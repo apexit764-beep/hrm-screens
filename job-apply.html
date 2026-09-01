@@ -1,0 +1,655 @@
+<title>صفحة التقديم على الوظيفة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+
+<style>
+:root {
+  /* --brand is overwritten per tenant at runtime — every accent on this page reads from it */
+  --brand: #505edc;
+  --brand-fg: #fff;
+  --brand-deep: #3a46b8;              /* نفس اللون أغمق — لتدرّج الغلاف بلا اتساخ */
+  --brand-soft: rgba(80, 94, 220, 0.10);
+  --brand-line: rgba(80, 94, 220, 0.28);
+
+  /* زر التقديم أخضر ثابت في كل العلامات — إجراء النظام لا يتبع لون العميل،
+     فيبقى معروفاً للمتقدّم مهما تغيّرت الشركة. لا يُشتقّ من --brand إطلاقاً. */
+  --apply: #0b8348;
+  --apply-hover: #0a7340;
+
+  --bg: #f7f7f8; --fg: #121217; --card: #fff; --muted: #f7f7f8; --muted-fg: #6c6c89;
+  --border: #d1d1db; --input-border: #d1d1db;
+  --success: #0caf60; --success-bg: #e7f8f0; --success-fg: #0a7b43;
+  --warning-bg: #fef9e7; --warning-fg: #8a6300;
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+  --shadow-card: 0 1px 2px rgba(18,18,23,0.06), 0 0 0 1px rgba(18,18,23,0.04);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --input-border: #3a3a45;
+  --success: #34d369; --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+  --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+} }
+:root[data-theme="dark"] {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --input-border: #3a3a45;
+  --success: #34d369; --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+  --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); direction: rtl; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+
+/* ---------- Demo strip: not part of the tenant page ---------- */
+.demo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 18px; background: #18181c; color: #ededf0; font-size: 12.5px; }
+.demo-lbl { display: flex; align-items: center; gap: 7px; color: #9494a8; }
+.demo-lbl svg { width: 14px; height: 14px; }
+.demo-btn { font-family: var(--font); font-size: 12.5px; padding: 5px 12px; border-radius: 999px; border: 1px solid #3a3a45; background: transparent; color: #ededf0; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.demo-btn:hover { background: #26262e; }
+.demo-btn.on { background: #fff; color: #18181c; border-color: #fff; font-weight: 600; }
+.demo-swatch { width: 11px; height: 11px; border-radius: 50%; }
+.demo-note { margin-inline-start: auto; color: #6c6c89; }
+
+/* ---------- Tenant header ----------
+   مخفيّ في الأعلى لأن الهيرو يحمل الهوية كاملة هناك — إظهاره فوقه تكرار.
+   ينزلق عند خروج الهيرو من الشاشة، فيعيد الهوية ومعه زرّ التقديم. */
+.site-head {
+  position: fixed; inset-inline: 0; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  opacity: 0; visibility: hidden;
+  transition: transform .26s ease, opacity .26s ease, visibility .26s;
+}
+.site-head.show { transform: none; opacity: 1; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { .site-head { transition: opacity .2s ease, visibility .2s; } }
+.site-head-in { max-width: 940px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.site-head .btn { padding: 8px 15px; font-size: 13px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-logo {
+  flex: none; width: 34px; height: 34px; border-radius: 9px; overflow: hidden;
+  display: grid; place-items: center;
+  background: var(--brand); color: var(--brand-fg); font-weight: 700; font-size: 14px;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+.brand-name { font-size: 14.5px; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.head-nav { display: flex; align-items: center; gap: 6px; }
+.head-link {
+  font-size: 13px; color: var(--muted-fg); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 11px; border-radius: 999px; white-space: nowrap;
+}
+.head-link:hover { color: var(--brand); background: var(--brand-soft); }
+.head-link svg { width: 14px; height: 14px; }
+@media (max-width: 560px) { .head-link .lbl { display: none; } }
+
+/* ---------- Hero ----------
+   الغلاف والشعار وعنوان الوظيفة في كتلة واحدة، فالهوية والوظيفة تُقرآن معاً
+   بدل شريط لون فارغ وعنوان معلّق تحته. */
+.hero { max-width: 940px; margin: 0 auto; padding: 0 20px; }
+.hero-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); box-shadow: var(--shadow-card); overflow: hidden;
+}
+
+/* اللون يحمل هوية الوظيفة بدل أن يكون شريطاً فارغاً فوقها */
+.hero-band {
+  position: relative; padding: 26px 26px 24px;
+  background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+  background-size: cover; background-position: center;
+  isolation: isolate;
+}
+/* حجاب داكن + نصّ أبيض: الوضع الافتراضي للعلامات الداكنة */
+.hero-band::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(circle at 88% -25%, rgba(255,255,255,.12), transparent 55%),
+    linear-gradient(200deg, rgba(0,0,0,var(--scrim-a,.14)), rgba(0,0,0,var(--scrim-b,.46)));
+}
+/* شبكة نقطية خفيفة تكسر مسطّح اللون */
+.hero-band::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; opacity: .35;
+  background-image: radial-gradient(rgba(255,255,255,.5) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom left, #000, transparent 62%);
+  mask-image: linear-gradient(to bottom left, #000, transparent 62%);
+}
+
+/* علامة فاتحة (أصفر، ليموني، بيج): تعتيمها لأجل نصّ أبيض يُفقدها لونها،
+   فيُترك الشريط فاتحاً ويُقلب النصّ إلى داكن — التباين يمرّ واللون يبقى. */
+.hero-band.light::before {
+  background:
+    radial-gradient(circle at 88% -25%, rgba(255,255,255,.30), transparent 55%),
+    linear-gradient(200deg, rgba(0,0,0,.02), rgba(0,0,0,.10));
+}
+.hero-band.light::after { background-image: radial-gradient(rgba(0,0,0,.34) 1px, transparent 1px); opacity: .3; }
+.hero-band.light .hero-org-name,
+.hero-band.light .hero-title { color: #121217; }
+.hero-band.light .hero-org-link { color: rgba(18,18,23,.66); }
+.hero-band.light .hero-org-link:hover { color: #121217; }
+.hero-band.light .pill.on-band {
+  color: #121217; background: rgba(255,255,255,.42); border-color: rgba(18,18,23,.16);
+}
+.hero-band.light .hero-logo { box-shadow: 0 3px 12px rgba(0,0,0,.14), 0 0 0 1px rgba(18,18,23,.10); }
+
+.hero-org { display: flex; align-items: center; gap: 13px; margin-bottom: 20px; }
+/* بلاطة بيضاء: شعار العميل ذو الخلفية البيضاء لا يختفي على الغلاف الملوّن */
+.hero-logo {
+  flex: none; width: 60px; height: 60px; border-radius: 15px; overflow: hidden;
+  background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,.22);
+  display: grid; place-items: center;
+}
+.hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.hero-mark {
+  width: 100%; height: 100%; display: grid; place-items: center;
+  background: var(--brand); color: var(--brand-fg); font-weight: 700; font-size: 25px;
+}
+.hero-org-txt { min-width: 0; line-height: 1.45; }
+.hero-org-name { font-size: 14.5px; font-weight: 600; color: #fff; }
+.hero-org-link {
+  font-size: 12.5px; color: rgba(255,255,255,.72); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.hero-org-link:hover { color: #fff; }
+.hero-org-link svg { width: 12px; height: 12px; }
+
+.hero-title { font-size: 30px; font-weight: 600; line-height: 1.35; color: #fff; margin-bottom: 14px; letter-spacing: -.2px; }
+/* حبّات فوق اللون: زجاجية بدل حدود رمادية تختفي على الخلفية الداكنة */
+.pill.on-band {
+  color: #fff; background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.26); backdrop-filter: blur(4px);
+}
+.pill.on-band svg { opacity: .85; }
+
+/* شريط الإجراءات: أبيض تحت اللون — الزر الأساسي لا يضيع داخل الخلفية الملوّنة */
+.hero-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 15px 26px; border-top: 1px solid var(--border); background: var(--card);
+}
+.hero-bar .spacer { margin-inline-start: auto; }
+.deadline {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
+  color: var(--warning-fg); background: var(--warning-bg);
+  border-radius: 999px; padding: 6px 12px;
+}
+.deadline svg { width: 14px; height: 14px; }
+
+@media (max-width: 560px) {
+  .hero-band { padding: 20px 18px; }
+  .hero-logo { width: 52px; height: 52px; border-radius: 13px; }
+  .hero-mark { font-size: 21px; }
+  .hero-title { font-size: 22px; }
+  .hero-bar { padding: 13px 18px; }
+  .hero-bar .btn { flex: 1 1 100%; }
+  .hero-bar .spacer { margin-inline-start: 0; }
+}
+
+.wrap { max-width: 940px; margin: 0 auto; padding: 24px 20px 70px; display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+@media (max-width: 860px) { .wrap { grid-template-columns: 1fr; } }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); }
+.card-pad { padding: 22px 24px; }
+.card + .card { margin-top: 16px; }
+
+.job-title { font-size: 24px; font-weight: 600; line-height: 1.45; margin-bottom: 10px; }
+.job-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted-fg); background: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
+.pill svg { width: 13px; height: 13px; }
+.pill.brand { color: var(--brand); background: var(--brand-soft); border-color: var(--brand-line); }
+
+.sec-title { font-size: 15px; font-weight: 600; margin: 22px 0 8px; }
+.sec-title:first-child { margin-top: 0; }
+.body-txt { font-size: 14px; color: var(--fg); }
+.list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.list li { position: relative; padding-inline-start: 21px; font-size: 14px; }
+.list li::before { content: ''; position: absolute; inset-inline-start: 4px; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+
+/* ---------- Apply form ---------- */
+.field { margin-bottom: 14px; }
+.label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.req { color: #d92d20; }
+.input, .textarea, .select-el {
+  width: 100%; padding: 10px 13px; font-family: var(--font); font-size: 13.5px;
+  border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); color: var(--fg);
+}
+.input:focus, .textarea:focus, .select-el:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.textarea { min-height: 96px; resize: vertical; }
+.hint { font-size: 12px; color: var(--muted-fg); margin-top: 5px; }
+
+.drop { border: 1.5px dashed var(--input-border); border-radius: var(--radius-lg); padding: 20px; text-align: center; cursor: pointer; background: var(--muted); }
+.drop:hover { border-color: var(--brand); }
+.drop svg { width: 26px; height: 26px; color: var(--brand); margin-bottom: 6px; }
+.drop-t { font-size: 13.5px; font-weight: 500; }
+.drop-s { font-size: 12px; color: var(--muted-fg); }
+.drop.filled { border-style: solid; border-color: var(--brand); background: var(--brand-soft); text-align: right; display: flex; align-items: center; gap: 10px; }
+.drop.filled svg { margin: 0; }
+
+.check { display: flex; align-items: flex-start; gap: 9px; font-size: 12.5px; color: var(--muted-fg); }
+.check input { margin-top: 4px; accent-color: var(--brand); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 20px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--fg); font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn:hover { background: var(--muted); }
+.btn svg { width: 16px; height: 16px; }
+.btn-brand { background: var(--brand); border-color: var(--brand); color: var(--brand-fg); }
+.btn-brand:hover { filter: brightness(1.07); background: var(--brand); }
+.btn-apply { background: var(--apply); border-color: var(--apply); color: #fff; }
+.btn-apply:hover { background: var(--apply-hover); border-color: var(--apply-hover); }
+.btn-block { width: 100%; }
+
+/* ---------- Aside ---------- */
+.aside-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.aside-row:last-child { border-bottom: none; }
+.aside-k { color: var(--muted-fg); }
+.aside-v { font-weight: 500; }
+.about { font-size: 13px; color: var(--muted-fg); }
+
+/* ---------- Footer ---------- */
+.foot { max-width: 940px; margin: 0 auto; padding: 0 20px 40px; font-size: 12.5px; color: var(--muted-fg); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.powered { display: inline-flex; align-items: center; gap: 6px; }
+.powered b { color: var(--fg); font-weight: 600; }
+
+/* ---------- Sent state ---------- */
+.done { text-align: center; padding: 12px 4px 4px; }
+.done-ico { width: 60px; height: 60px; border-radius: 50%; background: var(--success-bg); color: var(--success-fg); display: grid; place-items: center; margin: 0 auto 14px; }
+.done-ico svg { width: 28px; height: 28px; }
+.done-t { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.done-d { font-size: 13.5px; color: var(--muted-fg); margin-bottom: 18px; }
+/* عزل اتجاه البريد: بدونه تتبعثر النقطة و@ داخل جملة عربية */
+.mail { color: var(--fg); direction: ltr; unicode-bidi: isolate; word-break: break-word; }
+.ref-label { font-size: 12px; color: var(--muted-fg); margin-bottom: 6px; }
+.ref { display: inline-block; font-family: ui-monospace, monospace; direction: ltr; font-size: 13px; background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; }
+</style>
+
+<!-- Demo strip only: proves one page serves every tenant. Not shipped to candidates. -->
+<div class="demo">
+  <span class="demo-lbl">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="14" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 0-4 2 2 0 0 1 0-4h4a6 6 0 0 0 0-12z"/></svg>
+    نفس الصفحة بعلامة كل عميل
+  </span>
+  <span id="demoBtns"></span>
+  <span class="demo-note">الشعار واللون والاسم والنطاق تأتي من إعدادات الشركة</span>
+</div>
+
+<div class="site-head">
+  <div class="site-head-in">
+    <div class="brand">
+      <div class="brand-logo" id="brandLogo">ش</div>
+      <div class="brand-name" id="brandName">شركة الماسة لحلول التسويق</div>
+    </div>
+    <nav class="head-nav">
+      <a class="head-link" href="#" onclick="return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <span class="lbl">جميع الوظائف</span>
+      </a>
+      <button class="btn btn-apply" onclick="document.getElementById('formCard').scrollIntoView({behavior:'smooth',block:'start'})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        التقديم
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- الهيرو: غلاف العميل + شعاره + الوظيفة + إجراءاتها في كتلة واحدة -->
+<div class="hero">
+  <div class="hero-card">
+    <div class="hero-band" id="heroBand">
+      <div class="hero-org">
+        <div class="hero-logo" id="heroLogo"><span class="hero-mark">م</span></div>
+        <div class="hero-org-txt">
+          <div class="hero-org-name" id="heroOrgName">شركة الماسة لحلول التسويق</div>
+          <a class="hero-org-link" href="#" onclick="return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span id="heroOrgDomain">almasa.com</span>
+          </a>
+        </div>
+      </div>
+
+      <h1 class="hero-title">مصمم واجهات وتجربة مستخدم (UI/UX)</h1>
+      <div class="job-meta">
+        <span class="pill on-band">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          دوام كامل
+        </span>
+        <span class="pill on-band">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          فرع الرياض
+        </span>
+        <!-- نمط العمل بدل الراتب: الفرع تابعية إدارية، والنمط مكان العمل الفعلي -->
+        <span class="pill on-band">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/></svg>
+          حضوري
+        </span>
+        <span class="pill on-band">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          قسم التسويق
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-bar">
+      <button class="btn btn-apply" onclick="document.getElementById('formCard').scrollIntoView({behavior:'smooth',block:'start'})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        التقديم على الوظيفة
+      </button>
+      <button class="btn" onclick="copyLink(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        نسخ الرابط
+      </button>
+      <span class="deadline spacer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="deadlineTxt">آخر موعد للتقديم: 30 سبتمبر</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- Job + application -->
+  <div>
+    <div class="card card-pad">
+      <p class="sec-title">عن الوظيفة</p>
+      <p class="body-txt">نبحث عن مصمم واجهات وتجربة مستخدم للعمل على منتجاتنا الرقمية، من البحث الأولي وحتى تسليم التصاميم النهائية للفريق التقني. ستعمل ضمن فريق المنتج وتشارك في قرارات التصميم منذ اليوم الأول.</p>
+
+      <p class="sec-title">المهام الأساسية</p>
+      <ul class="list">
+        <li>تصميم واجهات المنتج على الويب والموبايل بما يخدم أهداف المستخدم والعمل</li>
+        <li>بناء وصيانة نظام تصميم موحّد يُستخدم عبر جميع المنتجات</li>
+        <li>إجراء اختبارات استخدام وتحويل نتائجها إلى تحسينات ملموسة</li>
+        <li>التعاون مع فريق التطوير لضمان مطابقة التنفيذ للتصميم</li>
+      </ul>
+
+      <p class="sec-title">المتطلبات</p>
+      <ul class="list">
+        <li>خبرة لا تقل عن 3 سنوات في تصميم المنتجات الرقمية</li>
+        <li>معرض أعمال يوضّح مشاريع كاملة لا لقطات معزولة</li>
+        <li>إتقان Figma والعمل بأنظمة التصميم</li>
+        <li>إجادة العربية والإنجليزية كتابةً وتحدثاً</li>
+      </ul>
+    </div>
+
+    <!-- Application -->
+    <div class="card card-pad" id="formCard">
+      <p class="sec-title">التقديم على الوظيفة</p>
+      <p class="hint" style="margin: -4px 0 16px;">تُرسل بياناتك مباشرة إلى فريق التوظيف في <span id="brandNameInline">شركة الماسة</span>.</p>
+
+      <div class="field">
+        <label class="label">الاسم الكامل <span class="req">*</span></label>
+        <input class="input" id="fName" placeholder="مثال: سارة أحمد">
+      </div>
+      <div class="field">
+        <label class="label">البريد الإلكتروني <span class="req">*</span></label>
+        <input class="input" id="fMail" type="email" placeholder="name@example.com" style="direction:ltr;text-align:left">
+      </div>
+      <div class="field">
+        <label class="label">رقم الجوال <span class="req">*</span></label>
+        <input class="input" id="fPhone" placeholder="05xxxxxxxx" style="direction:ltr;text-align:left">
+      </div>
+      <div class="field">
+        <label class="label">سنوات الخبرة</label>
+        <select class="select-el">
+          <option>أقل من سنة</option>
+          <option>1 – 3 سنوات</option>
+          <option selected>3 – 5 سنوات</option>
+          <option>أكثر من 5 سنوات</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="label">السيرة الذاتية <span class="req">*</span></label>
+        <div class="drop" id="cvDrop" onclick="pickCv()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="drop-t">اسحب ملفك هنا أو اضغط للاختيار</div>
+          <div class="drop-s">PDF أو DOCX · حتى 5 ميغابايت</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">رابط معرض الأعمال</label>
+        <input class="input" placeholder="https://" style="direction:ltr;text-align:left">
+      </div>
+      <div class="field">
+        <label class="label">لماذا تناسب هذه الوظيفة؟</label>
+        <textarea class="textarea" placeholder="اكتب نبذة قصيرة..."></textarea>
+      </div>
+
+      <label class="check" style="margin-bottom: 16px;">
+        <input type="checkbox" id="fOk">
+        <span>أوافق على معالجة بياناتي لغرض التوظيف، والاحتفاظ بها للنظر في الوظائف المستقبلية.</span>
+      </label>
+
+      <button class="btn btn-apply btn-block" onclick="submitApp()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        إرسال الطلب
+      </button>
+    </div>
+
+    <!-- After sending -->
+    <div class="card card-pad" id="doneCard" hidden>
+      <div class="done">
+        <div class="done-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="done-t">تم استلام طلبك</div>
+        <div class="done-d">
+          أرسلنا تأكيداً إلى <b class="mail" id="doneMail">—</b><br>
+          سيتواصل معك فريقنا في حال كنت مؤهلاً للوظيفة.
+        </div>
+        <div class="ref-label">رقم الطلب</div>
+        <div class="ref" id="doneRef">APP-2026-0417</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aside -->
+  <aside>
+    <div class="card card-pad">
+      <div class="aside-row"><span class="aside-k">الراتب</span><span class="aside-v">8,000 – 11,000 ر.س</span></div>
+      <div class="aside-row"><span class="aside-k">نوع العقد</span><span class="aside-v">دوام كامل</span></div>
+      <div class="aside-row"><span class="aside-k">الخبرة</span><span class="aside-v">3 – 5 سنوات</span></div>
+      <div class="aside-row"><span class="aside-k">الفرع</span><span class="aside-v">الرياض</span></div>
+      <div class="aside-row"><span class="aside-k">نمط العمل</span><span class="aside-v">حضوري</span></div>
+      <div class="aside-row"><span class="aside-k">آخر موعد</span><span class="aside-v">30 سبتمبر 2026</span></div>
+    </div>
+
+    <div class="card card-pad">
+      <p class="sec-title">عن الشركة</p>
+      <p class="about" id="brandAbout">—</p>
+    </div>
+
+    <div class="card card-pad">
+      <p class="sec-title">شارك الوظيفة</p>
+      <p class="hint" style="margin: 0 0 10px;">رابط الوظيفة على نطاق الشركة:</p>
+      <div class="ref" id="jobLink" style="display:block;overflow-x:auto;white-space:nowrap;">—</div>
+      <button class="btn btn-block" style="margin-top:10px" onclick="copyLink(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        نسخ الرابط
+      </button>
+    </div>
+  </aside>
+</div>
+
+<div class="foot">
+  <span id="footRights">—</span>
+  <span class="powered" id="powered">مدعوم بـ <b>Apex HR</b></span>
+</div>
+
+<script>
+/* One page, many tenants: everything a company owns lives in this object.
+   In production these come from إعدادات الشركة — name, logos, primary colour, custom domain. */
+const TENANTS = [
+  { key:'almasa', name:'شركة الماسة لحلول التسويق', short:'الماسة', mark:'م', color:'#505edc',
+    domain:'almasa.com', about:'شركة سعودية متخصصة في التسويق الرقمي وبناء العلامات التجارية، تخدم أكثر من 120 عميلاً في المنطقة.',
+    rights:'جميع الحقوق محفوظة @ALMASA 2026', poweredHidden:false },
+  { key:'nakheel', name:'مجموعة النخيل القابضة', short:'النخيل', mark:'ن', color:'#0caf60',
+    domain:'careers.alnakheel.sa', about:'مجموعة استثمارية تعمل في التجزئة والضيافة والعقار، ويعمل بها أكثر من 3,000 موظف.',
+    rights:'© مجموعة النخيل القابضة 2026', poweredHidden:true,
+    /* عميل رفع غلافاً خاصاً — الصورة تحلّ محل تدرّج اللون */
+    cover:'linear-gradient(115deg,#0b3d2c,#0caf60)' },
+  { key:'mudad', name:'مداد للتقنية', short:'مداد', mark:'د', color:'#d92d20',
+    domain:'jobs.mudad.tech', about:'شركة تقنية تبني حلول الدفع والفوترة للشركات الصغيرة والمتوسطة.',
+    rights:'© مداد للتقنية 2026', poweredHidden:false }
+];
+
+/* A hex accent needs matching soft tints, so tenants never hand-pick four colours */
+function hexToRgb(h) {
+  const m = h.replace('#','').match(/.{2}/g).map(x => parseInt(x, 16));
+  return { r: m[0], g: m[1], b: m[2] };
+}
+/* تعتيم بنسبة مئوية في فضاء اللون نفسه — أنظف من مزجه بالأسود الذي يُطفئ التشبّع */
+function shade(hex, amount) {
+  const c = hexToRgb(hex);
+  const f = v => Math.max(0, Math.min(255, Math.round(v * (1 - amount))));
+  return '#' + [f(c.r), f(c.g), f(c.b)].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+/* اللمعان النسبي بمعادلة WCAG — لا تقريب، لأن قرار لون النص يُبنى عليه */
+function relLum(hex) {
+  const c = hexToRgb(hex);
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+}
+/* لون النص فوق العلامة: أيّهما يعطي تبايناً أعلى، الأبيض أم الداكن */
+function readableOn(hex) {
+  const L = relLum(hex);
+  const onWhite = 1.05 / (L + 0.05);          // تباين الأبيض
+  const onDark  = (L + 0.05) / (0.0085 + 0.05); // تباين #121217
+  return onDark > onWhite ? '#121217' : '#fff';
+}
+
+/* أقلّ حجاب أسود يجعل النصّ الأبيض يبلغ 4.5:1 فوق لون العميل.
+   حجاب ثابت لا يكفي: الأزرق الغامق يمرّ بـ14% والأخضر المتوسط يحتاج ضعفها،
+   فيُحسب لكل علامة بدل معاقبة الجميع بأثقل قيمة. */
+function scrimFor(hex, highlight) {
+  const c = hexToRgb(hex);
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  // اللمعان بعد الحجاب الأسود ثم وهج الضوء العلوي الأبيض
+  const lumAt = a => {
+    const px = ['r','g','b'].map(k => {
+      const afterBlack = c[k] * (1 - a);
+      return afterBlack * (1 - highlight) + 255 * highlight;
+    });
+    return 0.2126 * f(px[0]) + 0.7152 * f(px[1]) + 0.0722 * f(px[2]);
+  };
+  const TARGET = 1.05 / 4.5 - 0.05;            // اللمعان الذي يعطي 4.5:1 مع الأبيض
+  let lo = 0, hi = 0.75;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    if (lumAt(mid) > TARGET) lo = mid; else hi = mid;
+  }
+  return Math.min(0.75, Math.max(0.12, hi));
+}
+
+function applyTenant(t) {
+  const c = hexToRgb(t.color);
+  const r = document.documentElement.style;
+  /* فوق هذا اللمعان يحتاج النصّ الأبيض حجاباً ثقيلاً يطمس اللون،
+     فيبقى الشريط فاتحاً ويُقلب النصّ إلى داكن — التباين يمرّ واللون يبقى. */
+  const isLight = relLum(t.color) > 0.45;
+  // الحجاب محسوب على اللون نفسه ليمرّ 4.5:1 عند أفتح نقطة في الشريط
+  const a = isLight ? 0.03 : scrimFor(t.color, 0.12);
+
+  r.setProperty('--brand', t.color);
+  r.setProperty('--brand-deep', shade(t.color, isLight ? 0.12 : 0.42));
+  r.setProperty('--scrim-a', a.toFixed(3));
+  r.setProperty('--scrim-b', Math.min(0.80, a + 0.26).toFixed(3));
+  r.setProperty('--brand-fg', readableOn(t.color));
+  r.setProperty('--brand-soft', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',0.10)');
+  r.setProperty('--brand-line', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',0.28)');
+
+  // الشعار: صورة العميل إن وُجدت، وإلا حرف على لون العلامة
+  const markHtml = t.logo
+    ? '<img src="' + t.logo + '" alt="' + t.name + '">'
+    : '<span class="hero-mark">' + t.mark + '</span>';
+  document.getElementById('heroLogo').innerHTML = markHtml;
+  const head = document.getElementById('brandLogo');
+  head.innerHTML = t.logo ? '<img src="' + t.logo + '" alt="">' : t.mark;
+
+  // الغلاف: صورة أو تدرّج خاص بالعميل، وإلا تدرّج مشتقّ من لونه
+  const band = document.getElementById('heroBand');
+  band.style.backgroundImage = t.cover || '';
+  // غلاف صورة يحمل حجابه الداكن دائماً، فيبقى النص أبيض مهما كان لون العلامة
+  band.classList.toggle('light', isLight && !t.cover);
+
+  document.getElementById('brandName').textContent = t.name;
+  document.getElementById('heroOrgName').textContent = t.name;
+  document.getElementById('heroOrgDomain').textContent = t.domain;   // النطاق في الهيرو وحده — كان مكرراً في الهيدر
+  document.getElementById('brandNameInline').textContent = t.short;
+  document.getElementById('brandAbout').textContent = t.about;
+  document.getElementById('footRights').textContent = t.rights;
+  document.getElementById('jobLink').textContent = 'https://' + t.domain + '/jobs/ui-ux-designer';
+  // hiding the platform mark is a paid-plan feature, same gate as the custom domain
+  document.getElementById('powered').hidden = t.poweredHidden;
+  document.title = 'وظيفة: مصمم UI/UX — ' + t.short;
+
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.toggle('on', b.dataset.k === t.key));
+}
+
+function buildDemo() {
+  document.getElementById('demoBtns').innerHTML = TENANTS.map(t =>
+    '<button class="demo-btn" data-k="' + t.key + '" onclick="applyTenant(TENANTS.find(x=>x.key===\'' + t.key + '\'))">' +
+    '<span class="demo-swatch" style="background:' + t.color + '"></span>' + t.short + '</button>'
+  ).join(' ');
+}
+
+/* ---------- Application ---------- */
+function pickCv() {
+  const d = document.getElementById('cvDrop');
+  d.classList.add('filled');
+  d.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+    + '<div><div class="drop-t">sara-ahmed-cv.pdf</div><div class="drop-s">318 كيلوبايت · اضغط للاستبدال</div></div>';
+}
+
+function submitApp() {
+  const name = document.getElementById('fName').value.trim();
+  const mail = document.getElementById('fMail').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const cv = document.getElementById('cvDrop').classList.contains('filled');
+  const ok = document.getElementById('fOk').checked;
+  if (!name || !mail || !phone || !cv || !ok) {
+    alert('أكمل الحقول المطلوبة وأرفق السيرة الذاتية ووافق على معالجة البيانات.');
+    return;
+  }
+  document.getElementById('doneMail').textContent = mail;
+  document.getElementById('doneRef').textContent = 'APP-2026-' + String(Math.floor(Math.random() * 9000) + 1000);
+  document.getElementById('formCard').hidden = true;
+  document.getElementById('doneCard').hidden = false;
+  document.getElementById('doneCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function copyLink(btn) {
+  const txt = document.getElementById('jobLink').textContent;
+  const done = () => { const o = btn.innerHTML; btn.textContent = 'تم النسخ'; setTimeout(() => btn.innerHTML = o, 1400); };
+  try { navigator.clipboard.writeText(txt).then(done).catch(done); } catch (e) { done(); }
+}
+
+/* الهيدر يظهر فقط بعد خروج الهيرو من أعلى الشاشة — قبلها هو تكرار له.
+   القياس من موضع الهيرو مباشرة لا من IntersectionObserver: الأخير يحتاج
+   ارتفاع نافذة صحيحاً، ويصمت تماماً حين يكون صفراً (إطارات مضمّنة، معاينات). */
+function watchHeader() {
+  const head = document.querySelector('.site-head');
+  const hero = document.querySelector('.hero-card');
+  if (!head || !hero) return;
+
+  const update = () => head.classList.toggle('show', hero.getBoundingClientRect().bottom < 60);
+
+  /* خنق زمني لا requestAnimationFrame: الأخير يتوقّف تماماً حين تكون
+     الصفحة في تبويب خلفي أو إطار مخفيّ، فيتجمّد الهيدر على آخر حالة. */
+  let last = 0, timer = null;
+  const onScroll = () => {
+    const now = Date.now();
+    if (now - last >= 16) { last = now; update(); return; }
+    clearTimeout(timer);
+    timer = setTimeout(() => { last = Date.now(); update(); }, 16);   // يضمن تنفيذ آخر حدث
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  update();
+}
+
+buildDemo();
+applyTenant(TENANTS[0]);
+watchHeader();
+</script>

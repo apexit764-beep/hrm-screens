@@ -1,0 +1,523 @@
+<title>تخصيص المستندات المطلوبة — نسخة معدّلة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+
+<style>
+:root {
+  --bg: #f6f5f2; --card: #fff; --inset: #f0efec;
+  --fg: #1a1a1a; --body: #3d3b37; --muted: #8a8780; --caption: #a5a29c;
+  --line: #e4e2dd; --line2: #d1cfca;
+  --accent: #5b5bd6; --accent-bg: #eeeefb; --accent-fg: #3634a3;
+  --green: #16a34a; --green-bg: #ecfdf5; --green-fg: #166534;
+  --amber: #d97706; --amber-bg: #fffbeb; --amber-fg: #92400e;
+  --red: #dc2626; --red-bg: #fef2f2; --red-fg: #991b1b;
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  --r: 8px; --r2: 12px; --pill: 100px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #141312; --card: #1e1d1b; --inset: #272624;
+  --fg: #f0efec; --body: #c9c7c2; --muted: #7a7872; --caption: #5c5a56;
+  --line: #2e2d2a; --line2: #3a3935;
+  --accent: #8b8bf0; --accent-bg: #23223d; --accent-fg: #b9b9f7;
+  --green: #34d369; --green-bg: #0f2a1a; --green-fg: #6ee7a0;
+  --amber: #f59e0b; --amber-bg: #2a1f0a; --amber-fg: #fbbf24;
+  --red: #ef4444; --red-bg: #2a1212; --red-fg: #fca5a5;
+} }
+:root[data-theme="dark"] {
+  --bg: #141312; --card: #1e1d1b; --inset: #272624;
+  --fg: #f0efec; --body: #c9c7c2; --muted: #7a7872; --caption: #5c5a56;
+  --line: #2e2d2a; --line2: #3a3935;
+  --accent: #8b8bf0; --accent-bg: #23223d; --accent-fg: #b9b9f7;
+  --green: #34d369; --green-bg: #0f2a1a; --green-fg: #6ee7a0;
+  --amber: #f59e0b; --amber-bg: #2a1f0a; --amber-fg: #fbbf24;
+  --red: #ef4444; --red-bg: #2a1212; --red-fg: #fca5a5;
+}
+
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--body); font-family: var(--font); direction: rtl; line-height: 1.7; -webkit-font-smoothing: antialiased; padding: 26px 20px 70px; }
+[hidden] { display: none !important; }
+svg { flex: none; }
+
+.page { max-width: 1000px; margin: 0 auto; }
+.head { text-align: center; margin-bottom: 26px; }
+.head h1 { font-size: 25px; font-weight: 600; color: var(--fg); margin-bottom: 6px; }
+.head p { font-size: 14px; color: var(--muted); }
+
+.sec { margin-bottom: 40px; }
+.sec-n { display: inline-block; font-size: 11px; font-weight: 600; color: var(--accent-fg); background: var(--accent-bg); border-radius: var(--pill); padding: 3px 11px; margin-bottom: 9px; }
+.sec-t { font-size: 18px; font-weight: 600; color: var(--fg); margin-bottom: 5px; }
+.sec-d { font-size: 13px; color: var(--muted); margin-bottom: 15px; }
+
+.note { display: flex; gap: 10px; background: var(--inset); border: 1px solid var(--line); border-radius: var(--r2); padding: 12px 14px; margin-bottom: 16px; }
+.note > svg { width: 17px; height: 17px; color: var(--accent); margin-top: 2px; }
+.note-t { font-size: 12.5px; font-weight: 600; color: var(--fg); margin-bottom: 6px; }
+.note ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.note li { font-size: 12.5px; line-height: 1.75; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 600; border-radius: var(--pill); padding: 1px 8px; margin-inline-end: 6px; vertical-align: 1px; }
+.tag.fix { background: var(--red-bg); color: var(--red-fg); }
+.tag.add { background: var(--green-bg); color: var(--green-fg); }
+.tag.mod { background: var(--amber-bg); color: var(--amber-fg); }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.card-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.card-t { font-size: 15px; font-weight: 600; color: var(--fg); }
+.card-t span { font-weight: 400; color: var(--muted); font-size: 13px; }
+.card-b { padding: 18px; }
+
+.layout { display: grid; grid-template-columns: 210px 1fr; gap: 0; }
+@media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }
+.levels { border-inline-start: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 720px) { .levels { border-inline-start: none; border-bottom: 1px solid var(--line); } }
+.lvl { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: var(--r); font-size: 13px; color: var(--muted); cursor: default; }
+.lvl svg { width: 16px; height: 16px; }
+.lvl.on { background: var(--accent-bg); color: var(--accent-fg); font-weight: 600; }
+.lvl-c { margin-inline-start: auto; font-size: 11px; background: var(--inset); color: var(--muted); border-radius: var(--pill); padding: 1px 7px; }
+.lvl.on .lvl-c { background: var(--card); color: var(--accent-fg); }
+
+.scope { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1.5px solid var(--accent); border-radius: var(--r); padding: 10px 13px; font-size: 13px; color: var(--fg); margin-bottom: 12px; }
+.scope.ph { border-color: var(--line2); color: var(--muted); }
+.search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line2); border-radius: var(--r); padding: 10px 13px; font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
+.search svg { width: 15px; height: 15px; }
+
+.rule { display: flex; gap: 9px; align-items: flex-start; background: var(--accent-bg); color: var(--accent-fg); border-radius: var(--r2); padding: 11px 14px; font-size: 12.5px; margin-bottom: 14px; }
+.rule svg { width: 16px; height: 16px; margin-top: 2px; }
+.rule b { font-weight: 600; }
+
+.doc { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: var(--r2); padding: 11px 13px; margin-bottom: 8px; background: var(--card); }
+.doc.inherited { background: var(--inset); }
+.doc-ico { width: 32px; height: 32px; border-radius: 8px; background: var(--inset); display: grid; place-items: center; color: var(--muted); }
+.doc.inherited .doc-ico { background: var(--card); }
+.doc-ico svg { width: 15px; height: 15px; }
+.doc-i { flex: 1; min-width: 0; }
+.doc-n { font-size: 13.5px; font-weight: 500; color: var(--fg); }
+.doc-s { font-size: 11.5px; color: var(--muted); }
+.src { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; border-radius: var(--pill); padding: 2px 9px; }
+.src.inh { background: var(--card); color: var(--muted); border: 1px solid var(--line2); }
+.src.own { background: var(--green-bg); color: var(--green-fg); }
+.src.ovr { background: var(--amber-bg); color: var(--amber-fg); }
+.state-l { font-size: 12px; font-weight: 500; min-width: 52px; text-align: center; }
+.state-l.req { color: var(--accent-fg); }
+.state-l.opt { color: var(--muted); }
+.sw { width: 34px; height: 19px; border-radius: var(--pill); background: var(--accent); position: relative; flex: none; }
+.sw.off { background: var(--line2); }
+.sw i { position: absolute; top: 2.5px; inset-inline-end: 2.5px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.sw.off i { inset-inline-end: auto; inset-inline-start: 2.5px; }
+.doc.inherited .sw { opacity: .45; }
+.ico-btn { width: 30px; height: 30px; border-radius: var(--r); border: 1px solid var(--line2); background: var(--card); color: var(--muted); display: grid; place-items: center; cursor: pointer; }
+.ico-btn.danger { color: var(--red); border-color: var(--red-bg); }
+.ico-btn svg { width: 14px; height: 14px; }
+.link-btn { font-family: var(--font); font-size: 11.5px; color: var(--accent-fg); background: none; border: none; cursor: pointer; padding: 0; }
+
+.empty { text-align: center; padding: 40px 20px; }
+.empty-ico { width: 58px; height: 58px; border-radius: 50%; background: var(--inset); color: var(--muted); display: grid; place-items: center; margin: 0 auto 14px; }
+.empty-ico svg { width: 26px; height: 26px; }
+.empty h3 { font-size: 15px; font-weight: 600; color: var(--fg); margin-bottom: 6px; }
+.empty p { font-size: 13px; color: var(--muted); max-width: 380px; margin: 0 auto; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 18px; border-radius: var(--r); border: 1px solid var(--line2); background: var(--card); color: var(--body); font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn svg { width: 15px; height: 15px; }
+.foot { display: flex; justify-content: flex-start; gap: 8px; padding: 14px 18px; border-top: 1px solid var(--line); }
+
+.impact { background: var(--amber-bg); color: var(--amber-fg); border-radius: var(--r2); padding: 13px 15px; margin-bottom: 14px; font-size: 12.5px; }
+.impact-t { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.impact ul { margin: 8px 0 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.stat { border: 1px solid var(--line); border-radius: var(--r2); padding: 12px 14px; }
+.stat-v { font-size: 21px; font-weight: 600; color: var(--fg); }
+.stat-k { font-size: 12px; color: var(--muted); }
+.stat.warn { border-color: var(--amber); background: var(--amber-bg); }
+.stat.warn .stat-v, .stat.warn .stat-k { color: var(--amber-fg); }
+.stat.bad { border-color: var(--red); background: var(--red-bg); }
+.stat.bad .stat-v, .stat.bad .stat-k { color: var(--red-fg); }
+
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; border-radius: var(--pill); padding: 2px 9px; }
+.pill.ok { background: var(--green-bg); color: var(--green-fg); }
+.pill.warn { background: var(--amber-bg); color: var(--amber-fg); }
+.pill.bad { background: var(--red-bg); color: var(--red-fg); }
+
+.cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+.col { background: var(--inset); border-radius: var(--r2); padding: 13px; }
+.col-h { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 10px; }
+.col-c { font-size: 11px; font-weight: 500; color: var(--muted); background: var(--card); border-radius: var(--pill); padding: 1px 8px; }
+.dcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 11px; margin-bottom: 8px; }
+.dcard.is-new { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.dcard:last-child { margin-bottom: 0; }
+.dcard-top { display: flex; align-items: center; gap: 9px; }
+.dcard-n { flex: 1; font-size: 12.5px; font-weight: 500; color: var(--fg); }
+.dcard-btn { font-family: var(--font); font-size: 11.5px; font-weight: 500; border-radius: 6px; padding: 5px 11px; border: none; cursor: pointer; }
+.dcard-btn.up { background: var(--fg); color: var(--card); }
+.dcard-btn.rn { background: var(--green); color: #fff; }
+.dcard-meta { font-size: 10.5px; color: var(--muted); margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.due { color: var(--amber-fg); font-weight: 500; }
+.late { color: var(--red-fg); font-weight: 500; }
+
+</style>
+
+<div class="page">
+  <div class="head">
+    <h1>تخصيص المستندات المطلوبة — نسخة معدّلة</h1>
+    <p>حلّ الوراثة بين المستويات الأربعة، وأثر التغيير على مستندات الموظفين</p>
+  </div>
+
+  <!-- 1 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ١</div>
+    <div class="sec-t">مستوى الشركة — القائمة الأساس</div>
+    <div class="sec-d">مكانها: الإعدادات ← المستندات ← تخصيص المستندات المطلوبة</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">التعديل المطلوب</div>
+        <ul>
+          <li><span class="tag fix">إصلاح</span> «شهادة الزواج» مكرّرة مرتين في النظام الحالي — يُمنع تكرار المستند في المستوى الواحد، ويظهر المضاف مسبقاً باهتاً في قائمة البحث</li>
+          <li><span class="tag fix">إصلاح</span> توحيد الإملاء على <b>«إلزامي»</b> — النظام الحالي يكتبها «الزامي» في صفّين و«إلزامي» في البقية</li>
+          <li><span class="tag add">إضافة</span> عدّاد بجانب كل مستوى يبيّن عدد مستنداته، فيُعرف المخصَّص من الفارغ دون فتحه</li>
+          <li><span class="tag add">إضافة</span> تمييز واضح بين <b>الحذف</b> (يزيل المستند نهائياً) و<b>الإيقاف</b> (يجعله اختيارياً ويبقيه ظاهراً)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="card-t">المستندات المطلوبة <span>(مستوى الشركة)</span></span></div>
+      <div class="layout">
+        <div class="card-b">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            ابحث واختر مستنداً من القائمة المرجعية لإضافته…
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">بطاقة الهوية الشخصية</div><div class="doc-s">تسري على جميع الموظفين</div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="ico-btn danger" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">شهادة الميلاد</div><div class="doc-s">تسري على جميع الموظفين</div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="ico-btn danger" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">بطاقة الإقامة</div><div class="doc-s">اختياري — يُطلب من غير السعوديين فقط</div></div>
+            <span class="state-l opt">اختياري</span><span class="sw off"><i></i></span>
+            <button class="ico-btn danger" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">شهادة الزواج</div><div class="doc-s">تسري على جميع الموظفين</div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="ico-btn danger" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="levels">
+          <span class="lvl on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M14 9h1M14 13h1"/></svg> مستوى الشركة <span class="lvl-c">4</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> مستوى الفرع <span class="lvl-c">2</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> مستوى القسم <span class="lvl-c">0</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> المسمى الوظيفي <span class="lvl-c">1</span></span>
+        </div>
+      </div>
+      <div class="foot"><button class="btn pri">حفظ التغييرات</button><button class="btn">إلغاء</button></div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ٢</div>
+    <div class="sec-t">مستوى الفرع — قبل اختيار فرع</div>
+    <div class="sec-d">النظام الحالي يعرض قائمة كاملة والقائمة المنسدلة ما زالت تقول «اختر الفرع»</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">التعديل المطلوب</div>
+        <ul>
+          <li><span class="tag fix">إصلاح</span> القائمة المعروضة اليوم <b>لا تخصّ شيئاً</b> — لم يُختر فرع بعد، فما الذي يعدّله المستخدم؟ خطر أن يظنّها قائمة الفرع ويعدّلها</li>
+          <li><span class="tag add">إضافة</span> حالة فارغة حتى يُختار الفرع — نفس القاعدة المطبّقة في لوحة مراحل المرشحين</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="card-t">المستندات المطلوبة <span>(مستوى الفرع)</span></span></div>
+      <div class="layout">
+        <div class="card-b">
+          <div class="scope ph">اختر الفرع
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="empty">
+            <div class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <h3>اختر فرعاً لعرض مستنداته</h3>
+            <p>لكل فرع مستنداته الخاصة إضافةً إلى مستندات الشركة. حدّد الفرع من القائمة أعلاه لتظهر قائمته.</p>
+          </div>
+        </div>
+        <div class="levels">
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg> مستوى الشركة <span class="lvl-c">4</span></span>
+          <span class="lvl on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> مستوى الفرع <span class="lvl-c">2</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> مستوى القسم <span class="lvl-c">0</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> المسمى الوظيفي <span class="lvl-c">1</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ٣</div>
+    <div class="sec-t">مستوى الفرع — الوراثة ظاهرة</div>
+    <div class="sec-d">وهذا جوهر التعديل: أن يرى المستخدم ما وُرِث وما أُضيف وما خُصِّص</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">التعديل المطلوب</div>
+        <ul>
+          <li><span class="tag add">إضافة</span> ثلاثة أوسمة تُبيّن مصدر كل صف: <b>موروث</b> من مستوى أعلى · <b>مُضاف هنا</b> · <b>مخصَّص</b> (موروث عُدِّل في هذا المستوى)</li>
+          <li><span class="tag add">إضافة</span> قاعدة الأولوية معلنة في أعلى الصفحة — بدونها لا يعرف أحد أي إعداد ينفَّذ عند التعارض</li>
+          <li><span class="tag mod">تعديل</span> الصف الموروث لا يُحذف من هنا (زر الحذف يصير «تخصيص») — حذفه من الفرع يوهم أنه أُزيل من الشركة</li>
+          <li><span class="tag add">إضافة</span> «إرجاع إلى الموروث» على الصف المخصَّص، ليعود لما ورثه بضغطة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="card-t">المستندات المطلوبة <span>(فرع القاهرة)</span></span></div>
+      <div class="layout">
+        <div class="card-b">
+          <div class="scope">فرع القاهرة
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="rule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg>
+            <div><b>الأقرب للموظف يتقدّم:</b> المسمى الوظيفي ← القسم ← الفرع ← الشركة. فإن كان المستند إلزامياً على مستوى الشركة واختيارياً على مستوى الفرع، يُطبَّق إعداد الفرع على موظفيه.</div>
+          </div>
+
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            ابحث واختر مستنداً لإضافته لهذا الفرع…
+          </div>
+
+          <div class="doc inherited">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">بطاقة الهوية الشخصية</div><div class="doc-s"><span class="src inh">موروث من مستوى الشركة</span></div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="link-btn">تخصيص لهذا الفرع</button>
+          </div>
+
+          <div class="doc inherited">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">شهادة الميلاد</div><div class="doc-s"><span class="src inh">موروث من مستوى الشركة</span></div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="link-btn">تخصيص لهذا الفرع</button>
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">شهادة الزواج</div><div class="doc-s"><span class="src ovr">مخصَّص — كان إلزامياً على مستوى الشركة</span></div></div>
+            <span class="state-l opt">اختياري</span><span class="sw off"><i></i></span>
+            <button class="link-btn">إرجاع إلى الموروث</button>
+          </div>
+
+          <div class="doc">
+            <div class="doc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-i"><div class="doc-n">تصريح العمل</div><div class="doc-s"><span class="src own">مُضاف في هذا الفرع</span></div></div>
+            <span class="state-l req">إلزامي</span><span class="sw"><i></i></span>
+            <button class="ico-btn danger" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+        </div>
+
+        <div class="levels">
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg> مستوى الشركة <span class="lvl-c">4</span></span>
+          <span class="lvl on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> مستوى الفرع <span class="lvl-c">2</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> مستوى القسم <span class="lvl-c">0</span></span>
+          <span class="lvl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> المسمى الوظيفي <span class="lvl-c">1</span></span>
+        </div>
+      </div>
+      <div class="foot"><button class="btn pri">حفظ التغييرات</button><button class="btn">إلغاء</button></div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ٤</div>
+    <div class="sec-t">تأكيد الحفظ — أثر التغيير قبل وقوعه</div>
+    <div class="sec-d">تظهر عند الضغط على «حفظ التغييرات» متى مسّ التغيير موظفين قائمين</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">التعديل المطلوب</div>
+        <ul>
+          <li><span class="tag add">إضافة</span> الحفظ اليوم صامت، بينما أثره <b>رجعي</b> — إضافة مستند إلزامي تجعل موظفين مكتملين ناقصين فجأة</li>
+          <li><span class="tag add">إضافة</span> عدد الموظفين المتأثرين قبل التنفيذ، وخيار إشعارهم من عدمه</li>
+          <li><span class="tag add">إضافة</span> مهلة رفع بدل المطالبة الفورية — «مطلوب خلال 14 يوماً» أرحم من وسم الجميع ناقصين اليوم</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="card-t">تأكيد حفظ التغييرات</span></div>
+      <div class="card-b">
+        <div class="impact">
+          <div class="impact-t">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            سيتأثر 34 موظفاً في فرع القاهرة
+          </div>
+          <ul>
+            <li><b>تصريح العمل</b> صار إلزامياً — 31 موظفاً لم يرفعوه وسيظهرون ناقصي المستندات</li>
+            <li><b>شهادة الزواج</b> صارت اختيارية — 3 موظفين كانوا موسومين ناقصين ولن يعودوا كذلك</li>
+          </ul>
+        </div>
+
+        <div class="doc" style="margin-bottom:8px">
+          <div class="doc-i"><div class="doc-n">إشعار الموظفين المتأثرين</div><div class="doc-s">يصلهم إشعار في التطبيق وبريد بالمستند المطلوب</div></div>
+          <span class="sw"><i></i></span>
+        </div>
+        <div class="doc">
+          <div class="doc-i"><div class="doc-n">مهلة الرفع</div><div class="doc-s">لا يُوسَم الموظف ناقصاً قبل انتهاء المهلة</div></div>
+          <span class="state-l req">14 يوماً</span>
+        </div>
+      </div>
+      <div class="foot"><button class="btn pri">تأكيد الحفظ</button><button class="btn">رجوع</button></div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ٥</div>
+    <div class="sec-t">الأثر على مستندات الموظف</div>
+    <div class="sec-d">مكانها: الموظفون ← تفاصيل الموظف ← تبويب المستندات — بأعمدته الثلاثة كما هي</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">هنا تنعكس إعدادات المستندات</div>
+        <ul>
+          <li><span class="tag mod">تعديل</span> <b>عمود «غير المرفوعة» هو نقطة الانعكاس</b> — كل مستند يُضاف في الإعدادات يهبط هنا مباشرة. أضفنا «تصريح العمل» على مستوى الفرع فظهر في هذا العمود لموظفي فرع القاهرة وحدهم</li>
+          <li><span class="tag add">إضافة</span> <b>مصدر الإلزام</b> تحت اسم كل مستند: «إلزامي من مستوى الفرع». اليوم كل البطاقات متشابهة، فلا يعرف الموظف من طلب المستند ولا لماذا لم يُطلب من زميله في فرع آخر</li>
+          <li><span class="tag add">إضافة</span> <b>المهلة</b> على المستند المطلوب حديثاً — «مطلوب خلال 11 يوماً» بدل ظهوره ناقصاً في اللحظة نفسها</li>
+          <li><span class="tag add">إضافة</span> فصل <b>الاختياري</b> عن الإلزامي داخل العمود — «صورة شخصية حديثة» اختيارية لكنها تبدو الآن مطلوبة كغيرها</li>
+          <li><span class="tag fix">إصلاح</span> اختلاف التسمية بين الشاشتين: الإعدادات تقول <b>«بطاقة الهوية الشخصية»</b> وهنا تُكتب <b>«البطاقة الشخصية»</b> — الاسم يجب أن يأتي من القائمة المرجعية نفسها</li>
+          <li><span class="tag fix">إصلاح</span> «شهادة الزواج» إلزامية في إعدادات الشركة ولا تظهر في أي عمود هنا — كل مستند إلزامي يجب أن يكون له مكان، وإلا فالإعداد بلا أثر</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="card-t">المستندات <span>· أحمد محمد · مصمم جرافيك · فرع القاهرة · قسم التصميم والمونتاج</span></span>
+        <span class="pill warn">3 مستندات مطلوبة</span>
+      </div>
+      <div class="card-b">
+        <div class="cols">
+
+          <div class="col">
+            <div class="col-h">المستندات المرفوعة <span class="col-c">4</span></div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">جواز السفر</span>
+                <button class="ico-btn" title="عرض"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="dcard-meta"><span class="src inh">إلزامي من مستوى الشركة</span> ينتهي 10 سبتمبر 2025</div>
+            </div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">عقد العمل</span>
+                <button class="ico-btn" title="عرض"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="dcard-meta"><span class="src inh">إلزامي من مستوى الشركة</span> بلا تاريخ انتهاء</div>
+            </div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">التأمين الصحي</span>
+                <button class="ico-btn" title="عرض"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="dcard-meta"><span class="src own">إلزامي من مستوى الفرع</span> ينتهي 30 يونيو 2027</div>
+            </div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">استمارة 6</span>
+                <button class="ico-btn" title="عرض"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="dcard-meta"><span class="src ovr">اختياري — رفعه الموظف</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-h">المستندات غير المرفوعة <span class="col-c">3</span></div>
+
+            <div class="dcard is-new">
+              <div class="dcard-top"><span class="dcard-n">تصريح العمل</span><button class="dcard-btn up">رفع</button></div>
+              <div class="dcard-meta"><span class="src own">إلزامي من مستوى الفرع — فرع القاهرة</span> <span class="due">مطلوب خلال 11 يوماً</span></div>
+            </div>
+
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">بطاقة الهوية الشخصية</span><button class="dcard-btn up">رفع</button></div>
+              <div class="dcard-meta"><span class="src inh">إلزامي من مستوى الشركة</span> <span class="late">متأخر 6 أيام</span></div>
+            </div>
+
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">شهادة المؤهل العلمي</span><button class="dcard-btn up">رفع</button></div>
+              <div class="dcard-meta"><span class="src own">إلزامي من المسمى الوظيفي — مصمم جرافيك</span> <span class="due">مطلوب خلال 4 أيام</span></div>
+            </div>
+
+            <div style="font-size:11px;color:var(--caption);margin:12px 0 7px">اختيارية — لا تُحتسب ناقصة</div>
+
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">صورة شخصية حديثة</span><button class="dcard-btn up" style="background:var(--line2);color:var(--fg)">رفع</button></div>
+              <div class="dcard-meta"><span class="src ovr">اختياري من مستوى الشركة</span></div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="col-h">منتهية الصلاحية <span class="col-c">2</span></div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">رخصة القيادة</span><button class="dcard-btn rn">تجديد</button></div>
+              <div class="dcard-meta"><span class="src inh">إلزامي من مستوى الشركة</span> <span class="late">انتهت 20 أغسطس 2026</span></div>
+            </div>
+            <div class="dcard">
+              <div class="dcard-top"><span class="dcard-n">شهادة الميلاد</span><button class="dcard-btn rn">تجديد</button></div>
+              <div class="dcard-meta"><span class="src inh">إلزامي من مستوى الشركة</span> <span class="due">تنتهي بعد 12 يوماً</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="sec">
+    <div class="sec-n">الشاشة ٦</div>
+    <div class="sec-t">الأثر على بطاقة لوحة التحكم</div>
+    <div class="sec-d">مكانها: لوحة التحكم ← بطاقة «حالة مستندات الموظفين»</div>
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="note-t">التعديل المطلوب</div>
+        <ul>
+          <li><span class="tag mod">تعديل</span> الأرقام اليوم صمّاء (52 · 10 · 5) — تصير قابلة للضغط تفتح قائمة الموظفين المعنيين</li>
+          <li><span class="tag add">إضافة</span> فصل «داخل المهلة» عن «متأخر» — الخلط بينهما يجعل الرقم مخيفاً بلا سبب بعد كل تعديل على الإعدادات</li>
+          <li><span class="tag add">إضافة</span> سطر يربط القفزة بسببها: «ارتفع 31 بسبب تعديل مستندات فرع القاهرة» — وإلا بدا الرقم عطلاً في النظام</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span class="card-t">حالة مستندات الموظفين <span>· جميع الفروع</span></span></div>
+      <div class="card-b">
+        <div class="stats">
+          <div class="stat"><div class="stat-v">52</div><div class="stat-k">مستند مرفوع</div></div>
+          <div class="stat warn"><div class="stat-v">10</div><div class="stat-k">منتهي الصلاحية</div></div>
+          <div class="stat warn"><div class="stat-v">31</div><div class="stat-k">مطلوب — داخل المهلة</div></div>
+          <div class="stat bad"><div class="stat-v">5</div><div class="stat-k">متأخر عن المهلة</div></div>
+        </div>
+        <div class="rule">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div>ارتفع «المطلوب» بمقدار 31 بعد إضافة <b>تصريح العمل</b> إلى مستندات فرع القاهرة اليوم — المهلة تنتهي في 12 سبتمبر 2026.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

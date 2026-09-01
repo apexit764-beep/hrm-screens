@@ -1,0 +1,1717 @@
+<title>فحص السير الذاتية وفلاتر التوظيف</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Inter:wght@400;500;600&display=swap">
+
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+<style>
+  :root {
+    --bg-page: #f6f5f2;
+    --bg-card: #ffffff;
+    --bg-inset: #f0efec;
+    --text-h: #1a1a1a;
+    --text-body: #3d3b37;
+    --text-muted: #8a8780;
+    --text-caption: #a5a29c;
+    --border-light: #e4e2dd;
+    --border-mid: #d1cfca;
+    --accent: #2563eb;
+    --accent-bg: #eff4ff;
+    --accent-text: #1e40af;
+    --green: #16a34a;
+    --green-bg: #ecfdf5;
+    --green-text: #166534;
+    --amber: #d97706;
+    --amber-bg: #fffbeb;
+    --amber-text: #92400e;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --red-text: #991b1b;
+    --purple-bg: #f3f0ff;
+    --purple-text: #5b21b6;
+    --pink-bg: #fdf2f8;
+    --pink-text: #9d174d;
+    --coral-bg: #fff7ed;
+    --coral-text: #9a3412;
+    --toggle-on: #2563eb;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03);
+    --font-ar: 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+    --font-en: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 100px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-page: #141312;
+      --bg-card: #1e1d1b;
+      --bg-inset: #272624;
+      --text-h: #f0efec;
+      --text-body: #c9c7c2;
+      --text-muted: #7a7872;
+      --text-caption: #5c5a56;
+      --border-light: #2e2d2a;
+      --border-mid: #3a3935;
+      --accent: #5b8def;
+      --accent-bg: #1a2744;
+      --accent-text: #93b4f5;
+      --green: #34d369;
+      --green-bg: #0f2a1a;
+      --green-text: #6ee7a0;
+      --amber: #f59e0b;
+      --amber-bg: #2a1f0a;
+      --amber-text: #fbbf24;
+      --red: #ef4444;
+      --red-bg: #2a1212;
+      --red-text: #fca5a5;
+      --purple-bg: #1f1a2e;
+      --purple-text: #c4b5fd;
+      --pink-bg: #2a1520;
+      --pink-text: #f9a8d4;
+      --coral-bg: #2a1a0f;
+      --coral-text: #fdba74;
+      --toggle-on: #5b8def;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-page: #141312;
+    --bg-card: #1e1d1b;
+    --bg-inset: #272624;
+    --text-h: #f0efec;
+    --text-body: #c9c7c2;
+    --text-muted: #7a7872;
+    --text-caption: #5c5a56;
+    --border-light: #2e2d2a;
+    --border-mid: #3a3935;
+    --accent: #5b8def;
+    --accent-bg: #1a2744;
+    --accent-text: #93b4f5;
+    --green: #34d369;
+    --green-bg: #0f2a1a;
+    --green-text: #6ee7a0;
+    --amber: #f59e0b;
+    --amber-bg: #2a1f0a;
+    --amber-text: #fbbf24;
+    --red: #ef4444;
+    --red-bg: #2a1212;
+    --red-text: #fca5a5;
+    --purple-bg: #1f1a2e;
+    --purple-text: #c4b5fd;
+    --pink-bg: #2a1520;
+    --pink-text: #f9a8d4;
+    --coral-bg: #2a1a0f;
+    --coral-text: #fdba74;
+    --toggle-on: #5b8def;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.04);
+  }
+
+  body {
+    background: var(--bg-page);
+    color: var(--text-body);
+    direction: rtl;
+    font-family: var(--font-ar);
+    margin: 0;
+    padding: 2rem 1.5rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+  .page-header h1 {
+    font-family: var(--font-ar);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-h);
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .section {
+    margin-bottom: 3rem;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: var(--accent-text);
+    background: var(--accent-bg);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--font-ar);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-h);
+    margin: 0 0 6px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+  }
+
+  /* What has to be built, stated next to the screen that shows it */
+  .note {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-inset);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md, 10px);
+    padding: 12px 14px;
+    margin: 0 0 16px;
+  }
+  .note-ico { flex: none; width: 17px; height: 17px; color: var(--accent-text); margin-top: 2px; }
+  .note-t { font-size: 12.5px; font-weight: 600; color: var(--text-h); margin: 0 0 6px; }
+  .note ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .note li { font-size: 12.5px; color: var(--text-body); line-height: 1.7; }
+  .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 600; border-radius: 999px;
+    padding: 1px 8px; margin-inline-end: 6px; vertical-align: 1px;
+  }
+  .tag.add { background: var(--green-bg); color: var(--green-text); }
+  .tag.mod { background: var(--amber-bg); color: var(--amber-text); }
+  .legend { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); margin-top: 10px; }
+  .legend .badge-new {
+    font-size: 10px; font-weight: 600; background: var(--accent); color: #fff;
+    border-radius: 999px; padding: 1px 7px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .tabs-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border-light);
+    padding: 0 20px;
+  }
+  .tab {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-family: var(--font-ar);
+    white-space: nowrap;
+  }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 500;
+  }
+
+  .card-body {
+    padding: 20px 24px;
+  }
+
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+  }
+  .toggle-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-h);
+    margin: 0;
+  }
+  .toggle-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 3px 0 0;
+  }
+  .toggle-switch {
+    width: 42px;
+    height: 24px;
+    background: var(--toggle-on);
+    border-radius: 12px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .toggle-switch .knob {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  }
+
+  .range-group {
+    margin-bottom: 20px;
+  }
+  .range-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .range-row input[type="range"] {
+    flex: 1;
+    height: 4px;
+    appearance: none;
+    background: var(--border-light);
+    border-radius: 2px;
+    outline: none;
+  }
+  .range-row input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .range-val {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-h);
+    min-width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .range-hint {
+    font-size: 11px;
+    color: var(--text-caption);
+    margin: 4px 0 0;
+  }
+
+  .weights-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-h);
+    margin: 0 0 12px;
+  }
+  .weights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .weight-card {
+    padding: 14px;
+    background: var(--bg-inset);
+    border-radius: var(--radius-md);
+  }
+  .weight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .weight-name {
+    font-size: 13px;
+    color: var(--text-body);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .weight-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .weight-pct {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .weight-card input[type="range"] {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: var(--border-light);
+    border-radius: 2px;
+    outline: none;
+  }
+  .weight-card input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+
+  .btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .btn {
+    padding: 8px 20px;
+    font-size: 13px;
+    font-family: var(--font-ar);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    border: 1px solid var(--border-mid);
+    background: var(--bg-card);
+    color: var(--text-body);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* Filters */
+  .filters-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    align-items: center;
+  }
+  .filter-chip {
+    padding: 6px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    background: var(--bg-card);
+    font-family: var(--font-ar);
+  }
+  .filter-chip.new {
+    border-color: var(--accent);
+    color: var(--accent-text);
+    background: var(--accent-bg);
+  }
+  .filter-chip .badge-new {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: normal;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: var(--radius-pill);
+    line-height: 1.4;
+  }
+  .filter-chip svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .chevron {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Table */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .tbl th {
+    text-align: right;
+    padding: 10px 14px;
+    font-weight: 500;
+    color: var(--text-caption);
+    font-size: 11.5px;
+    letter-spacing: normal;
+    border-bottom: 1px solid var(--border-light);
+    white-space: nowrap;
+  }
+  .tbl th.center { text-align: center; }
+  .tbl td {
+    padding: 12px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-body);
+    vertical-align: middle;
+  }
+  .tbl td.center { text-align: center; }
+  .tbl tr:last-child td { border-bottom: none; }
+
+  .candidate-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: var(--font-ar);
+  }
+  .candidate-name {
+    font-weight: 500;
+    color: var(--text-h);
+    font-family: var(--font-ar);
+    font-size: 13px;
+  }
+  .candidate-email {
+    font-size: 11px;
+    color: var(--text-caption);
+    margin-top: 1px;
+  }
+
+  .score-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-high { background: var(--green-bg); color: var(--green-text); }
+  .score-mid  { background: var(--amber-bg); color: var(--amber-text); }
+  .score-low  { background: var(--red-bg);   color: var(--red-text); }
+
+  .ar { font-family: var(--font-ar); }
+
+  .action-btns {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  .action-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    font-family: var(--font-ar);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 500;
+    border: 1px solid var(--border-light);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .action-btn.advance {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+  .action-btn.reject {
+    background: var(--red-bg);
+    color: var(--red-text);
+    border-color: transparent;
+  }
+
+  /* Popup */
+  .popup-backdrop {
+    min-height: 420px;
+    background: var(--bg-inset);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--border-mid);
+  }
+  .popup-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    width: 380px;
+    padding: 20px 24px;
+  }
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .popup-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-h);
+  }
+  .popup-close {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-caption);
+    background: var(--bg-inset);
+  }
+  .score-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 6px;
+  }
+  .score-ring-val {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--green-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .score-ring-label {
+    font-size: 12px;
+    color: var(--green);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .criteria-row {
+    margin-bottom: 12px;
+  }
+  .criteria-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  .criteria-name { color: var(--text-muted); }
+  .criteria-pct { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .bar-track {
+    height: 5px;
+    background: var(--bg-inset);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+
+  .skills-section {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-light);
+  }
+  .skills-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-caption);
+    margin: 0 0 8px;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .skill-tag {
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .skill-match { background: var(--green-bg); color: var(--green-text); }
+  .skill-miss  { background: var(--red-bg);   color: var(--red-text); }
+
+  /* Requirement chips the recruiter edits per job */
+  .field-lbl { font-size: 12.5px; font-weight: 600; color: var(--text-h); margin: 0 0 7px; }
+  .field-hint { font-size: 11.5px; color: var(--text-muted); margin: 6px 0 0; }
+  .field-grp { margin-bottom: 18px; }
+  .chip-in {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+    background: var(--bg-card); padding: 8px 10px; min-height: 40px;
+  }
+  .chip-in.req { border-color: var(--accent); }
+  .req-chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px;
+    border-radius: var(--radius-pill); padding: 3px 10px;
+    background: var(--accent-bg); color: var(--accent-text);
+  }
+  .req-chip.opt { background: var(--bg-inset); color: var(--text-muted); }
+  .req-chip .x { cursor: pointer; opacity: .6; font-size: 13px; line-height: 1; }
+  .chip-in input { border: none; outline: none; background: transparent; font-family: var(--font-ar); font-size: 12.5px; color: var(--text-body); flex: 1; min-width: 90px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px) { .two-col { grid-template-columns: 1fr; } }
+  .sel {
+    width: 100%; padding: 8px 11px; font-family: var(--font-ar); font-size: 12.5px;
+    border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+    background: var(--bg-card); color: var(--text-body);
+  }
+
+  /* A banner for consequences the recruiter must act on */
+  .alert {
+    display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px;
+    border-radius: var(--radius-md); font-size: 12.5px; margin-bottom: 14px;
+  }
+  .alert svg { flex: none; width: 17px; height: 17px; margin-top: 2px; }
+  .alert.warn { background: var(--amber-bg); color: var(--amber-text); }
+  .alert.info { background: var(--accent-bg); color: var(--accent-text); }
+  .alert-t { font-weight: 600; }
+  .alert-btn {
+    margin-inline-start: auto; flex: none; font-family: var(--font-ar); font-size: 12px; font-weight: 500;
+    padding: 5px 12px; border-radius: var(--radius-sm); cursor: pointer;
+    border: 1px solid currentColor; background: transparent; color: inherit;
+  }
+
+  /* Screening state, for rows that have no score yet */
+  .state {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px;
+    border-radius: var(--radius-pill); padding: 3px 10px; white-space: nowrap;
+  }
+  .state.run { background: var(--accent-bg); color: var(--accent-text); }
+  .state.fail { background: var(--red-bg); color: var(--red-text); }
+  .state.skip { background: var(--bg-inset); color: var(--text-muted); }
+  .state .spin {
+    width: 9px; height: 9px; border-radius: 50%; border: 1.6px solid currentColor;
+    border-top-color: transparent; animation: sp .8s linear infinite;
+  }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  .stale { font-size: 10.5px; color: var(--amber-text); display: block; margin-top: 3px; }
+
+  /* Review actions inside the breakdown popup */
+  .pop-tools { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-light); }
+  .tool-btn {
+    display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ar); font-size: 12px;
+    padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer;
+    border: 1px solid var(--border-mid); background: var(--bg-card); color: var(--text-body);
+  }
+  .tool-btn svg { width: 13px; height: 13px; }
+  .skill-tag .fix { cursor: pointer; margin-inline-start: 5px; font-weight: 700; opacity: .75; }
+  .log { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+  .log-row { display: flex; gap: 8px; font-size: 11.5px; color: var(--text-muted); padding: 4px 0; }
+  .log-row b { color: var(--text-body); font-weight: 600; }
+  .manual {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11px;
+    background: var(--amber-bg); color: var(--amber-text); border-radius: var(--radius-pill); padding: 2px 9px;
+  }
+
+  /* The toolbar the product actually has: jobs select, search, view switch, filter panel */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
+  .tb-sel, .tb-search {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted);
+    border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 8px 12px; background: var(--bg-card);
+  }
+  .tb-sel { min-width: 170px; justify-content: space-between; }
+  .tb-search { min-width: 210px; }
+  .tb-search svg, .tb-sel svg { width: 14px; height: 14px; flex: none; }
+  .tb-spacer { flex: 1; }
+  .viewtog { display: inline-flex; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); overflow: hidden; }
+  .viewtog span { padding: 7px 10px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+  .viewtog span.on { background: var(--bg-inset); color: var(--text-h); }
+  .viewtog svg { width: 15px; height: 15px; }
+  .tb-btn {
+    display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 500;
+    border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 8px 13px;
+    background: var(--bg-card); color: var(--text-body);
+  }
+  .tb-btn svg { width: 14px; height: 14px; }
+  .tb-btn.solid { background: var(--text-h); border-color: var(--text-h); color: var(--bg-card); }
+  .fpanel { padding: 14px 18px; border-bottom: 1px solid var(--border-light); background: var(--bg-inset); }
+  .fpanel-t { font-size: 11.5px; color: var(--text-muted); margin: 0 0 9px; }
+  .fpanel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 9px; }
+  .fitem {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: var(--bg-card); border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+    padding: 8px 11px; font-size: 12.5px; color: var(--text-muted);
+  }
+  .fitem.new { border-color: var(--accent); color: var(--accent-text); }
+  .fitem .badge-new { font-size: 10px; font-weight: 600; background: var(--accent); color: #fff; border-radius: var(--radius-pill); padding: 1px 7px; }
+  .ai-dot { color: var(--accent); font-size: 11px; margin-inline-start: 4px; }
+  .cbx { width: 14px; height: 14px; border: 1.5px solid var(--border-mid); border-radius: 3px; display: inline-block; vertical-align: -2px; }
+  .cbx.on { background: var(--accent); border-color: var(--accent); }
+  .job-code { font-size: 11px; color: var(--accent-text); direction: ltr; display: block; }
+  .contact-cell { font-size: 11.5px; color: var(--text-muted); direction: ltr; text-align: right; }
+  .st-pill { display: inline-block; font-size: 11px; border-radius: var(--radius-pill); padding: 2px 9px; background: var(--bg-inset); color: var(--text-muted); white-space: nowrap; }
+
+  /* Ranked shortlist */
+  .rank-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
+  .rank-top .tb-spacer { flex: 1; }
+  .rank-meta { font-size: 11.5px; color: var(--text-muted); }
+  .rank-card { border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px; background: var(--bg-card); }
+  .rank-card.top { border-color: var(--accent); }
+  .rank-card.out { background: var(--bg-inset); }
+  .rank-head { display: flex; align-items: center; gap: 11px; }
+  .rank-no {
+    flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; background: var(--bg-inset); color: var(--text-muted);
+  }
+  .rank-card.top .rank-no { background: var(--accent); color: #fff; }
+  .rank-id { flex: 1; min-width: 0; }
+  .rank-name { font-size: 14px; font-weight: 600; color: var(--text-h); }
+  .rank-sub { font-size: 11.5px; color: var(--text-muted); }
+  .rank-score { text-align: center; flex: none; }
+  .rank-verdict { display: block; font-size: 10.5px; color: var(--text-muted); margin-top: 3px; }
+  .rank-why { font-size: 12.5px; color: var(--text-body); margin: 11px 0 0; line-height: 1.75; }
+  .rank-why b { color: var(--text-h); }
+  .mini-bars { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 16px; margin-top: 11px; }
+  .mini { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-muted); }
+  .mini-k { flex: none; width: 62px; }
+  .mini-t { flex: 1; height: 5px; border-radius: 100px; background: var(--bg-inset); overflow: hidden; }
+  .mini-f { height: 100%; border-radius: 100px; }
+  .mini-v { flex: none; width: 32px; text-align: left; font-variant-numeric: tabular-nums; }
+  .pts { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
+  .pt { font-size: 11px; border-radius: var(--radius-pill); padding: 2px 9px; }
+  .pt.good { background: var(--green-bg); color: var(--green-text); }
+  .pt.bad { background: var(--red-bg); color: var(--red-text); }
+  .rank-acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border-light); }
+  .why-box { background: var(--bg-inset); border-radius: var(--radius-md); padding: 13px 15px; margin-top: 4px; }
+  .why-t { font-size: 12.5px; font-weight: 600; color: var(--text-h); margin: 0 0 7px; }
+  .why-box ol { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 5px; }
+  .why-box li { font-size: 12px; color: var(--text-body); line-height: 1.7; }
+
+  .divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 2.5rem 0;
+  }
+
+  @media (max-width: 680px) {
+    body { padding: 1.5rem 1rem; }
+    .weights-grid { grid-template-columns: 1fr; }
+    .popup-card { width: 100%; }
+    .filters-bar { padding: 12px 14px; }
+    .tbl { font-size: 12px; }
+    .tbl th, .tbl td { padding: 8px 8px; }
+  }
+
+  /* Nav bar */
+  .nav-bar {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; background: var(--bg-card);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-card);
+  }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-link {
+    padding: 7px 14px; border-radius: var(--radius-sm);
+    font-size: 13px; font-family: var(--font-ar); font-weight: 400;
+    border: none; cursor: pointer; text-decoration: none;
+    background: transparent; color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-link:hover { background: var(--bg-inset); color: var(--text-h); }
+  .nav-link.active { background: var(--accent); color: #fff; font-weight: 500; }
+  .theme-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light); background: var(--bg-card);
+    font-size: 13px; font-family: var(--font-ar); color: var(--text-body);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .theme-toggle:hover { background: var(--bg-inset); }
+  .theme-toggle svg { width: 16px; height: 16px; }
+</style>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <div class="nav-links">
+    <a href="candidates-kanban.html" class="nav-link">مراحل المرشحين</a>
+    <a href="company-settings.html" class="nav-link">إعدادات الشركة</a>
+    <a href="ai-settings.html" class="nav-link">إعدادات الذكاء الاصطناعي</a>
+    <a href="index.html" class="nav-link active">فحص السير الذاتية</a>
+    <a href="training.html" class="nav-link">التدريب والتطوير</a>
+    <a href="tokens.html" class="nav-link">Design Tokens</a>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span id="theme-label">Light</span>
+  </button>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <h1>تحسينات وحدة التوظيف</h1>
+    <p>فحص السير الذاتية آلياً، وفلاتر أوسع للمرشحين والوظائف</p>
+    <div class="legend"><span class="badge-new">جديد</span> يشير إلى عنصر يُضاف الآن — وما عداه قائم في النظام</div>
+  </div>
+
+  <!-- SECTION 1: ATS Settings -->
+  <div class="section">
+    <div class="section-label">الشاشة ١</div>
+    <div class="section-title">إعدادات الفرز الآلي للسير الذاتية</div>
+    <div class="section-desc">مكانها: الإعدادات ← التوظيف ← تبويب جديد باسم «إعدادات الفرز الآلي»</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> تبويب ثالث في إعدادات التوظيف، بجانب «قوالب أسئلة الوظائف» و«قوالب مراحل التوظيف»</li>
+          <li><span class="tag add">إضافة</span> مفتاح تشغيل الفرز الآلي — عند إطفائه تبقى السير الذاتية تُرفع بلا تحليل</li>
+          <li><span class="tag add">إضافة</span> حدّ أدنى لنسبة المطابقة، ومن دونه يُوسَم المرشح للمراجعة اليدوية بدل استبعاده</li>
+          <li><span class="tag add">إضافة</span> أوزان المعايير الأربعة — يجب أن يكون مجموعها 100% وإلا يُمنع الحفظ</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tabs-bar">
+        <div class="tab">قوالب أسئلة الوظائف</div>
+        <div class="tab">قوالب مراحل التوظيف</div>
+        <div class="tab active">إعدادات الفرز الآلي</div>
+      </div>
+      <div class="card-body">
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-label">الفرز الآلي للسير الذاتية</p>
+            <p class="toggle-sub">تحليل كل سيرة ذاتية تُرفع ومطابقتها بمتطلبات الوظيفة تلقائياً</p>
+          </div>
+          <div class="toggle-switch"><div class="knob"></div></div>
+        </div>
+
+        <div class="range-group">
+          <label>الحدّ الأدنى لنسبة المطابقة</label>
+          <div class="range-row">
+            <input type="range" min="0" max="100" value="70">
+            <span class="range-val">70%</span>
+          </div>
+          <p class="range-hint">المرشحون دون هذه النسبة يُوسَمون للمراجعة اليدوية</p>
+        </div>
+
+        <p class="weights-title">أوزان معايير الفرز</p>
+        <div class="weights-grid">
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name">
+                <span class="weight-icon" style="background: var(--amber-bg); color: var(--amber-text);">&#9733;</span>
+                المهارات
+              </span>
+              <span class="weight-pct">40%</span>
+            </div>
+            <input type="range" min="0" max="100" value="40">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name">
+                <span class="weight-icon" style="background: var(--purple-bg); color: var(--purple-text);">&#9881;</span>
+                الخبرة العملية
+              </span>
+              <span class="weight-pct">30%</span>
+            </div>
+            <input type="range" min="0" max="100" value="30">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name">
+                <span class="weight-icon" style="background: var(--green-bg); color: var(--green-text);">&#127891;</span>
+                المؤهل العلمي
+              </span>
+              <span class="weight-pct">20%</span>
+            </div>
+            <input type="range" min="0" max="100" value="20">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name">
+                <span class="weight-icon" style="background: var(--coral-bg); color: var(--coral-text);">&#127760;</span>
+                اللغات
+              </span>
+              <span class="weight-pct">10%</span>
+            </div>
+            <input type="range" min="0" max="100" value="10">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">إلغاء</button>
+          <button class="btn btn-primary">حفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: Candidates with ATS Score -->
+  <div class="section">
+    <div class="section-label">الشاشة ٢</div>
+    <div class="section-title">جدول المرشحين مع نسبة المطابقة</div>
+    <div class="section-desc">مكانها: التوظيف ← المرشحون — نفس الجدول الحالي</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> عمود واحد فقط — «نسبة المطابقة» بين «الوظيفة» و«سنوات الخبرة». بقية الأعمدة العشرة كما هي في النظام اليوم</li>
+          <li><span class="tag add">إضافة</span> ألوان النسبة: أخضر ٧٥%+ · أصفر ٤٠–٧٤% · أحمر أقل من ٤٠%</li>
+          <li><span class="tag add">إضافة</span> ثلاثة فلاتر <b>داخل لوحة الفلاتر القائمة</b> بجانب «حالة المرشح» و«تاريخ التقديم»: القسم · نسبة المطابقة · نطاق الراتب</li>
+          <li><span class="tag mod">تعديل</span> أيقونة ✦ الموجودة بجانب اسم المرشح تفتح تفصيل المطابقة — لا نضيف مؤشر ذكاء ثانياً</li>
+          <li><span class="tag mod">تعديل</span> الإجراء الأول يتبع النسبة — «ترقية» للمطابقة العالية و«استبعاد» لما دون الحدّ الأدنى</li>
+          <li><span class="tag mod">تعديل</span> الترتيب الافتراضي يصير بنسبة المطابقة تنازلياً بدل تاريخ التقديم</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="toolbar">
+        <span class="tb-sel">جميع الوظائف <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></span>
+        <span class="tb-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> البحث في المرشحين</span>
+        <span class="tb-spacer"></span>
+        <span class="viewtog">
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+        </span>
+        <span class="tb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> التصفية السريعة</span>
+        <span class="tb-btn solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></span>
+      </div>
+      <div class="fpanel">
+        <p class="fpanel-t">لوحة الفلاتر القائمة — الجديد يُضاف داخلها، لا في شريط منفصل</p>
+        <div class="fpanel-grid">
+          <span class="fitem">حالة المرشح <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></span>
+          <span class="fitem">تاريخ التقديم <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></span>
+          <span class="fitem new">القسم <span class="badge-new">جديد</span></span>
+          <span class="fitem new">نسبة المطابقة <span class="badge-new">جديد</span></span>
+          <span class="fitem new">نطاق الراتب <span class="badge-new">جديد</span></span>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 34px;"><span class="cbx"></span></th>
+              <th>اسم المرشح</th>
+              <th>الوظيفة</th>
+              <th class="center" style="color: var(--accent-text);">نسبة المطابقة <span class="badge-new" style="background: var(--accent); color: #fff; border-radius: 100px; padding: 1px 7px; font-size: 10px;">جديد</span></th>
+              <th>سنوات الخبرة</th>
+              <th>الراتب المتوقع</th>
+              <th>التواصل</th>
+              <th>تاريخ التقديم</th>
+              <th>حالة المرشح</th>
+              <th class="center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">سارة أحمد<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--accent-bg); color: var(--accent-text);">سأ</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم واجهة المستخدم UXUI<span class="job-code">JOB-202510</span></td>
+              <td class="center"><span class="score-badge score-high">92%</span></td>
+              <td class="ar" style="color: var(--text-muted);">3-5 سنوات</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">8,000 SAR</td>
+              <td class="contact-cell">s.ahmed@gmail.com<br>+966 5522 4212</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">15 سبتمبر 2025 | 08:15 ص</td>
+              <td><span class="st-pill">مقابلة فنية</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn advance">ترقية</button><button class="action-btn">عرض</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">خالد منصور<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--purple-bg); color: var(--purple-text);">خم</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم جرافيك<span class="job-code">JOB-202512</span></td>
+              <td class="center"><span class="score-badge score-high">78%</span></td>
+              <td class="ar" style="color: var(--text-muted);">2-3 سنوات</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">5,500 SAR</td>
+              <td class="contact-cell">k.mansour@gmail.com<br>+966 5533 1180</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">15 سبتمبر 2025 | 09:40 ص</td>
+              <td><span class="st-pill">مقابلة موارد بشرية</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn advance">ترقية</button><button class="action-btn">عرض</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">محمد عبدالله<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--amber-bg); color: var(--amber-text);">مع</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم واجهة المستخدم UXUI<span class="job-code">JOB-202510</span></td>
+              <td class="center"><span class="score-badge score-mid">58%</span></td>
+              <td class="ar" style="color: var(--text-muted);">سنة – سنتان</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">4,000 SAR</td>
+              <td class="contact-cell">m.abdullah@gmail.com<br>+966 5501 7734</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">14 سبتمبر 2025 | 04:02 م</td>
+              <td><span class="st-pill">جديد</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn advance">ترقية</button><button class="action-btn">عرض</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">نورة الحربي<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--pink-bg); color: var(--pink-text);">نح</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم جرافيك<span class="job-code">JOB-202512</span></td>
+              <td class="center"><span class="score-badge score-low">35%</span></td>
+              <td class="ar" style="color: var(--text-muted);">أقل من سنة</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">3,000 SAR</td>
+              <td class="contact-cell">n.harbi@gmail.com<br>+966 5590 2245</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">14 سبتمبر 2025 | 11:26 ص</td>
+              <td><span class="st-pill">جديد</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn reject">استبعاد</button><button class="action-btn">عرض</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: ATS Detail Popup -->
+  <div class="section">
+    <div class="section-label">الشاشة ٣</div>
+    <div class="section-title">نافذة تفصيل نسبة المطابقة</div>
+    <div class="section-desc">تُفتح من جدول المرشحين بالضغط على النسبة نفسها</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> نافذة تشرح <b>سبب</b> النسبة — لا تُعرض نسبة مجرّدة بلا تفسير</li>
+          <li><span class="tag add">إضافة</span> تفصيل لكل معيار من المعايير الأربعة بنفس أوزانها في الإعدادات</li>
+          <li><span class="tag add">إضافة</span> المهارات المطابقة والمهارات الناقصة، مأخوذة من متطلبات الوظيفة نفسها</li>
+          <li><span class="tag mod">تعديل</span> النسبة في الجدول تصير قابلة للضغط، لا مجرد وسم ملوّن</li>
+        </ul>
+      </div>
+    </div>
+    <div class="popup-backdrop">
+      <div class="popup-card">
+        <div class="popup-header">
+          <span class="popup-title ar">تحليل المطابقة — سارة أحمد</span>
+          <div class="popup-close">&times;</div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div class="score-ring">
+            <span class="score-ring-val">92%</span>
+          </div>
+          <div class="score-ring-label">مطابقة ممتازة</div>
+        </div>
+
+        <div class="criteria-row">
+          <div class="criteria-header">
+            <span class="criteria-name">المهارات</span>
+            <span class="criteria-pct" style="color: var(--green-text);">95%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: 95%; background: var(--green);"></div></div>
+        </div>
+        <div class="criteria-row">
+          <div class="criteria-header">
+            <span class="criteria-name">الخبرة العملية</span>
+            <span class="criteria-pct" style="color: var(--green-text);">90%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: 90%; background: var(--green);"></div></div>
+        </div>
+        <div class="criteria-row">
+          <div class="criteria-header">
+            <span class="criteria-name">المؤهل العلمي</span>
+            <span class="criteria-pct" style="color: var(--green-text);">88%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: 88%; background: var(--green);"></div></div>
+        </div>
+        <div class="criteria-row">
+          <div class="criteria-header">
+            <span class="criteria-name">اللغات</span>
+            <span class="criteria-pct" style="color: var(--amber-text);">70%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: 70%; background: var(--amber);"></div></div>
+        </div>
+
+        <div class="skills-section">
+          <p class="skills-label">مهارات مطابقة</p>
+          <div class="skill-tags">
+            <span class="skill-tag skill-match">Figma</span>
+            <span class="skill-tag skill-match">Adobe XD</span>
+            <span class="skill-tag skill-match">النمذجة التفاعلية</span>
+            <span class="skill-tag skill-match">بحث المستخدم</span>
+          </div>
+          <p class="skills-label">مهارات ناقصة</p>
+          <div class="skill-tags">
+            <span class="skill-tag skill-miss">تصميم الموشن</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: Jobs Filters -->
+  <div class="section">
+    <div class="section-label">الشاشة ٤</div>
+    <div class="section-title">فلاتر الوظائف الموسّعة</div>
+    <div class="section-desc">مكانها: التوظيف ← الوظائف — شريط الفلاتر أعلى القائمة</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> أربعة فلاتر: القسم · حالة الوظيفة · نطاق الراتب · عدد المرشحين</li>
+          <li><span class="tag mod">تعديل</span> «إعادة تعيين» تظهر فقط عند وجود فلتر مفعّل</li>
+          <li><span class="tag mod">تعديل</span> تُحفظ آخر فلاتر استخدمها المستخدم وتُستعاد عند عودته للصفحة</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="filters-bar">
+        <div class="filter-chip">تاريخ النشر <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></div>
+        <div class="filter-chip">الفرع <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></div>
+        <div class="filter-chip">نوع العقد <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></div>
+        <div class="filter-chip">تاريخ التعيين <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></div>
+        <div class="filter-chip new">القسم <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> <span class="badge-new">جديد</span></div>
+        <div class="filter-chip new">حالة الوظيفة <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> <span class="badge-new">جديد</span></div>
+        <div class="filter-chip new">نطاق الراتب <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> <span class="badge-new">جديد</span></div>
+        <div class="filter-chip new">عدد المرشحين <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> <span class="badge-new">جديد</span></div>
+        <div class="filter-chip">آخر موعد للتقديم <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></div>
+        <button class="btn" style="padding: 5px 12px; color: var(--red-text); border-color: transparent; font-size: 12px;">إعادة تعيين</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5: Screening requirements on the job itself -->
+  <div class="section">
+    <div class="section-label">الشاشة ٥</div>
+    <div class="section-title">متطلبات الفرز داخل الوظيفة</div>
+    <div class="section-desc">مكانها: التوظيف ← الوظائف ← فتح وظيفة ← تبويب جديد باسم «متطلبات الفرز»</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب — وهي أهم قطعة ناقصة</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> الأوزان في الإعدادات تحدد <b>كم يزن</b> كل معيار، وهذه الشاشة تحدد <b>ما</b> يُقارن به. بدونها الفحص بلا مرجع</li>
+          <li><span class="tag add">إضافة</span> فصل المهارات الإلزامية عن المفضّلة — الإلزامية غيابها يخفض النسبة بشدة، والمفضّلة تزيدها ولا تُسقطها</li>
+          <li><span class="tag add">إضافة</span> تجاوز الأوزان لهذه الوظيفة وحدها — وظيفة مصمم تزن المهارات أعلى، ووظيفة محاسب تزن المؤهل أعلى</li>
+          <li><span class="tag mod">تعديل</span> أي حفظ هنا يجعل نسب المرشحين الحاليين محسوبة على معايير قديمة — فيظهر تنبيه إعادة الفحص في الشاشة التالية</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tabs-bar">
+        <div class="tab">تفاصيل الوظيفة</div>
+        <div class="tab">أسئلة التقديم</div>
+        <div class="tab active">متطلبات الفرز</div>
+      </div>
+      <div class="card-body">
+        <div class="field-grp">
+          <p class="field-lbl">المهارات الإلزامية</p>
+          <div class="chip-in req">
+            <span class="req-chip">Figma <span class="x">&times;</span></span>
+            <span class="req-chip">تصميم واجهات <span class="x">&times;</span></span>
+            <span class="req-chip">أنظمة تصميم <span class="x">&times;</span></span>
+            <input placeholder="اكتب مهارة واضغط Enter">
+          </div>
+          <p class="field-hint">غياب المهارة الإلزامية يخفض نسبة المطابقة بشدة</p>
+        </div>
+
+        <div class="field-grp">
+          <p class="field-lbl">المهارات المفضّلة</p>
+          <div class="chip-in">
+            <span class="req-chip opt">تصميم الموشن <span class="x">&times;</span></span>
+            <span class="req-chip opt">بحث المستخدم <span class="x">&times;</span></span>
+            <input placeholder="اكتب مهارة واضغط Enter">
+          </div>
+          <p class="field-hint">وجودها يرفع النسبة، وغيابها لا يستبعد المرشح</p>
+        </div>
+
+        <div class="two-col">
+          <div class="field-grp">
+            <p class="field-lbl">سنوات الخبرة المطلوبة</p>
+            <select class="sel"><option>سنة – 3 سنوات</option><option selected>3 – 5 سنوات</option><option>أكثر من 5 سنوات</option></select>
+          </div>
+          <div class="field-grp">
+            <p class="field-lbl">المؤهل العلمي</p>
+            <select class="sel"><option>ثانوية عامة</option><option selected>بكالوريوس</option><option>ماجستير فأعلى</option></select>
+          </div>
+          <div class="field-grp">
+            <p class="field-lbl">اللغات</p>
+            <select class="sel"><option selected>العربية والإنجليزية</option><option>العربية فقط</option></select>
+          </div>
+          <div class="field-grp">
+            <p class="field-lbl">الحدّ الأدنى لهذه الوظيفة</p>
+            <select class="sel"><option selected>يتبع الإعدادات العامة (70%)</option><option>حد مخصص لهذه الوظيفة</option></select>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-label">تخصيص أوزان المعايير لهذه الوظيفة</p>
+            <p class="toggle-sub">عند إطفائه تُستخدم الأوزان العامة: مهارات 40% · خبرة 30% · مؤهل 20% · لغات 10%</p>
+          </div>
+          <div class="toggle-switch"><div class="knob"></div></div>
+        </div>
+
+        <div class="weights-grid">
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name"><span class="weight-icon" style="background: var(--amber-bg); color: var(--amber-text);">&#9733;</span>المهارات</span>
+              <span class="weight-pct">60%</span>
+            </div>
+            <input type="range" min="0" max="100" value="60">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name"><span class="weight-icon" style="background: var(--purple-bg); color: var(--purple-text);">&#9881;</span>الخبرة العملية</span>
+              <span class="weight-pct">25%</span>
+            </div>
+            <input type="range" min="0" max="100" value="25">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name"><span class="weight-icon" style="background: var(--green-bg); color: var(--green-text);">&#127891;</span>المؤهل العلمي</span>
+              <span class="weight-pct">5%</span>
+            </div>
+            <input type="range" min="0" max="100" value="5">
+          </div>
+          <div class="weight-card">
+            <div class="weight-header">
+              <span class="weight-name"><span class="weight-icon" style="background: var(--coral-bg); color: var(--coral-text);">&#127760;</span>اللغات</span>
+              <span class="weight-pct">10%</span>
+            </div>
+            <input type="range" min="0" max="100" value="10">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn">إلغاء</button>
+          <button class="btn btn-primary">حفظ وإعادة فحص المرشحين</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 6: Screening states in the candidates table -->
+  <div class="section">
+    <div class="section-label">الشاشة ٦</div>
+    <div class="section-title">حالات الفحص وإعادة الفحص</div>
+    <div class="section-desc">مكانها: نفس جدول المرشحين في الشاشة ٢ — عمود نسبة المطابقة</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag mod">تعديل</span> العمود لا يعرض نسبة دائماً — الجدول في الشاشة ٢ يفترض أن لكل مرشح نتيجة، وهذا غير صحيح</li>
+          <li><span class="tag add">إضافة</span> أربع حالات: <b>قيد الفحص</b> ثوانٍ بعد التقديم · <b>تعذّر الفحص</b> لسيرة ممسوحة أو ملف تالف · <b>لم يُفحص</b> حين يكون الفرز مطفأً أو المرشح مُضافاً يدوياً بلا سيرة · ثم النسبة</li>
+          <li><span class="tag add">إضافة</span> تنبيه إعادة الفحص الجماعي بعد تغيير متطلبات الوظيفة، مع عدد المرشحين المتأثرين</li>
+          <li><span class="tag add">إضافة</span> وسم «محسوبة على متطلبات سابقة» تحت النسبة القديمة حتى تُعاد</li>
+          <li><span class="tag mod">تعديل</span> «تعذّر الفحص» لا يوقف الطلب — يبقى المرشح في القائمة للمراجعة اليدوية</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="alert warn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <span class="alert-t">تغيّرت متطلبات هذه الوظيفة.</span>
+            14 مرشحاً نسبهم محسوبة على المتطلبات السابقة — حدّدهم من عمود الاختيار أو أعد فحص الجميع.
+          </div>
+          <button class="alert-btn">إعادة فحص الجميع</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 34px;"><span class="cbx"></span></th>
+              <th>اسم المرشح</th>
+              <th>الوظيفة</th>
+              <th class="center" style="color: var(--accent-text);">نسبة المطابقة <span class="badge-new" style="background: var(--accent); color: #fff; border-radius: 100px; padding: 1px 7px; font-size: 10px;">جديد</span></th>
+              <th>سنوات الخبرة</th>
+              <th>الراتب المتوقع</th>
+              <th>التواصل</th>
+              <th>تاريخ التقديم</th>
+              <th>حالة المرشح</th>
+              <th class="center">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="cbx on"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">سارة أحمد<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--accent-bg); color: var(--accent-text);">سأ</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم واجهة المستخدم UXUI<span class="job-code">JOB-202510</span></td>
+              <td class="center"><span class="score-badge score-high">92%</span><span class="stale">محسوبة على متطلبات سابقة</span></td>
+              <td class="ar" style="color: var(--text-muted);">3-5 سنوات</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">8,000 SAR</td>
+              <td class="contact-cell">s.ahmed@gmail.com<br>+966 5522 4212</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">15 سبتمبر 2025 | 08:15 ص</td>
+              <td><span class="st-pill">مقابلة فنية</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn">إعادة فحص</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">ريم سعيد<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--purple-bg); color: var(--purple-text);">رس</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم جرافيك<span class="job-code">JOB-202512</span></td>
+              <td class="center"><span class="state run"><span class="spin"></span> قيد الفحص</span></td>
+              <td class="ar" style="color: var(--text-muted);">2-3 سنوات</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">5,000 SAR</td>
+              <td class="contact-cell">r.saeed@gmail.com<br>+966 5577 9012</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">اليوم | 10:31 ص</td>
+              <td><span class="st-pill">جديد</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn">عرض</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">يوسف إبراهيم<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--amber-bg); color: var(--amber-text);">يإ</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم واجهة المستخدم UXUI<span class="job-code">JOB-202510</span></td>
+              <td class="center"><span class="state fail">تعذّر الفحص</span></td>
+              <td class="ar" style="color: var(--text-muted);">3-5 سنوات</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">7,000 SAR</td>
+              <td class="contact-cell">y.ibrahim@gmail.com<br>+966 5544 6621</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">أمس | 02:18 م</td>
+              <td><span class="st-pill">جديد</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn">مراجعة يدوية</button><button class="action-btn">طلب ملف آخر</button></div></td>
+            </tr>
+            <tr>
+              <td><span class="cbx"></span></td>
+              <td>
+                <div class="candidate-cell">
+                  <div><div class="candidate-name">دانا فؤاد<span class="ai-dot">&#10022;</span></div></div>
+                  <div class="avatar" style="background: var(--pink-bg); color: var(--pink-text);">دف</div>
+                </div>
+              </td>
+              <td class="ar" style="color: var(--text-muted);">مصمم جرافيك<span class="job-code">JOB-202512</span></td>
+              <td class="center"><span class="state skip">لم يُفحص</span></td>
+              <td class="ar" style="color: var(--text-muted);">أقل من سنة</td>
+              <td style="color: var(--text-muted); font-variant-numeric: tabular-nums;">3,500 SAR</td>
+              <td class="contact-cell">d.fouad@gmail.com<br>+966 5512 3390</td>
+              <td style="color: var(--text-muted); font-size: 11.5px; white-space: nowrap;">12 سبتمبر 2025 | 09:05 ص</td>
+              <td><span class="st-pill">جديد</span></td>
+              <td class="center"><div class="action-btns"><button class="action-btn">إرفاق سيرة</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 7: Correcting a result -->
+  <div class="section">
+    <div class="section-label">الشاشة ٧</div>
+    <div class="section-title">مراجعة نتيجة مرشح وتصحيحها</div>
+    <div class="section-desc">مكانها: نفس نافذة الشاشة ٣ — أدوات تُضاف أسفلها</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> الذكاء يخطئ — يقرأ مهارة داخل صورة فلا يراها، أو يحسب خبرة متقطعة خطأً. فلا بد من طريق للتصحيح</li>
+          <li><span class="tag add">إضافة</span> «تعليم كمهارة موجودة» بجانب كل مهارة ناقصة — تصحيح الاستخراج يعيد الحساب فوراً</li>
+          <li><span class="tag add">إضافة</span> تعديل النسبة يدوياً <b>بسبب إلزامي</b>، وتُعرض بعدها موسومة «عُدّلت يدوياً» لا كنتيجة آلية</li>
+          <li><span class="tag add">إضافة</span> سجل يبيّن من عدّل ومتى — نسبة الفرز قرار توظيفي قد يُساءل عنه</li>
+        </ul>
+      </div>
+    </div>
+    <div class="popup-backdrop">
+      <div class="popup-card">
+        <div class="popup-header">
+          <span class="popup-title ar">تحليل المطابقة — محمد عبدالله</span>
+          <div class="popup-close">&times;</div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 14px;">
+          <div class="score-ring"><span class="score-ring-val">58%</span></div>
+          <div class="score-ring-label">مطابقة متوسطة — دون الحدّ الأدنى</div>
+          <span class="manual" style="margin-top: 8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            عُدّلت يدوياً — كانت 41%
+          </span>
+        </div>
+
+        <div class="criteria-row">
+          <div class="criteria-header"><span class="criteria-name">المهارات</span><span class="criteria-pct" style="color: var(--amber-text);">62%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 62%; background: var(--amber);"></div></div>
+        </div>
+        <div class="criteria-row">
+          <div class="criteria-header"><span class="criteria-name">الخبرة العملية</span><span class="criteria-pct" style="color: var(--red-text);">35%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width: 35%; background: var(--red);"></div></div>
+        </div>
+
+        <div class="skills-section">
+          <p class="skills-label">مهارات ناقصة — علّم ما يظهر في السيرة فعلاً</p>
+          <div class="skill-tags">
+            <span class="skill-tag skill-miss">أنظمة تصميم <span class="fix" title="تعليم كمهارة موجودة">&#10003;</span></span>
+            <span class="skill-tag skill-miss">تصميم الموشن <span class="fix" title="تعليم كمهارة موجودة">&#10003;</span></span>
+          </div>
+        </div>
+
+        <div class="pop-tools">
+          <button class="tool-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            إعادة فحص هذا المرشح
+          </button>
+          <button class="tool-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+            تعديل النسبة يدوياً
+          </button>
+          <button class="tool-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            فتح السيرة الذاتية
+          </button>
+        </div>
+
+        <div class="log">
+          <div class="log-row"><b>سلمى القحطاني</b><span>عدّلت النسبة من 41% إلى 58% — «المهارة مذكورة في معرض الأعمال لا في السيرة»</span><span style="margin-inline-start:auto">اليوم 10:24</span></div>
+          <div class="log-row"><b>النظام</b><span>فُحصت السيرة آلياً</span><span style="margin-inline-start:auto">أمس 18:02</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 8: AI shortlist for one job -->
+  <div class="section">
+    <div class="section-label">الشاشة ٨</div>
+    <div class="section-title">ترشيحات الذكاء الاصطناعي — ترتيب المرشحين</div>
+    <div class="section-desc">مكانها: التوظيف ← المرشحون ← بعد اختيار وظيفة، عرض ثالث بجانب «جدول» و«مراحل»</div>
+    <div class="note">
+      <svg class="note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <p class="note-t">التعديل المطلوب</p>
+        <ul>
+          <li><span class="tag add">إضافة</span> <b>المدخل الأول:</b> عرض ثالث باسم «الترشيحات ✦» في مبدّل العرض القائم بجانب «جدول» و«مراحل» — باسم ظاهر لا أيقونة صامتة</li>
+          <li><span class="tag add">إضافة</span> <b>المدخل الثاني:</b> إجراء «الترشيحات» في صف كل وظيفة داخل صفحة الوظائف — لأن الترتيب يخصّ وظيفة، فمن الطبيعي بدؤه منها</li>
+          <li><span class="tag mod">تعديل</span> قبل اختيار وظيفة يعرض هذا التبويب نفس الحالة الفارغة المستخدمة في «مراحل المرشحين»: «اختر وظيفة لعرض ترشيحاتها» — لا قائمة مختلطة من وظائف مختلفة</li>
+          <li><span class="tag add">إضافة</span> لكل مرشح <b>سبب مكتوب لموضعه</b>، لا رقم مجرّد — الترتيب بلا تفسير لا يُبنى عليه قرار توظيف</li>
+          <li><span class="tag add">إضافة</span> لوحة «كيف رُتِّبوا» تشرح الأوزان وقاعدة فضّ التعادل، فيفهم المستخدم المنطق لا النتيجة فقط</li>
+          <li><span class="tag add">إضافة</span> «استبعاد من الترشيح» — قرار الموظف يعلو على ترتيب الذكاء، ويُحفظ سببه</li>
+          <li><span class="tag mod">تعديل</span> من تعذّر فحصه أو لم يُفحص يظهر أسفل القائمة بلا رقم — لا يُحذف ولا يُرتَّب بنسبة لا يملكها</li>
+          <li><span class="tag mod">تعديل</span> عند تفعيل «إخفاء البيانات الشخصية أثناء الفرز» في إعدادات الذكاء، تُخفى الأسماء والصور هنا حتى صدور القرار</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="rank-top">
+        <span class="tb-sel">مصمم واجهة المستخدم UXUI — JOB-202510 <svg viewBox="0 0 10 10" class="chevron"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" fill="none" stroke-width="1.2"/></svg></span>
+        <span class="viewtog">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+          <span class="on" style="gap:6px; font-size:12.5px; font-weight:500;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> الترشيحات <span class="ai-dot">&#10022;</span></span>
+        </span>
+        <span class="tb-spacer"></span>
+        <span class="rank-meta">رُتِّب 22 مرشحاً · آخر تحديث اليوم 10:40 ص</span>
+        <span class="tb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> إعادة الترتيب</span>
+      </div>
+
+      <div class="card-body">
+        <div class="alert info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div>
+            <span class="alert-t">الترتيب ترشيح لا قرار.</span>
+            يعتمد على متطلبات الوظيفة وأوزانها، ولا يرى ما لم يُذكر في السيرة — راجعه قبل الاعتماد عليه.
+          </div>
+        </div>
+
+      <div class="rank-card top">
+        <div class="rank-head">
+          <span class="rank-no">1</span>
+          <div class="avatar" style="background: var(--accent-bg); color: var(--accent-text);">سأ</div>
+          <div class="rank-id">
+            <div class="rank-name">سارة أحمد<span class="ai-dot">&#10022;</span></div>
+            <div class="rank-sub">3-5 سنوات · 8,000 SAR · قدّمت 15 سبتمبر</div>
+          </div>
+          <div class="rank-score">
+            <span class="score-badge score-high">92%</span>
+            <span class="rank-verdict">مطابقة ممتازة</span>
+          </div>
+        </div>
+        <p class="rank-why"><b>سبب هذا الترتيب:</b> تغطي المهارات الإلزامية الثلاث كاملة، وخبرتها 4 سنوات داخل المدى المطلوب، ومعرض أعمالها يعرض مشاريع منتج كاملة. لا تنقصها إلا مهارة مفضّلة واحدة.</p>
+        <div class="mini-bars">
+          <span class="mini"><span class="mini-k">المهارات</span><span class="mini-t"><span class="mini-f" style="width:95%;background:var(--green)"></span></span><span class="mini-v">95%</span></span>
+          <span class="mini"><span class="mini-k">الخبرة</span><span class="mini-t"><span class="mini-f" style="width:90%;background:var(--green)"></span></span><span class="mini-v">90%</span></span>
+          <span class="mini"><span class="mini-k">المؤهل</span><span class="mini-t"><span class="mini-f" style="width:88%;background:var(--green)"></span></span><span class="mini-v">88%</span></span>
+          <span class="mini"><span class="mini-k">اللغات</span><span class="mini-t"><span class="mini-f" style="width:70%;background:var(--amber)"></span></span><span class="mini-v">70%</span></span>
+        </div>
+        <div class="pts"><span class="pt good">✓ Figma</span><span class="pt good">✓ تصميم واجهات</span><span class="pt good">✓ أنظمة تصميم</span><span class="pt bad">✕ تصميم الموشن (مفضّلة)</span></div>
+        <div class="rank-acts"><button class="action-btn advance">دعوة لمقابلة</button><button class="action-btn">عرض التفصيل</button><button class="action-btn">استبعاد من الترشيح</button></div>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-head">
+          <span class="rank-no">2</span>
+          <div class="avatar" style="background: var(--purple-bg); color: var(--purple-text);">خم</div>
+          <div class="rank-id">
+            <div class="rank-name">خالد منصور<span class="ai-dot">&#10022;</span></div>
+            <div class="rank-sub">2-3 سنوات · 5,500 SAR · قدّم 15 سبتمبر</div>
+          </div>
+          <div class="rank-score">
+            <span class="score-badge score-high">78%</span>
+            <span class="rank-verdict">مطابقة جيدة</span>
+          </div>
+        </div>
+        <p class="rank-why"><b>سبب هذا الترتيب:</b> يملك المهارات الإلزامية كلها، لكن خبرته سنتان — أي دون المدى المطلوب بسنة، وهذا ما خفّض ترتيبه عن الأولى رغم تقارب المهارات.</p>
+        <div class="mini-bars">
+          <span class="mini"><span class="mini-k">المهارات</span><span class="mini-t"><span class="mini-f" style="width:88%;background:var(--green)"></span></span><span class="mini-v">88%</span></span>
+          <span class="mini"><span class="mini-k">الخبرة</span><span class="mini-t"><span class="mini-f" style="width:55%;background:var(--amber)"></span></span><span class="mini-v">55%</span></span>
+          <span class="mini"><span class="mini-k">المؤهل</span><span class="mini-t"><span class="mini-f" style="width:85%;background:var(--green)"></span></span><span class="mini-v">85%</span></span>
+          <span class="mini"><span class="mini-k">اللغات</span><span class="mini-t"><span class="mini-f" style="width:80%;background:var(--green)"></span></span><span class="mini-v">80%</span></span>
+        </div>
+        <div class="pts"><span class="pt good">✓ Figma</span><span class="pt good">✓ تصميم واجهات</span><span class="pt good">✓ أنظمة تصميم</span><span class="pt bad">✕ الخبرة أقل من المطلوب</span></div>
+        <div class="rank-acts"><button class="action-btn advance">دعوة لمقابلة</button><button class="action-btn">عرض التفصيل</button><button class="action-btn">استبعاد من الترشيح</button></div>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-head">
+          <span class="rank-no">3</span>
+          <div class="avatar" style="background: var(--amber-bg); color: var(--amber-text);">مع</div>
+          <div class="rank-id">
+            <div class="rank-name">محمد عبدالله<span class="ai-dot">&#10022;</span></div>
+            <div class="rank-sub">سنة – سنتان · 4,000 SAR · قدّم 14 سبتمبر</div>
+          </div>
+          <div class="rank-score">
+            <span class="score-badge score-mid">58%</span>
+            <span class="rank-verdict">دون الحدّ الأدنى (70%)</span>
+          </div>
+        </div>
+        <p class="rank-why"><b>سبب هذا الترتيب:</b> تنقصه مهارة إلزامية واحدة هي أنظمة التصميم، وخبرته سنة واحدة. يظهر في القائمة لأن مهاراته الأخرى قوية، لكنه دون الحدّ الأدنى المحدد للوظيفة.</p>
+        <div class="mini-bars">
+          <span class="mini"><span class="mini-k">المهارات</span><span class="mini-t"><span class="mini-f" style="width:62%;background:var(--amber)"></span></span><span class="mini-v">62%</span></span>
+          <span class="mini"><span class="mini-k">الخبرة</span><span class="mini-t"><span class="mini-f" style="width:35%;background:var(--red)"></span></span><span class="mini-v">35%</span></span>
+          <span class="mini"><span class="mini-k">المؤهل</span><span class="mini-t"><span class="mini-f" style="width:80%;background:var(--green)"></span></span><span class="mini-v">80%</span></span>
+          <span class="mini"><span class="mini-k">اللغات</span><span class="mini-t"><span class="mini-f" style="width:75%;background:var(--green)"></span></span><span class="mini-v">75%</span></span>
+        </div>
+        <div class="pts"><span class="pt good">✓ Figma</span><span class="pt good">✓ تصميم واجهات</span><span class="pt bad">✕ أنظمة تصميم (إلزامية)</span></div>
+        <div class="rank-acts"><button class="action-btn">عرض التفصيل</button><button class="action-btn">استبعاد من الترشيح</button></div>
+      </div>
+
+      <div class="rank-card">
+        <div class="rank-head">
+          <span class="rank-no">4</span>
+          <div class="avatar" style="background: var(--pink-bg); color: var(--pink-text);">نح</div>
+          <div class="rank-id">
+            <div class="rank-name">نورة الحربي<span class="ai-dot">&#10022;</span></div>
+            <div class="rank-sub">أقل من سنة · 3,000 SAR · قدّمت 14 سبتمبر</div>
+          </div>
+          <div class="rank-score">
+            <span class="score-badge score-low">35%</span>
+            <span class="rank-verdict">مطابقة ضعيفة</span>
+          </div>
+        </div>
+        <p class="rank-why"><b>سبب هذا الترتيب:</b> تفتقد مهارتين إلزاميتين، وخبرتها أقل من سنة مقابل 3–5 المطلوبة. لا يوجد في سيرتها ما يعوّض الفجوة.</p>
+        <div class="mini-bars">
+          <span class="mini"><span class="mini-k">المهارات</span><span class="mini-t"><span class="mini-f" style="width:30%;background:var(--red)"></span></span><span class="mini-v">30%</span></span>
+          <span class="mini"><span class="mini-k">الخبرة</span><span class="mini-t"><span class="mini-f" style="width:15%;background:var(--red)"></span></span><span class="mini-v">15%</span></span>
+          <span class="mini"><span class="mini-k">المؤهل</span><span class="mini-t"><span class="mini-f" style="width:70%;background:var(--amber)"></span></span><span class="mini-v">70%</span></span>
+          <span class="mini"><span class="mini-k">اللغات</span><span class="mini-t"><span class="mini-f" style="width:65%;background:var(--amber)"></span></span><span class="mini-v">65%</span></span>
+        </div>
+        <div class="pts"><span class="pt good">✓ Figma</span><span class="pt bad">✕ أنظمة تصميم (إلزامية)</span><span class="pt bad">✕ تصميم واجهات (إلزامية)</span></div>
+        <div class="rank-acts"><button class="action-btn reject">استبعاد</button><button class="action-btn">عرض التفصيل</button></div>
+      </div>
+
+      <div class="rank-card out">
+        <div class="rank-head">
+          <span class="rank-no">—</span>
+          <div class="avatar" style="background: var(--amber-bg); color: var(--amber-text);">يإ</div>
+          <div class="rank-id">
+            <div class="rank-name">يوسف إبراهيم<span class="ai-dot">&#10022;</span></div>
+            <div class="rank-sub">قدّم أمس · خارج الترتيب</div>
+          </div>
+          <div class="rank-score">
+            <span class="score-badge score-mid">؟</span>
+            <span class="rank-verdict">تعذّر الفحص</span>
+          </div>
+        </div>
+        <p class="rank-why"><b>سبب هذا الترتيب:</b> سيرته صورة ممسوحة تعذّر استخراج نصها، فلا يملك نسبة تُرتَّب بها. يظهر أسفل القائمة بلا رقم حتى لا يُحذف ولا يُظلم بترتيب لا أساس له.</p>
+        <div class="mini-bars">
+          <span class="mini"><span class="mini-k">المهارات</span><span class="mini-t"><span class="mini-f" style="width:0%;background:var(--red)"></span></span><span class="mini-v">0%</span></span>
+          <span class="mini"><span class="mini-k">الخبرة</span><span class="mini-t"><span class="mini-f" style="width:0%;background:var(--red)"></span></span><span class="mini-v">0%</span></span>
+          <span class="mini"><span class="mini-k">المؤهل</span><span class="mini-t"><span class="mini-f" style="width:0%;background:var(--red)"></span></span><span class="mini-v">0%</span></span>
+          <span class="mini"><span class="mini-k">اللغات</span><span class="mini-t"><span class="mini-f" style="width:0%;background:var(--red)"></span></span><span class="mini-v">0%</span></span>
+        </div>
+        <div class="pts"><span class="pt bad">✕ لا يمكن قراءة السيرة</span></div>
+        <div class="rank-acts"><button class="action-btn">مراجعة يدوية</button><button class="action-btn">طلب ملف آخر</button></div>
+      </div>
+
+        <div class="why-box">
+          <p class="why-t">كيف رُتِّبوا؟</p>
+          <ol>
+            <li>تُحسب نسبة كل مرشح من معايير الوظيفة بأوزانها: المهارات 60% · الخبرة 25% · المؤهل 5% · اللغات 10% — وهي أوزان هذه الوظيفة، لا الأوزان العامة.</li>
+            <li>غياب مهارة <b>إلزامية</b> يخصم من درجة المهارات بشدة، أما المهارة <b>المفضّلة</b> فغيابها لا يخصم شيئاً.</li>
+            <li>عند تساوي النسبة، يتقدّم الأقدم تقديماً — لئلا يتغيّر الترتيب بلا سبب بين مرّة وأخرى.</li>
+            <li>من تعذّر فحصه أو لم يُفحص يظهر أسفل القائمة بلا رقم.</li>
+            <li>من استبعده موظف التوظيف يخرج من الترتيب ويُحفظ سبب استبعاده.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('hrm-theme', next);
+  updateThemeUI(next);
+}
+function updateThemeUI(theme) {
+  document.getElementById('theme-icon-sun').style.display = theme === 'dark' ? 'none' : 'block';
+  document.getElementById('theme-icon-moon').style.display = theme === 'dark' ? 'block' : 'none';
+  document.getElementById('theme-label').textContent = theme === 'dark' ? 'Dark' : 'Light';
+}
+const saved = localStorage.getItem('hrm-theme') || 'light';
+document.documentElement.setAttribute('data-theme', saved);
+updateThemeUI(saved);
+</script>

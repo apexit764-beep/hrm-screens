@@ -1,0 +1,212 @@
+<title>كل شاشات تخصيص النطاق</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+
+<style>
+:root {
+  --bg: #f7f7f8; --fg: #121217; --card: #fff; --muted: #f7f7f8; --muted-fg: #6c6c89;
+  --border: #d1d1db; --primary: #505edc; --info: #2563eb; --warning: #e5a500;
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --primary: #7b8aef; --info: #60a5fa; --warning: #f59e0b;
+} }
+:root[data-theme="dark"] {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --primary: #7b8aef; --info: #60a5fa; --warning: #f59e0b;
+}
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); direction: rtl; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+.top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 20px; background: var(--card); border-bottom: 1px solid var(--border); }
+.top-links { display: flex; gap: 4px; flex-wrap: wrap; }
+.top a, .top button { font-family: var(--font); font-size: 13px; padding: 7px 13px; border-radius: 8px; border: none; background: transparent; color: var(--muted-fg); text-decoration: none; cursor: pointer; }
+.top a:hover, .top button:hover { background: var(--muted); color: var(--fg); }
+.top a.on { background: var(--primary); color: #fff; font-weight: 500; }
+.top .ghost { border: 1px solid var(--border); background: var(--card); color: var(--fg); }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 26px 20px 70px; }
+.head-t { font-size: 25px; font-weight: 600; margin-bottom: 6px; }
+.head-s { font-size: 14px; color: var(--muted-fg); margin-bottom: 10px; }
+.head-n { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted-fg); background: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; }
+.head-n b { color: var(--fg); font-weight: 600; }
+
+.grp { display: flex; align-items: center; gap: 11px; margin: 34px 0 16px; }
+.grp-n { flex: none; width: 27px; height: 27px; border-radius: 50%; background: var(--primary); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 600; }
+.grp-t { font-size: 16.5px; font-weight: 600; }
+.grp-s { font-size: 12.5px; color: var(--muted-fg); }
+.grp-line { flex: 1; height: 1px; background: var(--border); }
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+.scr { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.scr-h { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; padding: 11px 14px; border-bottom: 1px solid var(--border); background: var(--muted); }
+.scr-num { flex: none; font-size: 11.5px; font-weight: 700; color: #fff; background: var(--primary); border-radius: 6px; padding: 3px 8px; direction: ltr; }
+.scr-t { font-size: 14px; font-weight: 600; }
+.scr-d { font-size: 12.5px; color: var(--muted-fg); }
+.chip { font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted-fg); }
+.chip.pg { color: var(--info); border-color: var(--info); }
+.chip.md { color: var(--warning); border-color: var(--warning); }
+.frame { position: relative; background: var(--bg); }
+.frame iframe { display: block; width: 100%; height: 720px; border: 0; }
+.frame.busy::after { content: 'جارِ التحميل...'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: var(--muted-fg); background: var(--bg); }
+</style>
+
+<div class="top">
+  <div class="top-links">
+    <a href="domain.html">الصفحة التفاعلية</a>
+    <a href="domain-all.html" class="on">كل الشاشات</a>
+    <a href="candidates-kanban.html">مراحل المرشحين</a>
+    <a href="index.html">فحص السير الذاتية</a>
+    <a href="tokens.html">Design Tokens</a>
+  </div>
+  <button class="ghost" onclick="toggleTheme()"><span id="tl">Light</span></button>
+</div>
+
+<div class="wrap">
+  <div class="head-t">كل شاشات تخصيص النطاق</div>
+  <div class="head-s">المسارات الثلاثة كاملة — شراء نطاق جديد، الترقية والدفع، وربط نطاق تملكه.</div>
+  <div class="head-n">كل لقطة أدناه هي <b>domain.html</b> نفسها مضبوطة على حالتها، فأي تعديل على الصفحة الأصلية يظهر هنا مباشرة.</div>
+  <div id="out"></div>
+</div>
+
+<script>
+/* Every screen below is one live copy of domain.html driven into a single state.
+   `run` executes inside that copy's window (same origin) — no markup is duplicated here,
+   so the sheet can never drift from the real page. */
+const GROUPS = [
+  { n:'١', t:'مسار شراء نطاق جديد', s:'من البحث حتى التجهيز التلقائي', screens: [
+    { num:'01', t:'البداية', kind:'pg', d:'باقة مجانية — النطاق المؤقت يعمل وحجز نطاق جديد مقفل',
+      run: w => w.setState('idle') },
+    { num:'02', t:'تصفّح الأسعار مجاناً', kind:'pg', d:'البحث متاح للجميع، والحجز وحده هو المقفل',
+      run: w => { w.setState('idle'); w.browseDomains(); } },
+    { num:'03', t:'جارِ البحث', kind:'pg', d:'حالة التحميل أثناء فحص توفّر النطاقات',
+      run: w => w.setState('searching') },
+    { num:'04', t:'نتائج البحث', kind:'pg', d:'النطاق المطلوب مع بدائل مقترحة وأسعارها',
+      run: w => w.setState('results') },
+    { num:'05', t:'ملخّص الحجز والدفع', kind:'md', d:'بعد الترقية: «احجز الآن» تفتح ملخص الطلب ووسيلة الدفع',
+      run: w => { w.setState('upgraded'); w.setState('results'); w.openBuy('syntax.net', 45); } },
+    { num:'06', t:'التجهيز — تم الدفع', kind:'md', d:'أول مرحلة بعد إتمام الدفع مباشرة',
+      run: w => { w.setState('results'); w.runProvisioning(false); w.freeze(); w.setStage('paid'); } },
+    { num:'07', t:'التجهيز — جارٍ التسجيل', kind:'md', d:'تسجيل النطاق وضبط سجلاته وإصدار SSL (≈30 ثانية في الإنتاج)',
+      run: w => { w.setState('results'); w.runProvisioning(false); w.freeze(); w.setStage('working'); } },
+    { num:'08', t:'التجهيز — اكتمل', kind:'md', d:'النطاق جاهز — تُغلق النافذة تلقائياً بعد لحظة',
+      run: w => { w.setState('results'); w.runProvisioning(false); w.freeze(); w.setStage('done'); } },
+    { num:'08-ب', t:'فشل التجهيز', kind:'md', d:'تعذّر التسجيل — لا خصم إضافي، مع مسار تواصل',
+      run: w => { w.setState('results'); w.runProvisioning(true); w.freeze(); w.setStage('failed'); } },
+    { num:'09', t:'تم الشراء والربط', kind:'md', d:'رسالة النجاح فوق صفحة صار بانرها أخضر',
+      run: w => w.showSuccess('bought') }
+  ]},
+  { n:'٢', t:'مسار الترقية والدفع', s:'يظهر عند محاولة الحجز أو الربط على الباقة المجانية', screens: [
+    { num:'10', t:'اختيار الباقة', kind:'md', d:'الباقات مع التبديل بين الشهري والسنوي',
+      run: w => { w.setState('idle'); w.openPlans(); } },
+    { num:'11', t:'الدفع', kind:'md', d:'ملخص الاشتراك ووسائل الدفع',
+      run: w => { w.setState('idle'); w.choosePlan('الاحترافية'); } },
+    { num:'12', t:'معالجة الدفع', kind:'md', d:'رسالة واحدة بلا خطوات داخلية',
+      run: w => { w.setState('idle'); w.openModal('processModal'); } },
+    { num:'13', t:'تمت الترقية', kind:'md', d:'تأكيد التفعيل وتاريخ التجديد، والصفحة خلفها صارت مفتوحة',
+      run: w => w.showUpgradeSuccess() }
+  ]},
+  { n:'٣', t:'مسار ربط نطاق تملكه', s:'من الحالة المقفلة حتى تفعيل SSL', screens: [
+    { num:'14', t:'التبويب مقفل', kind:'pg', d:'باقة مجانية — قيمة الربط وزر الترقية',
+      run: w => { w.setState('idle'); w.setPath('own'); } },
+    { num:'15', t:'بعد الترقية', kind:'pg', d:'التبويب مفتوح وجاهز لإدخال النطاق المملوك',
+      run: w => w.setState('upgraded') },
+    { num:'16', t:'تعليمات الـ Nameservers', kind:'pg', d:'القديم مقابل الجديد ودليل المزوّدين — النطاق المُدخل ينتقل إلى هنا',
+      run: w => { w.setState('upgraded'); w.document.getElementById('ownDomainInput').value = 'almasa.com'; w.startConnect(); } },
+    { num:'17', t:'جارِ الفحص', kind:'md', d:'التحقق من انتشار الـ Nameservers',
+      run: w => { w.setState('dns'); w.showVerifyState('checking'); } },
+    { num:'17-ب', t:'لم يكتمل الفحص', kind:'md', d:'النطاق ما زال يشير للمزوّد القديم، مع إعادة المحاولة',
+      run: w => { w.setState('dns'); w.showVerifyState('failed'); } },
+    { num:'18', t:'تم الربط', kind:'md', d:'زر واحد ينقلك إلى النطاق الجديد — لا «زيارة موقع» بلا وجهة',
+      run: w => w.showSuccess('connected') },
+    { num:'19', t:'النطاق نشط', kind:'pg', d:'بطاقة الإضافة اختفت — البانر وحده يدير النطاق الواحد',
+      run: w => { w.showSuccess('connected'); w.closeModal('successModal'); } },
+    { num:'20', t:'تغيير النطاق', kind:'pg', d:'المسارات تعود عند الطلب فقط، مع تحذير أن الحالي سيتوقف',
+      run: w => { w.showSuccess('connected'); w.closeModal('successModal'); w.changeDomain(); } }
+  ]}
+];
+
+/* Injected into each copy so an animated step can be held still on one frame */
+const HELPERS = [
+  // provTimers is a top-level `let`, so it lives in the global lexical scope, not on window
+  "window.freeze = function(){ try { provTimers.forEach(clearTimeout); provTimers.length = 0; } catch(e){} };",
+  "window.showVerifyState = function(which){",
+  "  document.getElementById('verifyChecking').hidden = which !== 'checking';",
+  "  document.getElementById('verifyFailed').hidden   = which !== 'failed';",
+  "  document.getElementById('verifyFoot').hidden     = which !== 'failed';",
+  "  document.getElementById('verifyCloseBtn').hidden = which !== 'failed';",
+  "  openModal('verifyModal');",
+  "};"
+].join("\n");
+
+/* The sheet supplies its own chrome, so each copy hides the app nav and the scenario switcher */
+const CHROME_OFF = ".nav-bar, .scenario, .crumb, .page-title { display: none !important; }" +
+                   ".page { padding-top: 18px !important; }" +
+                   "html, body { overflow-x: hidden; }";
+
+function build() {
+  const out = document.getElementById('out');
+  GROUPS.forEach(g => {
+    const h = document.createElement('div');
+    h.className = 'grp';
+    h.innerHTML = '<span class="grp-n">' + g.n + '</span><div><div class="grp-t">' + g.t +
+                  '</div><div class="grp-s">' + g.s + '</div></div><span class="grp-line"></span>';
+    out.appendChild(h);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    out.appendChild(grid);
+
+    g.screens.forEach(sc => {
+      const box = document.createElement('div');
+      box.className = 'scr';
+      box.innerHTML =
+        '<div class="scr-h">' +
+          '<span class="scr-num">' + sc.num + '</span>' +
+          '<span class="scr-t">' + sc.t + '</span>' +
+          '<span class="chip ' + sc.kind + '">' + (sc.kind === 'md' ? 'نافذة' : 'صفحة') + '</span>' +
+          '<span class="scr-d">' + sc.d + '</span>' +
+        '</div>' +
+        '<div class="frame busy"><iframe src="domain.html"></iframe></div>';
+      grid.appendChild(box);
+
+      const frame = box.querySelector('.frame');
+      const f = box.querySelector('iframe');
+      f.addEventListener('load', () => {
+        const w = f.contentWindow;
+        try {
+          const st = w.document.createElement('style');
+          st.textContent = CHROME_OFF;
+          w.document.head.appendChild(st);
+          w.eval(HELPERS);
+          w.scrollTo = function(){};          // setState scrolls its own page; the frame is already at the top
+          sc.run(w);
+          if (sc.kind === 'pg') {
+            const page = w.document.querySelector('.page');
+            f.style.height = Math.min(1400, Math.max(430, page.scrollHeight + 30)) + 'px';
+          }
+        } catch (e) {
+          frame.innerHTML = '<div style="padding:24px;font-size:13px;color:var(--muted-fg)">تعذّر ضبط هذه الشاشة: ' + e.message + '</div>';
+        }
+        frame.classList.remove('busy');
+      });
+    });
+  });
+}
+
+function toggleTheme() {
+  const r = document.documentElement;
+  const n = r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  r.setAttribute('data-theme', n);
+  try { localStorage.setItem('hrm-theme', n); } catch(e){}
+  document.getElementById('tl').textContent = n === 'dark' ? 'Dark' : 'Light';
+  document.querySelectorAll('iframe').forEach(f => {
+    try { f.contentDocument.documentElement.setAttribute('data-theme', n); } catch(e){}
+  });
+}
+(function(){ const s=(function(){try{return localStorage.getItem('hrm-theme')}catch(e){return null}})()||'light';
+  document.getElementById('tl').textContent = s === 'dark' ? 'Dark' : 'Light'; })();
+
+build();
+</script>

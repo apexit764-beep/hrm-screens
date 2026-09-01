@@ -1,0 +1,1561 @@
+﻿<title>إعدادات الذكاء الاصطناعي</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+<style>
+:root {
+  --bg: #f7f7f8;
+  --fg: #121217;
+  --card: #fff;
+  --card-fg: #121217;
+  --primary: #505edc;
+  --primary-fg: #fff;
+  --primary-light: #f4f1fd;
+  --primary-soft: #e8e5fa;
+  --muted: #f7f7f8;
+  --muted-fg: #6c6c89;
+  --border: #d1d1db;
+  --input-border: #d1d1db;
+  --success: #0caf60;
+  --success-bg: #e7f8f0;
+  --success-fg: #0a7b43;
+  --warning: #e5a500;
+  --warning-bg: #fef9e7;
+  --warning-fg: #8a6300;
+  --danger: #d92d20;
+  --danger-bg: #fef2f1;
+  --danger-fg: #991b1b;
+  --info: #2563eb;
+  --info-bg: #eff6ff;
+  --info-fg: #1d4ed8;
+  --shadow-sm: 0px 1px 1px rgba(18,18,23,0.05);
+  --shadow-md: 0px 1px 3px rgba(18,18,23,0.08), 0px 1px 1px rgba(18,18,23,0.04);
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0c0f;
+    --fg: #ededf0;
+    --card: #18181c;
+    --card-fg: #ededf0;
+    --primary: #7b8aef;
+    --primary-fg: #fff;
+    --primary-light: #1e1d30;
+    --primary-soft: #2a2950;
+    --muted: #1e1e24;
+    --muted-fg: #9494a8;
+    --border: #2c2c35;
+    --input-border: #3a3a45;
+    --success: #34d369;
+    --success-bg: #0f2a1a;
+    --success-fg: #6ee7a0;
+    --warning: #f59e0b;
+    --warning-bg: #2a1f0a;
+    --warning-fg: #fbbf24;
+    --danger: #ef4444;
+    --danger-bg: #2a1212;
+    --danger-fg: #fca5a5;
+    --info: #60a5fa;
+    --info-bg: #172554;
+    --info-fg: #93c5fd;
+    --shadow-sm: 0px 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0px 2px 4px rgba(0,0,0,0.3);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0c0f;
+  --fg: #ededf0;
+  --card: #18181c;
+  --card-fg: #ededf0;
+  --primary: #7b8aef;
+  --primary-fg: #fff;
+  --primary-light: #1e1d30;
+  --primary-soft: #2a2950;
+  --muted: #1e1e24;
+  --muted-fg: #9494a8;
+  --border: #2c2c35;
+  --input-border: #3a3a45;
+  --success: #34d369;
+  --success-bg: #0f2a1a;
+  --success-fg: #6ee7a0;
+  --warning: #f59e0b;
+  --warning-bg: #2a1f0a;
+  --warning-fg: #fbbf24;
+  --danger: #ef4444;
+  --danger-bg: #2a1212;
+  --danger-fg: #fca5a5;
+  --info: #60a5fa;
+  --info-bg: #172554;
+  --info-fg: #93c5fd;
+  --shadow-sm: 0px 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0px 2px 4px rgba(0,0,0,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--card-fg);
+  font-family: var(--font);
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.7;
+}
+
+.page { max-width: 960px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Nav bar */
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; background: var(--card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 7px 14px; border-radius: var(--radius);
+  font-size: 13px; font-family: var(--font); font-weight: 400;
+  border: none; cursor: pointer; text-decoration: none;
+  background: transparent; color: var(--muted-fg);
+  transition: background 0.15s, color 0.15s;
+}
+.nav-link:hover { background: var(--muted); color: var(--fg); }
+.nav-link.active { background: var(--primary); color: var(--primary-fg); font-weight: 500; }
+.theme-toggle {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--card);
+  font-size: 13px; font-family: var(--font); color: var(--card-fg);
+  cursor: pointer; transition: background 0.15s;
+}
+.theme-toggle:hover { background: var(--muted); }
+.theme-toggle svg { width: 16px; height: 16px; }
+
+/* Top settings card with tabs */
+.settings-shell {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Top category tabs bar */
+.top-tabs {
+  display: flex; align-items: center; gap: 4px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.top-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius);
+  font-size: 14px; font-family: var(--font);
+  border: none; cursor: pointer; white-space: nowrap;
+  background: transparent; color: var(--muted-fg); font-weight: 400;
+  transition: background 0.15s, color 0.15s;
+}
+.top-tab:hover { background: var(--muted); }
+.top-tab.active { background: var(--muted); color: var(--fg); font-weight: 500; }
+
+/* Sub tabs (border-bottom style like the site) */
+.sub-tabs {
+  display: flex; align-items: center; gap: 0;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.sub-tab {
+  padding: 12px 16px 14px;
+  font-size: 14px; font-family: var(--font);
+  border: none; background: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--muted-fg); font-weight: 400;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.sub-tab:hover { color: var(--fg); }
+.sub-tab.active { border-bottom-color: var(--primary); color: var(--primary); font-weight: 500; }
+
+/* Content area */
+.settings-content { padding: 24px; }
+
+/* Section cards inside content */
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.section:last-child { margin-bottom: 0; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title { font-size: 15px; font-weight: 600; color: var(--fg); margin: 0 0 2px; }
+.section-desc { font-size: 13px; color: var(--muted-fg); margin: 0; }
+.section-body { padding: 20px 24px; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 500;
+}
+.badge-success { background: var(--success-bg); color: var(--success-fg); }
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-warning { background: var(--warning-bg); color: var(--warning-fg); }
+.badge-danger { background: var(--danger-bg); color: var(--danger-fg); }
+
+/* Feature grid */
+.feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .feat-grid { grid-template-columns: 1fr; } }
+
+.feat-card {
+  padding: 18px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border); background: var(--card);
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color 0.15s;
+}
+.feat-card:hover { border-color: var(--primary-soft); }
+.feat-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.feat-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+}
+.feat-icon svg { width: 20px; height: 20px; }
+.feat-title { font-size: 14px; font-weight: 500; color: var(--fg); margin: 0; }
+.feat-desc { font-size: 13px; color: var(--muted-fg); margin: 0; line-height: 1.6; }
+
+/* Toggle switch */
+.toggle {
+  width: 40px; height: 24px; border-radius: 12px;
+  position: relative; flex-shrink: 0; cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+}
+.toggle.on { background: var(--primary); }
+.toggle.off { background: var(--border); }
+.toggle .dot {
+  width: 18px; height: 18px; background: #fff; border-radius: 50%;
+  position: absolute; top: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: left 0.2s, right 0.2s;
+}
+.toggle.on .dot { left: 3px; }
+.toggle.off .dot { right: 3px; }
+
+/* Toggle rows */
+.toggle-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; background: var(--muted); border-radius: var(--radius);
+  margin-bottom: 8px;
+}
+.toggle-row:last-child { margin-bottom: 0; }
+.toggle-info { flex: 1; margin-left: 14px; }
+.toggle-label { font-size: 14px; font-weight: 500; color: var(--fg); }
+.toggle-desc { font-size: 13px; color: var(--muted-fg); margin-top: 2px; }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* Agent chat preview */
+.agent-preview {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.agent-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.agent-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--success);
+  box-shadow: 0 0 0 3px rgba(12,175,96,0.15);
+}
+.agent-name { font-size: 13px; font-weight: 500; color: var(--fg); }
+.agent-status { font-size: 12px; color: var(--success-fg); margin-right: auto; }
+
+.agent-chat { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.bubble {
+  padding: 10px 16px; border-radius: var(--radius-lg);
+  font-size: 13px; line-height: 1.7; max-width: 85%;
+}
+.bubble-bot {
+  background: var(--primary-light); color: var(--primary);
+  align-self: flex-start; border-bottom-right-radius: 4px;
+}
+.bubble-user {
+  background: var(--muted); color: var(--card-fg);
+  align-self: flex-end; border-bottom-left-radius: 4px;
+}
+.agent-input-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-top: 1px solid var(--border);
+}
+.agent-input-field {
+  flex: 1; padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--card);
+  font-size: 13px; color: var(--muted-fg); font-family: var(--font);
+}
+.agent-send-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--primary); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.agent-send-btn svg { width: 16px; height: 16px; transform: scaleX(-1); }
+
+/* Model selector */
+.model-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.model-card {
+  flex: 1; min-width: 130px; padding: 16px;
+  border: 2px solid var(--border); border-radius: var(--radius-lg);
+  cursor: pointer; text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+.model-card:hover { border-color: var(--primary-soft); }
+.model-card.selected { border-color: var(--primary); background: var(--primary-light); }
+.model-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border); background: var(--card);
+  margin: 0 auto 10px; display: flex; align-items: center; justify-content: center;
+}
+.model-card.selected .model-radio {
+  border-color: var(--primary); background: var(--primary);
+}
+.model-radio svg { width: 10px; height: 10px; }
+.model-name { font-size: 14px; font-weight: 500; color: var(--fg); margin-bottom: 2px; }
+.model-desc { font-size: 12px; color: var(--muted-fg); }
+
+/* Slider */
+.slider-row { margin-bottom: 16px; }
+.slider-row:last-child { margin-bottom: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.slider-label { font-size: 14px; color: var(--card-fg); }
+.slider-val { font-size: 14px; font-weight: 600; color: var(--primary); font-variant-numeric: tabular-nums; }
+.slider-track {
+  width: 100%; height: 6px; appearance: none;
+  background: var(--border); border-radius: 3px; outline: none;
+  direction: ltr;
+}
+.slider-track::-webkit-slider-thumb {
+  appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--primary); cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.slider-hint { font-size: 12px; color: var(--muted-fg); margin-top: 4px; }
+
+/* Permission grid */
+.perm-grid { display: flex; flex-direction: column; gap: 8px; }
+.perm-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: var(--muted); border-radius: var(--radius);
+}
+.perm-label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--card-fg); }
+.perm-icon {
+  width: 32px; height: 32px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+}
+.perm-icon svg { width: 16px; height: 16px; }
+.perm-badge {
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* Form fields */
+.fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 500px) { .fields-row { grid-template-columns: 1fr; } }
+.field-label { font-size: 13px; color: var(--muted-fg); display: block; margin-bottom: 6px; }
+.field-input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--input-border);
+  border-radius: var(--radius); font-size: 14px; color: var(--fg);
+  background: var(--card); font-family: var(--font); box-sizing: border-box;
+}
+.field-select {
+  padding: 10px 14px; border: 1px solid var(--input-border); border-radius: var(--radius);
+  font-size: 14px; color: var(--card-fg); display: flex;
+  justify-content: space-between; align-items: center; background: var(--card);
+  cursor: pointer;
+}
+.field-select svg { width: 12px; height: 12px; color: var(--muted-fg); }
+
+/* Buttons */
+.btn-row {
+  display: flex; justify-content: flex-start; gap: 8px;
+  padding: 16px 24px; border-top: 1px solid var(--border);
+}
+.btn {
+  padding: 10px 20px; font-size: 14px; font-family: var(--font);
+  border-radius: var(--radius); cursor: pointer; font-weight: 500;
+  border: 1px solid var(--border); background: var(--card); color: var(--card-fg);
+  transition: background 0.15s;
+}
+.btn:hover { background: var(--muted); }
+.btn-primary { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+.btn-primary:hover { background: #4350c7; }
+
+/* Section label */
+.section-label {
+  font-size: 14px; font-weight: 600; color: var(--fg);
+  margin-bottom: 12px;
+}
+
+/* Info box */
+.info-box {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: var(--radius);
+}
+.info-box svg { width: 20px; height: 20px; flex-shrink: 0; }
+.info-box-title { font-size: 13px; font-weight: 500; margin: 0; }
+.info-box-desc { font-size: 12px; margin: 3px 0 0; }
+
+/* Module scope grid */
+.mod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .mod-grid { grid-template-columns: 1fr; } }
+.mod-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); background: var(--card);
+}
+.mod-icon { width: 36px; height: 36px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mod-icon svg { width: 18px; height: 18px; }
+.mod-info { flex: 1; min-width: 0; }
+.mod-name { font-size: 14px; font-weight: 500; color: var(--fg); }
+.mod-tasks { font-size: 12px; color: var(--muted-fg); margin-top: 1px; }
+
+/* Criteria checkboxes */
+.crit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 560px) { .crit-grid { grid-template-columns: 1fr; } }
+.crit-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius); background: var(--card); font-size: 13px; color: var(--card-fg);
+}
+.crit-item.on { border-color: var(--primary); background: var(--primary-light); }
+.crit-box {
+  width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--card);
+}
+.crit-item.on .crit-box { background: var(--primary); border-color: var(--primary); }
+.crit-box svg { width: 11px; height: 11px; }
+
+/* Module section header accent */
+.mod-head-icon { width: 30px; height: 30px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mod-head-icon svg { width: 16px; height: 16px; }
+/* قائمة المجالات — صف لكل مجال بمفتاح تفعيل واحد */
+.mod-list { display: flex; flex-direction: column; gap: 8px; }
+.mod-row { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--card); overflow: hidden; }
+.mod-row-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.mod-row .mod-icon { flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; }
+.mod-row .mod-icon svg { width: 18px; height: 18px; }
+.mod-row .mod-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.mod-row .mod-name { font-size: 14px; font-weight: 500; color: var(--fg); }
+.mod-row .mod-tasks { font-size: 12px; color: var(--muted-fg); }
+.mod-state { font-size: 11.5px; color: var(--muted-fg); }
+.mod-row .toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+/* المجال المعطَّل يبقى ظاهراً لكن باهتاً */
+.mod-row.off { background: var(--muted); }
+.mod-row.off .mod-icon, .mod-row.off .mod-info { opacity: .5; }
+.section-head-with-icon { display: flex; align-items: center; gap: 10px; }
+
+/* عنصر ثلاثي الحالة لصلاحية الوصول — المفتاح لا يكفي لثلاث حالات،
+   والشارة الثابتة كانت تعرض الحالة بلا وسيلة لتغييرها. */
+.seg { display: inline-flex; gap: 2px; padding: 3px; background: var(--muted); border: 1px solid var(--border); border-radius: 999px; flex: none; }
+.seg button {
+  font-family: var(--font); font-size: 12px; line-height: 1.4; padding: 5px 12px;
+  border: none; background: none; color: var(--muted-fg);
+  border-radius: 999px; cursor: pointer; white-space: nowrap;
+}
+.seg button:hover { color: var(--fg); }
+.seg button:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.seg button.on { background: var(--card); font-weight: 600; box-shadow: var(--shadow-sm); }
+.seg button.on[data-v="allow"] { color: var(--success-fg); }
+.seg button.on[data-v="limit"] { color: var(--warning-fg); }
+.seg button.on[data-v="deny"]  { color: var(--danger-fg); }
+
+/* أيقونة الصف تتبع الحالة المختارة، فيُقرأ الجدول لوناً قبل قراءته نصاً */
+.perm-icon svg { stroke: currentColor; }
+.perm-row[data-state="allow"] .perm-icon { background: var(--success-bg); color: var(--success); }
+.perm-row[data-state="limit"] .perm-icon { background: var(--warning-bg); color: var(--warning); }
+.perm-row[data-state="deny"]  .perm-icon { background: var(--danger-bg);  color: var(--danger); }
+@media (max-width: 560px) {
+  .perm-row { flex-wrap: wrap; gap: 10px; }
+  .seg { width: 100%; }
+  .seg button { flex: 1; }
+}
+
+/* كروت الاختيار — بديل القوائم المنسدلة حين تكون الخيارات قليلة ومعروفة */
+.opt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; }
+.opt-card {
+  position: relative; display: flex; align-items: flex-start; gap: 10px;
+  padding: 13px 14px; background: var(--card);
+  border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  cursor: pointer; text-align: right;
+  transition: border-color .15s, background .15s;
+}
+.opt-card:hover { border-color: var(--primary-soft); }
+.opt-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.opt-card.sel { border-color: var(--primary); background: var(--primary-light); }
+.opt-ico {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--muted);
+}
+.opt-card.sel .opt-ico { background: var(--card); }
+.opt-ico svg { width: 16px; height: 16px; color: var(--muted-fg); }
+.opt-card.sel .opt-ico svg { color: var(--primary); }
+.opt-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.opt-title { display: block; font-size: 13.5px; font-weight: 500; color: var(--fg); }
+.opt-card.sel .opt-title { color: var(--primary); }
+.opt-desc { display: block; font-size: 11.5px; color: var(--muted-fg); line-height: 1.5; }
+.opt-check { width: 15px; height: 15px; flex-shrink: 0; color: var(--primary); visibility: hidden; }
+.opt-card.sel .opt-check { visibility: visible; }
+/* صف مضغوط — للخيارات القصيرة بلا وصف */
+.opt-card.slim { align-items: center; padding: 11px 13px; }
+.opt-tag { font-size: 11px; font-weight: 600; color: var(--muted-fg); background: var(--muted); padding: 2px 7px; border-radius: 5px; }
+.opt-card.sel .opt-tag { color: var(--primary); background: var(--card); }
+
+/* حقول فعّالة */
+select.field-select-el {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--input-border);
+  border-radius: var(--radius); font-size: 14px; color: var(--card-fg);
+  background: var(--card); font-family: var(--font); cursor: pointer;
+  appearance: none; background-image: none;
+}
+select.field-select-el:focus-visible { outline: 2px solid var(--primary); outline-offset: -1px; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: ''; position: absolute; left: 14px; top: 50%; width: 8px; height: 8px;
+  border-left: 2px solid var(--muted-fg); border-bottom: 2px solid var(--muted-fg);
+  transform: translateY(-70%) rotate(-45deg); pointer-events: none;
+}
+.field-input:focus-visible { outline: 2px solid var(--primary); outline-offset: -1px; }
+.input-affix { position: relative; display: flex; align-items: center; }
+.input-affix .field-input { padding-left: 62px; }
+.input-affix .affix { position: absolute; left: 14px; font-size: 12.5px; color: var(--muted-fg); }
+.key-wrap { position: relative; display: flex; align-items: center; }
+.key-wrap .field-input { padding-left: 44px; }
+.key-eye {
+  position: absolute; left: 8px; width: 28px; height: 28px; border: none; background: none;
+  cursor: pointer; display: grid; place-items: center; border-radius: 6px; color: var(--muted-fg);
+}
+.key-eye:hover { background: var(--muted); }
+.key-eye svg { width: 16px; height: 16px; }
+.field-err { font-size: 12px; color: var(--danger-fg); margin-top: 5px; display: none; }
+.field-err.show { display: block; }
+.req { color: var(--danger); }
+
+/* شريط التغييرات غير المحفوظة */
+.save-bar {
+  position: sticky; bottom: 0; z-index: 20;
+  display: none; align-items: center; gap: 12px;
+  margin-top: 16px; padding: 12px 18px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: 0 -2px 12px rgba(18,18,23,.08);
+}
+.save-bar.show { display: flex; }
+.save-bar .dirty-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); flex-shrink: 0; }
+.save-bar .dirty-msg { flex: 1; font-size: 13px; color: var(--muted-fg); }
+
+/* الرصيد والاستهلاك */
+.usage-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.usage-num { font-size: 24px; font-weight: 600; color: var(--fg); font-variant-numeric: tabular-nums; }
+.usage-num span { font-size: 14px; font-weight: 400; color: var(--muted-fg); }
+.usage-bar { height: 8px; background: var(--muted); border-radius: 4px; overflow: hidden; }
+.usage-fill { height: 100%; background: var(--primary); border-radius: 4px; }
+.usage-fill.warn { background: var(--warning); }
+.usage-foot { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted-fg); margin-top: 8px; }
+
+/* حالة الربط */
+.conn-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.conn-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+.conn-name { font-size: 14px; font-weight: 500; color: var(--fg); flex: 1; }
+.field-input.mono { font-family: ui-monospace, Consolas, monospace; letter-spacing: .5px; direction: ltr; text-align: left; }
+
+/* Stat tiles (usage) */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 700px) { .stat-grid { grid-template-columns: 1fr 1fr; } }
+.stat-tile {
+  padding: 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); background: var(--card);
+}
+.stat-icon {
+  width: 36px; height: 36px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+}
+.stat-icon svg { width: 18px; height: 18px; }
+.stat-value { font-size: 24px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.stat-label { font-size: 12px; color: var(--muted-fg); margin-top: 2px; }
+.stat-trend { font-size: 11px; font-weight: 500; margin-top: 6px; display: inline-flex; align-items: center; gap: 3px; }
+
+/* Usage bar */
+.usage-block { padding: 16px; background: var(--muted); border-radius: var(--radius-lg); margin-top: 12px; }
+.usage-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.usage-title { font-size: 14px; font-weight: 500; color: var(--fg); }
+.usage-count { font-size: 13px; color: var(--muted-fg); font-variant-numeric: tabular-nums; direction: ltr; }
+.usage-bar-track { height: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; overflow: hidden; }
+.usage-bar-fill { height: 100%; background: var(--primary); border-radius: 100px; }
+.usage-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+.usage-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted-fg); }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* Weight row (ATS scoring) */
+.weight-row { display: grid; grid-template-columns: 130px 1fr 44px; gap: 14px; align-items: center; margin-bottom: 14px; }
+.weight-row:last-child { margin-bottom: 0; }
+.weight-label { font-size: 14px; color: var(--card-fg); }
+.weight-val { font-size: 14px; font-weight: 600; color: var(--primary); text-align: left; direction: ltr; font-variant-numeric: tabular-nums; }
+
+/* Knowledge base doc list */
+.doc-list { display: flex; flex-direction: column; gap: 8px; }
+.doc-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--muted); border-radius: var(--radius); }
+.doc-icon {
+  width: 38px; height: 38px; border-radius: var(--radius); background: var(--card);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.doc-icon svg { width: 18px; height: 18px; }
+.doc-info { flex: 1; min-width: 0; }
+.doc-name { font-size: 14px; font-weight: 500; color: var(--fg); }
+.doc-meta { font-size: 12px; color: var(--muted-fg); }
+.doc-remove {
+  width: 30px; height: 30px; border-radius: var(--radius); border: none; cursor: pointer;
+  background: transparent; color: var(--muted-fg); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.doc-remove:hover { background: var(--danger-bg); color: var(--danger-fg); }
+.doc-remove svg { width: 16px; height: 16px; }
+.upload-zone {
+  border: 1.5px dashed var(--border); border-radius: var(--radius-lg);
+  padding: 24px; text-align: center; margin-top: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.upload-zone svg { width: 24px; height: 24px; color: var(--muted-fg); }
+.upload-zone-title { font-size: 13px; font-weight: 500; color: var(--card-fg); }
+.upload-zone-hint { font-size: 12px; color: var(--muted-fg); }
+
+/* Automation rule */
+.rule-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; background: var(--muted); border-radius: var(--radius); margin-bottom: 8px;
+}
+.rule-row:last-child { margin-bottom: 0; }
+.rule-icon {
+  width: 38px; height: 38px; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.rule-icon svg { width: 18px; height: 18px; }
+.rule-info { flex: 1; }
+.rule-title { font-size: 14px; font-weight: 500; color: var(--fg); }
+.rule-flow { font-size: 12px; color: var(--muted-fg); margin-top: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rule-chip { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px 8px; font-size: 11px; color: var(--card-fg); }
+.rule-arrow { color: var(--primary); font-weight: 700; }
+
+/* Activity timeline */
+.timeline { display: flex; flex-direction: column; }
+.timeline-item { display: flex; gap: 12px; padding-bottom: 18px; position: relative; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item:not(:last-child)::before {
+  content: ''; position: absolute; right: 15px; top: 34px; bottom: 2px; width: 1.5px; background: var(--border);
+}
+.timeline-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1;
+}
+.timeline-dot svg { width: 15px; height: 15px; }
+.timeline-content { flex: 1; padding-top: 5px; }
+.timeline-text { font-size: 13px; color: var(--card-fg); line-height: 1.6; }
+.timeline-text strong { font-weight: 600; color: var(--fg); }
+.timeline-time { font-size: 11px; color: var(--muted-fg); margin-top: 3px; }
+</style>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <div class="nav-links">
+    <a href="candidates-kanban.html" class="nav-link">مراحل المرشحين</a>
+    <a href="company-settings.html" class="nav-link">إعدادات الشركة</a>
+    <a href="ai-settings.html" class="nav-link active">إعدادات الذكاء الاصطناعي</a>
+    <a href="index.html" class="nav-link">فحص السير الذاتية</a>
+    <a href="training.html" class="nav-link">التدريب والتطوير</a>
+    <a href="tokens.html" class="nav-link">Design Tokens</a>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span id="theme-label">Light</span>
+  </button>
+</div>
+
+<div class="page">
+
+  <!-- Settings shell -->
+  <div class="settings-shell">
+
+    <!-- Top category tabs -->
+    <div class="top-tabs">
+      <button class="top-tab">الشركة</button>
+      <button class="top-tab">الحضور</button>
+      <button class="top-tab">المالية</button>
+      <button class="top-tab">التوظيف</button>
+      <button class="top-tab">الطلبات والموافقات</button>
+      <button class="top-tab">التطبيق</button>
+      <button class="top-tab active">الذكاء الاصطناعي</button>
+    </div>
+
+    <!-- Sub navigation tabs -->
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="showTab('scope', this)">نطاق العمل</button>
+      <button class="sub-tab" onclick="showTab('assistant', this)">المساعد الذكي</button>
+      <button class="sub-tab" onclick="showTab('link', this)">إعدادات الربط</button>
+      <button class="sub-tab" onclick="showTab('usage', this)">الميزات والرصيد</button>
+      <button class="sub-tab" onclick="showTab('privacy', this)">الخصوصية</button>
+    </div>
+
+    <!-- Content -->
+    <div class="settings-content">
+
+      <div class="tab-panel" id="panel-scope">
+      <!-- نطاق العمل: تفعيل/إلغاء تفعيل كل مجال — لا إعدادات تفصيلية هنا -->
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">نطاق عمل الذكاء الاصطناعي</p>
+            <p class="section-desc">فعّل أو عطّل عمل الذكاء الاصطناعي في كل مجال</p>
+          </div>
+          <span class="badge badge-success" id="modCount">6 من 7 مفعّلة</span>
+        </div>
+        <div class="section-body" style="padding: 14px;">
+          <div class="mod-list">
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: var(--info-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">الموظفين</span>
+                  <span class="mod-tasks">تحليل السلوك والأداء</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: var(--primary-light);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">التوظيف</span>
+                  <span class="mod-tasks">فحص السير الذاتية · تحليل سلوك المرشحين</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: var(--success-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">الطلبات والموافقات</span>
+                  <span class="mod-tasks">تحليل الطلبات وتوصيات الموافقة</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: var(--warning-bg);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">الحضور والانصراف</span>
+                  <span class="mod-tasks">كشف أنماط التأخر والغياب</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: #e0f2fe;"><svg viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">الرواتب</span>
+                  <span class="mod-tasks">كشف التباينات في المسيّرات</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row off">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: var(--muted);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">التدريب والتطوير</span>
+                  <span class="mod-tasks">توصيات الدورات حسب فجوات المهارات</span>
+                </span>
+                <span class="mod-state">معطّل</span>
+                <span class="toggle off" role="switch" aria-checked="false" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+
+            <div class="mod-row">
+              <div class="mod-row-head">
+                <span class="mod-icon" style="background: #fdf2f8;"><svg viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                <span class="mod-info">
+                  <span class="mod-name">المستندات</span>
+                  <span class="mod-tasks">تنبيهات انتهاء الوثائق</span>
+                </span>
+                <span class="mod-state">مفعّل</span>
+                <span class="toggle on" role="switch" aria-checked="true" tabindex="0"
+                      onclick="toggleModuleSwitch(event, this)" onkeydown="modKey(event, this)"><span class="dot"></span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary">حفظ التغييرات</button>
+          <button class="btn">إلغاء</button>
+        </div>
+      </div>
+      </div>
+
+      <div class="tab-panel" id="panel-assistant" hidden>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">مساعد مدير الموارد البشرية</p>
+            <p class="section-desc">مساعد ذكي داخل لوحة الإدارة يساعد فريق الموارد البشرية في الاستعلام السريع وتنفيذ الإجراءات</p>
+          </div>
+          <span class="badge badge-success">مفعّل</span>
+        </div>
+        <div class="section-body">
+
+          <!-- Chat preview -->
+          <div class="agent-preview" style="margin-bottom: 20px;">
+            <div class="agent-header">
+              <div class="agent-dot"></div>
+              <span class="agent-name">مساعد HR</span>
+              <span class="agent-status">متصل</span>
+            </div>
+            <div class="agent-chat">
+              <div class="bubble bubble-user">كم موظف تأخر هذا الأسبوع؟</div>
+              <div class="bubble bubble-bot">تأخر 8 موظفين هذا الأسبوع، منهم 3 حالات متكررة من قسم المبيعات. هل تريد إرسال تنبيه للمدراء المباشرين؟</div>
+              <div class="bubble bubble-user">نعم، أرسل تنبيه</div>
+              <div class="bubble bubble-bot">تم إرسال التنبيه إلى 3 مدراء مباشرين مع تفاصيل حالات التأخر.</div>
+            </div>
+            <div class="agent-input-bar">
+              <div class="agent-input-field">اسأل عن أي موظف أو أي تقرير...</div>
+              <div class="agent-send-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions -->
+          <p class="section-label">صلاحيات المساعد</p>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">الوصول إلى بيانات الموظفين</div>
+              <div class="toggle-desc">قراءة ملفات الموظفين والأقسام والمسميات الوظيفية</div>
+            </div>
+            <div class="toggle on"><div class="dot"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">إنشاء التقارير</div>
+              <div class="toggle-desc">توليد تقارير الحضور والغياب والأداء عند الطلب</div>
+            </div>
+            <div class="toggle on"><div class="dot"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">تنفيذ الإجراءات الجماعية</div>
+              <div class="toggle-desc">إرسال تنبيهات وإشعارات لعدة موظفين أو مدراء دفعة واحدة</div>
+            </div>
+            <div class="toggle on"><div class="dot"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- اللغة والنبرة: خصائص محادثة، فمكانها مع المساعد لا في تبويب مستقل -->
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">لغات الرد</p>
+            <p class="section-desc">المساعد يكتشف لغة المستخدم ويرد بها تلقائياً. اختر اللغات المدعومة.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="opt-grid" data-group="langs" data-multi="1" data-min="1">
+            <div class="opt-card slim sel" role="checkbox" aria-checked="true" tabindex="0" data-val="ar">
+              <span class="opt-tag">AR</span>
+              <span class="opt-body"><span class="opt-title">العربية</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim sel" role="checkbox" aria-checked="true" tabindex="0" data-val="en">
+              <span class="opt-tag">EN</span>
+              <span class="opt-body"><span class="opt-title">English</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim" role="checkbox" aria-checked="false" tabindex="0" data-val="fr">
+              <span class="opt-tag">FR</span>
+              <span class="opt-body"><span class="opt-title">Français</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <p class="field-err" id="langsErr">اختر لغة واحدة على الأقل.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">نبرة وأسلوب الرد</p>
+            <p class="section-desc">حدّد شخصية المساعد عند التحدث مع المستخدم</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="opt-grid" data-group="tone">
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="brief">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">مختصر ومباشر</span>
+                <span class="opt-desc">إجابات سريعة بدون تفاصيل زائدة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card sel" role="radio" aria-checked="true" tabindex="0" data-val="friendly">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">ودود وحماسي</span>
+                <span class="opt-desc">لطيف، يستخدم رموزاً تعبيرية أحياناً</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="formal">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">رسمي ومحترف</span>
+                <span class="opt-desc">لغة جدية، احترامية ومنظمة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="premium">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l4 3 5-6 5 6 4-3-2 12H5z"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">فاخر وراقٍ</span>
+                <span class="opt-desc">أسلوب أنيق يناسب المؤسسات الكبرى</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <p class="section-label">طول الرد</p>
+          <div class="opt-grid" data-group="length" style="margin-bottom: 20px;">
+            <div class="opt-card slim" role="radio" aria-checked="false" tabindex="0" data-val="short">
+              <span class="opt-body"><span class="opt-title">قصير</span><span class="opt-desc">جملة أو جملتان</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim sel" role="radio" aria-checked="true" tabindex="0" data-val="medium">
+              <span class="opt-body"><span class="opt-title">متوسط</span><span class="opt-desc">فقرة مختصرة</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim" role="radio" aria-checked="false" tabindex="0" data-val="long">
+              <span class="opt-body"><span class="opt-title">مفصّل</span><span class="opt-desc">شرح كامل بالخطوات</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">اتباع لغة المستخدم تلقائياً</div>
+            </div>
+            <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">استخدام مصطلحات الشركة المعتمدة</div>
+            </div>
+            <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="save-bar" id="bar-assistant">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في المساعد الذكي</span>
+        <button class="btn" type="button" onclick="discard('assistant')">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="save('assistant')">حفظ التغييرات</button>
+      </div>
+      </div>
+
+      <!-- إعدادات الربط -->
+      <div class="tab-panel" id="panel-link" hidden>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">ربط مزوّد الذكاء الاصطناعي</p>
+            <p class="section-desc">اختر المزوّد ثم أدخل مفتاح الـ API. المفتاح محفوظ عندك ولا يُشارك مع أي طرف ثالث.</p>
+          </div>
+          <span class="badge badge-success" id="connBadge">متصل</span>
+        </div>
+        <div class="section-body">
+
+          <p class="section-label">المصدر</p>
+          <div class="opt-grid" data-group="provider" style="margin-bottom: 20px;">
+            <div class="opt-card sel" role="radio" aria-checked="true" tabindex="0" data-val="claude" data-models="متوازن|الأدق في التحليل|الأسرع">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">Claude</span>
+                <span class="opt-desc">الأذكى في التحليل والمحادثات الطويلة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="openai" data-models="GPT-4o mini · موصى به|GPT-4o|GPT-4 Turbo">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">OpenAI</span>
+                <span class="opt-desc">الأشهر — مجموعة GPT-4o</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="gemini" data-models="Gemini Flash · موصى به|Gemini Pro">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.6 6.8L21 11l-6.4 2.2L12 20l-2.6-6.8L3 11l6.4-2.2z"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">Gemini</span>
+                <span class="opt-desc">سياق طويل ودعم وسائط متعددة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label class="field-label" for="apiKey">مفتاح API <span class="req">*</span></label>
+            <div class="key-wrap">
+              <!-- قيمة عرض مقنّعة عمداً: أي نصّ بصيغة مفتاح حقيقي يُشعل فحص الأسرار في المستودع -->
+              <input type="password" id="apiKey" class="field-input mono" value="••••••••••••••••4f2a" placeholder="ألصق المفتاح هنا">
+              <button type="button" class="key-eye" id="keyEye" aria-label="إظهار المفتاح" onclick="toggleKey()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="field-err" id="apiKeyErr">مفتاح API مطلوب.</p>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label class="field-label" for="modelSel">النموذج <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="modelSel" class="field-select-el">
+                <option>متوازن</option>
+                <option>الأدق في التحليل</option>
+                <option>الأسرع</option>
+              </select>
+            </div>
+            <p class="slider-hint">النماذج المتاحة تتغيّر حسب المزوّد المختار.</p>
+          </div>
+
+          <div>
+            <label class="field-label" for="maxLen">حدّ طول الرد <span style="color: var(--muted-fg); font-weight: 400;">(اختياري)</span></label>
+            <div class="input-affix">
+              <input type="number" id="maxLen" class="field-input" value="600" min="50" max="4000" step="50">
+              <span class="affix">رمز</span>
+            </div>
+            <p class="slider-hint" id="maxLenHint">الحد الأقصى لطول الرد بالرموز (tokens). 600 رمز ≈ 450 كلمة.</p>
+          </div>
+
+          <div class="conn-row" style="margin-top: 20px;">
+            <span class="conn-dot" id="connDot"></span>
+            <span class="conn-name" id="connMsg">الاتصال يعمل — آخر فحص قبل 4 دقائق</span>
+            <button class="btn" type="button" onclick="testConn(this)">اختبار الاتصال</button>
+          </div>
+        </div>
+      </div>
+      <div class="save-bar" id="bar-link">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في إعدادات الربط</span>
+        <button class="btn" type="button" onclick="discard('link')">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="save('link')">حفظ التغييرات</button>
+      </div>
+      </div>
+
+      <!-- الميزات والرصيد -->
+      <div class="tab-panel" id="panel-usage" hidden>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">الرصيد الحالي</p>
+            <p class="section-desc">رصيد عمليات الذكاء الاصطناعي المتبقي في حسابك</p>
+          </div>
+          <span class="badge badge-primary">باقة الأعمال</span>
+        </div>
+        <div class="section-body">
+          <div class="usage-head">
+            <span class="usage-num" id="usageNum">3,600 <span>عملية متبقية من 10,000</span></span>
+            <span class="badge badge-success" id="usagePct">64%</span>
+          </div>
+          <div class="usage-bar"><div class="usage-fill" id="usageFill" style="width: 64%;"></div></div>
+          <div class="usage-foot">
+            <span>استهلاك اليوم: 23 عملية</span>
+            <span>تتجدّد الدورة في 1 أكتوبر</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">التنبيهات والحدود</p>
+            <p class="section-desc">اضبط التنبيه والحد الأقصى لاستهلاك الرصيد</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">تنبيه قبل نفاد الرصيد</div>
+            </div>
+            <div class="toggle on" role="switch" aria-checked="true" tabindex="0" data-controls="alertAt"><div class="dot"></div></div>
+          </div>
+
+          <div id="alertAt" style="margin-top: 14px; max-width: 320px;">
+            <label class="field-label" for="alertNum">نبّهني عند</label>
+            <div class="input-affix">
+              <input type="number" id="alertNum" class="field-input" value="1000" min="0" max="10000" step="100">
+              <span class="affix">عملية</span>
+            </div>
+            <p class="field-err" id="alertNumErr">القيمة يجب أن تكون بين 0 و 10,000.</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <p class="section-label">عند نفاد الرصيد</p>
+          <div class="opt-grid" data-group="onEmpty">
+            <div class="opt-card slim sel" role="radio" aria-checked="true" tabindex="0" data-val="stop">
+              <span class="opt-body"><span class="opt-title">إيقاف المزايا الذكية</span><span class="opt-desc">حتى تجديد الدورة</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim" role="radio" aria-checked="false" tabindex="0" data-val="renew">
+              <span class="opt-body"><span class="opt-title">شراء رصيد تلقائياً</span><span class="opt-desc">يُخصم من وسيلة الدفع</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">ميزات المساعد الذكي</p>
+            <p class="section-desc">فعّل أو عطّل الميزات حسب احتياجك — كل ميزة تستهلك رصيداً عند الاستخدام</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="feat-list">
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">تحليل السير الذاتية</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">2 عملية/سيرة</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">تحليل المستندات (PDF)</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">3 عمليات/ملف</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">تلخيص المحادثات</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">1 عملية/محادثة</span>
+              <div class="toggle off" role="switch" aria-checked="false" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="toggle-label">اقتراحات ذكية للموظفين</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">1 عملية/اقتراح</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="save-bar" id="bar-usage">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في الميزات والرصيد</span>
+        <button class="btn" type="button" onclick="discard('usage')">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="save('usage')">حفظ التغييرات</button>
+      </div>
+      </div>
+      <!-- الخصوصية -->
+      <div class="tab-panel" id="panel-privacy" hidden>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">البيانات والخصوصية</p>
+            <p class="section-desc">التحكم في البيانات التي يمكن للذكاء الاصطناعي الوصول إليها ومعالجتها</p>
+          </div>
+          <span class="badge badge-primary" id="complyBadge">متوافق</span>
+        </div>
+        <div class="section-body">
+          <div class="perm-grid" id="permGrid">
+            <div class="perm-row" data-state="allow">
+              <div class="perm-label">
+                <div class="perm-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                بيانات الموظف الأساسية
+              </div>
+              <div class="seg" role="radiogroup" aria-label="صلاحية بيانات الموظف الأساسية">
+                <button type="button" data-v="allow" class="on" role="radio" aria-checked="true">مسموح</button>
+                <button type="button" data-v="limit" role="radio" aria-checked="false">مقيّد</button>
+                <button type="button" data-v="deny"  role="radio" aria-checked="false">محظور</button>
+              </div>
+            </div>
+            <div class="perm-row" data-state="allow">
+              <div class="perm-label">
+                <div class="perm-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                سجلات الحضور
+              </div>
+              <div class="seg" role="radiogroup" aria-label="صلاحية سجلات الحضور">
+                <button type="button" data-v="allow" class="on" role="radio" aria-checked="true">مسموح</button>
+                <button type="button" data-v="limit" role="radio" aria-checked="false">مقيّد</button>
+                <button type="button" data-v="deny"  role="radio" aria-checked="false">محظور</button>
+              </div>
+            </div>
+            <div class="perm-row" data-state="allow">
+              <div class="perm-label">
+                <div class="perm-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                سجل الإجازات والطلبات
+              </div>
+              <div class="seg" role="radiogroup" aria-label="صلاحية سجل الإجازات والطلبات">
+                <button type="button" data-v="allow" class="on" role="radio" aria-checked="true">مسموح</button>
+                <button type="button" data-v="limit" role="radio" aria-checked="false">مقيّد</button>
+                <button type="button" data-v="deny"  role="radio" aria-checked="false">محظور</button>
+              </div>
+            </div>
+            <div class="perm-row" data-state="limit">
+              <div class="perm-label">
+                <div class="perm-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                بيانات الرواتب والمسيرات
+              </div>
+              <div class="seg" role="radiogroup" aria-label="صلاحية بيانات الرواتب">
+                <button type="button" data-v="allow" role="radio" aria-checked="false">مسموح</button>
+                <button type="button" data-v="limit" class="on" role="radio" aria-checked="true">مقيّد</button>
+                <button type="button" data-v="deny"  role="radio" aria-checked="false">محظور</button>
+              </div>
+            </div>
+            <div class="perm-row" data-state="deny" data-perm="docs">
+              <div class="perm-label">
+                <div class="perm-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                المستندات الشخصية
+              </div>
+              <div class="seg" role="radiogroup" aria-label="صلاحية المستندات الشخصية">
+                <button type="button" data-v="allow" role="radio" aria-checked="false">مسموح</button>
+                <button type="button" data-v="limit" role="radio" aria-checked="false">مقيّد</button>
+                <button type="button" data-v="deny"  class="on" role="radio" aria-checked="true">محظور</button>
+              </div>
+            </div>
+          </div>
+          <p class="slider-hint" style="margin-top: 12px;">
+            <b>مقيّد</b> يعني وصولاً للمجاميع والإحصاءات دون قيم الأفراد.
+          </p>
+
+          <div class="divider"></div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">الاحتفاظ بالبيانات</div>
+            </div>
+            <div class="toggle on"><div class="dot"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">التحليلات المجهولة</div>
+            </div>
+            <div class="toggle off"><div class="dot"></div></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="info-box" style="background: var(--info-bg);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div>
+              <p class="info-box-title" style="color: var(--info-fg);">التشفير من طرف إلى طرف مفعّل</p>
+              <p class="info-box-desc" style="color: var(--muted-fg);">جميع تفاعلات الذكاء الاصطناعي مشفرة. البيانات لا تغادر منطقتك.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="save-bar" id="bar-privacy">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في الخصوصية</span>
+        <button class="btn" type="button" onclick="discard('privacy')">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="save('privacy')">حفظ التغييرات</button>
+      </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('hrm-theme', next);
+  updateThemeUI(next);
+}
+function updateThemeUI(theme) {
+  document.getElementById('theme-icon-sun').style.display = theme === 'dark' ? 'none' : 'block';
+  document.getElementById('theme-icon-moon').style.display = theme === 'dark' ? 'block' : 'none';
+  document.getElementById('theme-label').textContent = theme === 'dark' ? 'Dark' : 'Light';
+}
+
+/* تبويب لكل شأن: أين يعمل · مساعد الموارد البشرية · الربط · اللغة · الرصيد · الخصوصية */
+const TABS = ['scope','assistant','link','usage','privacy'];
+function showTab(id, btn) {
+  TABS.forEach(k => document.getElementById('panel-' + k).hidden = k !== id);
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.toggle('active', b === btn));
+}
+
+/* كل مجال يُفعَّل أو يُعطَّل من صفّه — بلا إعدادات تفصيلية هنا */
+function toggleModuleSwitch(e, el) {
+  const row = el.closest('.mod-row');
+  const on = !el.classList.contains('on');
+  el.classList.toggle('on', on); el.classList.toggle('off', !on);
+  el.setAttribute('aria-checked', on);
+  row.classList.toggle('off', !on);
+  row.querySelector('.mod-state').textContent = on ? 'مفعّل' : 'معطّل';
+  updateModCount();
+}
+function modKey(e, el) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleModuleSwitch(e, el); }
+}
+function updateModCount() {
+  const rows = [...document.querySelectorAll('.mod-row')];
+  const on = rows.filter(r => !r.classList.contains('off')).length;
+  document.getElementById('modCount').textContent = on + ' من ' + rows.length + ' مفعّلة';
+}
+
+/* ─────────────────────────────────────────────────────────────
+   كل حقل في الصفحة فعّال: كروت الاختيار، المفاتيح، الحقول النصية
+   ───────────────────────────────────────────────────────────── */
+
+/* لقطة الحالة الأولى لكل تبويب — يقارَن بها لمعرفة وجود تغيير فعلي */
+const baseline = {};
+
+function panelOf(el) {
+  const p = el.closest('.tab-panel');
+  return p ? p.id.replace('panel-', '') : null;
+}
+
+/* توقيع الحالة: يلتقط كل كرت ومفتاح وحقل داخل التبويب */
+function snapshot(tab) {
+  const p = document.getElementById('panel-' + tab);
+  if (!p) return '';
+  const cards = [...p.querySelectorAll('.opt-card')].map(c => c.classList.contains('sel') ? '1' : '0');
+  const tgls  = [...p.querySelectorAll('.toggle')].map(t => t.classList.contains('on') ? '1' : '0');
+  const segs  = [...p.querySelectorAll('.perm-row')].map(r => r.dataset.state);
+  const vals  = [...p.querySelectorAll('input, select')].map(i => i.value);
+  return JSON.stringify([cards, tgls, segs, vals]);
+}
+
+function markDirty(tab) {
+  const bar = document.getElementById('bar-' + tab);
+  if (!bar) return;
+  bar.classList.toggle('show', snapshot(tab) !== baseline[tab]);
+}
+
+/* ── كروت الاختيار: مجموعة أحادية أو متعددة ── */
+function pickCard(card) {
+  const grid = card.closest('.opt-grid');
+  if (!grid) return;
+  const multi = grid.dataset.multi === '1';
+
+  if (multi) {
+    const min = parseInt(grid.dataset.min || '0', 10);
+    const selected = grid.querySelectorAll('.opt-card.sel').length;
+    // لا يُسمح بالنزول تحت الحد الأدنى — نُظهر الخطأ بدل إلغاء الاختيار بصمت
+    if (card.classList.contains('sel') && selected <= min) {
+      const err = grid.parentElement.querySelector('.field-err');
+      if (err) { err.classList.add('show'); setTimeout(() => err.classList.remove('show'), 2600); }
+      return;
+    }
+    card.classList.toggle('sel');
+    card.setAttribute('aria-checked', card.classList.contains('sel'));
+  } else {
+    grid.querySelectorAll('.opt-card').forEach(c => {
+      c.classList.toggle('sel', c === card);
+      c.setAttribute('aria-checked', c === card);
+    });
+  }
+
+  if (grid.dataset.group === 'provider') applyProvider(card);
+  markDirty(panelOf(card));
+}
+
+/* تغيير المزوّد يعيد بناء قائمة النماذج — القائمة تتبع المصدر */
+function applyProvider(card) {
+  const sel = document.getElementById('modelSel');
+  if (!sel || !card.dataset.models) return;
+  sel.innerHTML = '';
+  card.dataset.models.split('|').forEach(m => sel.add(new Option(m, m)));
+  setConn(true, 'تم تبديل المزوّد — اضغط «اختبار الاتصال» للتحقق');
+}
+
+/* ── صلاحية الوصول: ثلاث حالات ── */
+function pickPerm(btn) {
+  const seg = btn.closest('.seg');
+  const row = btn.closest('.perm-row');
+  seg.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('on', b === btn);
+    b.setAttribute('aria-checked', b === btn);
+  });
+  row.dataset.state = btn.dataset.v;      // يقود لون الأيقونة عبر CSS
+  updateCompliance();
+  markDirty(panelOf(btn));
+}
+
+/* شارة التوافق تتبع الصلاحيات فعلاً — إتاحة المستندات الشخصية تُخرج
+   الإعداد عن سياسة الخصوصية، فلا يصحّ أن تبقى الشارة «متوافق» ثابتة. */
+function updateCompliance() {
+  const badge = document.getElementById('complyBadge');
+  if (!badge) return;
+  const docs = document.querySelector('.perm-row[data-perm="docs"]');
+  const risky = docs && docs.dataset.state === 'allow';
+  badge.textContent = risky ? 'يحتاج مراجعة' : 'متوافق';
+  badge.className = 'badge ' + (risky ? 'badge-warning' : 'badge-primary');
+}
+
+/* ── المفاتيح ── */
+function flipToggle(t) {
+  const on = !t.classList.contains('on');
+  t.classList.toggle('on', on);
+  t.classList.toggle('off', !on);
+  t.setAttribute('aria-checked', on);
+  // مفتاح يتحكم بحقل: يخفيه عند الإطفاء بدل تركه معطّلاً بلا معنى
+  if (t.dataset.controls) {
+    const target = document.getElementById(t.dataset.controls);
+    if (target) target.style.display = on ? '' : 'none';
+  }
+  markDirty(panelOf(t));
+}
+
+/* ── إظهار مفتاح API ── */
+function toggleKey() {
+  const f = document.getElementById('apiKey');
+  const shown = f.type === 'text';
+  f.type = shown ? 'password' : 'text';
+  document.getElementById('keyEye').setAttribute('aria-label', shown ? 'إظهار المفتاح' : 'إخفاء المفتاح');
+}
+
+/* ── اختبار الاتصال ── */
+function setConn(ok, msg) {
+  const dot = document.getElementById('connDot');
+  const txt = document.getElementById('connMsg');
+  const badge = document.getElementById('connBadge');
+  if (!dot) return;
+  dot.style.background = ok ? 'var(--success)' : 'var(--danger)';
+  txt.textContent = msg;
+  badge.textContent = ok ? 'متصل' : 'غير متصل';
+  badge.className = 'badge ' + (ok ? 'badge-success' : 'badge-danger');
+}
+function testConn(btn) {
+  if (!validateKey()) return;
+  const old = btn.textContent;
+  btn.textContent = 'جارٍ الفحص…';
+  btn.disabled = true;
+  setTimeout(() => {
+    setConn(true, 'الاتصال يعمل — تم الفحص الآن');
+    btn.textContent = old;
+    btn.disabled = false;
+  }, 900);
+}
+
+/* ── التحقق ── */
+function showErr(id, on) {
+  const e = document.getElementById(id);
+  if (e) e.classList.toggle('show', on);
+  return !on;
+}
+function validateKey() {
+  const f = document.getElementById('apiKey');
+  return showErr('apiKeyErr', !f.value.trim());
+}
+function validateAlert() {
+  const f = document.getElementById('alertNum');
+  if (!f) return true;
+  const v = Number(f.value);
+  return showErr('alertNumErr', f.value === '' || v < 0 || v > 10000);
+}
+
+/* ── حفظ / تجاهل ── */
+function save(tab) {
+  if (tab === 'link' && !validateKey()) return;
+  if (tab === 'usage' && !validateAlert()) return;
+  baseline[tab] = snapshot(tab);
+  document.getElementById('bar-' + tab).classList.remove('show');
+}
+function discard(tab) {
+  // إعادة تحميل التبويب لحالته المحفوظة: أبسط وأصدق من تتبّع كل حقل
+  location.reload();
+}
+
+/* ── ربط الأحداث ── */
+document.addEventListener('click', e => {
+  const seg = e.target.closest('.seg button');
+  if (seg) { pickPerm(seg); return; }
+  const card = e.target.closest('.opt-card');
+  if (card) { pickCard(card); return; }
+  const tgl = e.target.closest('.toggle');
+  if (tgl && !tgl.closest('.mod-row')) flipToggle(tgl);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('.opt-card');
+  if (card) { e.preventDefault(); pickCard(card); return; }
+  const tgl = e.target.closest('.toggle');
+  if (tgl && !tgl.closest('.mod-row')) { e.preventDefault(); flipToggle(tgl); }
+});
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (!t.matches('input, select')) return;
+  if (t.id === 'apiKey') showErr('apiKeyErr', false);
+  if (t.id === 'alertNum') showErr('alertNumErr', false);
+  if (t.id === 'maxLen') {
+    const n = Number(t.value) || 0;
+    document.getElementById('maxLenHint').textContent =
+      'الحد الأقصى لطول الرد بالرموز (tokens). ' + n.toLocaleString('en') + ' رمز ≈ ' + Math.round(n * 0.75).toLocaleString('en') + ' كلمة.';
+  }
+  markDirty(panelOf(t));
+});
+document.addEventListener('change', e => {
+  if (e.target.matches('select')) markDirty(panelOf(e.target));
+});
+
+const saved = localStorage.getItem('hrm-theme') || 'light';
+document.documentElement.setAttribute('data-theme', saved);
+updateThemeUI(saved);
+TABS.forEach(t => baseline[t] = snapshot(t));
+</script>

@@ -1,0 +1,489 @@
+<title>الوظائف المتاحة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+
+<style>
+:root {
+  /* --brand is overwritten per tenant at runtime — every accent on this page reads from it */
+  --brand: #505edc;
+  --brand-fg: #fff;
+  --brand-deep: #3a46b8;
+  --brand-soft: rgba(80, 94, 220, 0.10);
+  --brand-line: rgba(80, 94, 220, 0.28);
+
+  /* زر الإجراء أخضر ثابت في كل العلامات — لا يُشتقّ من --brand إطلاقاً */
+  --apply: #0b8348;
+  --apply-hover: #0a7340;
+
+  --bg: #f7f7f8; --fg: #121217; --card: #fff; --muted: #f7f7f8; --muted-fg: #6c6c89;
+  --border: #d1d1db; --input-border: #d1d1db;
+  --success-bg: #e7f8f0; --success-fg: #0a7b43;
+  --warning-bg: #fef9e7; --warning-fg: #8a6300;
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+  --shadow-card: 0 1px 2px rgba(18,18,23,0.06), 0 0 0 1px rgba(18,18,23,0.04);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --input-border: #3a3a45;
+  --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+  --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+} }
+:root[data-theme="dark"] {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --muted: #1e1e24; --muted-fg: #9494a8;
+  --border: #2c2c35; --input-border: #3a3a45;
+  --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+  --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); direction: rtl; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+
+/* ---------- Demo strip: not part of the tenant page ---------- */
+.demo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 18px; background: #18181c; color: #ededf0; font-size: 12.5px; }
+.demo-lbl { display: flex; align-items: center; gap: 7px; color: #9494a8; }
+.demo-lbl svg { width: 14px; height: 14px; }
+.demo-btn { font-family: var(--font); font-size: 12.5px; padding: 5px 12px; border-radius: 999px; border: 1px solid #3a3a45; background: transparent; color: #ededf0; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.demo-btn:hover { background: #26262e; }
+.demo-btn.on { background: #fff; color: #18181c; border-color: #fff; font-weight: 600; }
+.demo-swatch { width: 11px; height: 11px; border-radius: 50%; }
+.demo-note { margin-inline-start: auto; color: #6c6c89; }
+
+/* ---------- Header: hidden until the hero scrolls away ---------- */
+.site-head {
+  position: fixed; inset-inline: 0; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%); opacity: 0; visibility: hidden;
+  transition: transform .26s ease, opacity .26s ease, visibility .26s;
+}
+.site-head.show { transform: none; opacity: 1; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { .site-head { transition: opacity .2s ease, visibility .2s; } }
+.site-head-in { max-width: 1000px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-logo { flex: none; width: 34px; height: 34px; border-radius: 9px; overflow: hidden; display: grid; place-items: center; background: var(--brand); color: var(--brand-fg); font-weight: 700; font-size: 14px; }
+.brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+.brand-name { font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.head-count { font-size: 13px; color: var(--muted-fg); white-space: nowrap; }
+
+/* ---------- Hero ---------- */
+.hero { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+.hero-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); overflow: hidden; }
+.hero-band {
+  position: relative; padding: 26px 26px 24px;
+  background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+  background-size: cover; background-position: center; isolation: isolate;
+}
+/* الحجاب محسوب لكل علامة ليمرّ النص 4.5:1 — انظر scrimFor() */
+.hero-band::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(circle at 88% -25%, rgba(255,255,255,.12), transparent 55%),
+    linear-gradient(200deg, rgba(0,0,0,var(--scrim-a,.14)), rgba(0,0,0,var(--scrim-b,.46)));
+}
+.hero-band::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; opacity: .35;
+  background-image: radial-gradient(rgba(255,255,255,.5) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom left, #000, transparent 62%);
+  mask-image: linear-gradient(to bottom left, #000, transparent 62%);
+}
+/* علامة فاتحة: الشريط يبقى فاتحاً والنصّ ينقلب داكناً — التباين يمرّ واللون يبقى */
+.hero-band.light::before {
+  background:
+    radial-gradient(circle at 88% -25%, rgba(255,255,255,.30), transparent 55%),
+    linear-gradient(200deg, rgba(0,0,0,.02), rgba(0,0,0,.10));
+}
+.hero-band.light::after { background-image: radial-gradient(rgba(0,0,0,.34) 1px, transparent 1px); opacity: .3; }
+.hero-band.light .hero-org-name, .hero-band.light .hero-title { color: #121217; }
+.hero-band.light .hero-org-link { color: rgba(18,18,23,.66); }
+.hero-band.light .hero-sub { color: rgba(18,18,23,.7); }
+.hero-band.light .hero-logo { box-shadow: 0 3px 12px rgba(0,0,0,.14), 0 0 0 1px rgba(18,18,23,.10); }
+
+.hero-org { display: flex; align-items: center; gap: 13px; margin-bottom: 20px; }
+.hero-logo { flex: none; width: 60px; height: 60px; border-radius: 15px; overflow: hidden; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,.22); display: grid; place-items: center; }
+.hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.hero-mark { width: 100%; height: 100%; display: grid; place-items: center; background: var(--brand); color: var(--brand-fg); font-weight: 700; font-size: 25px; }
+.hero-org-txt { min-width: 0; line-height: 1.45; }
+.hero-org-name { font-size: 14.5px; font-weight: 600; color: #fff; }
+.hero-org-link { font-size: 12.5px; color: rgba(255,255,255,.72); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+.hero-org-link:hover { color: #fff; }
+.hero-org-link svg { width: 12px; height: 12px; }
+.hero-title { font-size: 30px; font-weight: 600; line-height: 1.35; color: #fff; letter-spacing: -.2px; margin-bottom: 6px; }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,.78); }
+
+/* ---------- Filters ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px 26px; border-top: 1px solid var(--border); background: var(--card); }
+.search-wrap { position: relative; flex: 1 1 240px; min-width: 0; }
+.search-wrap svg { position: absolute; inset-inline-start: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--muted-fg); pointer-events: none; }
+.search-input { width: 100%; padding: 10px 38px 10px 13px; font-family: var(--font); font-size: 13.5px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); color: var(--fg); }
+.search-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.sel-wrap { position: relative; flex: 0 1 auto; }
+.sel {
+  appearance: none; font-family: var(--font); font-size: 13.5px;
+  /* حشو منطقي لا فيزيائي: السهم على inline-end فتُحجز مساحته هناك في الاتجاهين */
+  padding-block: 10px; padding-inline-start: 13px; padding-inline-end: 34px;
+  border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); color: var(--fg); cursor: pointer;
+}
+.sel:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.sel-wrap::after {
+  content: ''; position: absolute; inset-inline-end: 13px; top: 50%; width: 7px; height: 7px;
+  border-inline-start: 2px solid var(--muted-fg); border-bottom: 2px solid var(--muted-fg);
+  transform: translateY(-70%) rotate(-45deg); pointer-events: none;
+}
+
+/* ---------- Results ---------- */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 20px 20px 60px; }
+.res-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.res-count { font-size: 13.5px; color: var(--muted-fg); }
+.res-count b { color: var(--fg); font-weight: 600; }
+.clear-btn { font-family: var(--font); font-size: 13px; color: var(--brand); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: var(--radius); }
+.clear-btn:hover { background: var(--brand-soft); }
+
+.job-list { display: flex; flex-direction: column; gap: 12px; }
+.job {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card); padding: 18px 20px;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: border-color .15s, transform .15s;
+}
+.job:hover { border-color: var(--brand-line); }
+.job-main { flex: 1; min-width: 0; }
+.job-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 3px; }
+.job-title { font-size: 17px; font-weight: 600; }
+.job-dept { font-size: 13px; color: var(--muted-fg); margin-bottom: 10px; }
+.job-meta { display: flex; flex-wrap: wrap; gap: 7px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted-fg); background: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
+.pill svg { width: 13px; height: 13px; }
+.pill.brand { color: var(--brand); background: var(--brand-soft); border-color: var(--brand-line); }
+.tag-new { font-size: 11.5px; font-weight: 600; color: var(--success-fg); background: var(--success-bg); border-radius: 999px; padding: 2px 9px; }
+.tag-soon { font-size: 11.5px; font-weight: 600; color: var(--warning-fg); background: var(--warning-bg); border-radius: 999px; padding: 2px 9px; }
+.job-side { flex: none; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.job-apps { font-size: 12px; color: var(--muted-fg); white-space: nowrap; }
+@media (max-width: 620px) {
+  .job { flex-direction: column; gap: 12px; }
+  .job-side { width: 100%; }
+  .job-side .btn { width: 100%; }
+  .hero-band { padding: 20px 18px; }
+  .hero-title { font-size: 22px; }
+  .filters { padding: 13px 18px; }
+  .sel-wrap, .sel { flex: 1 1 100%; width: 100%; }
+}
+
+/* ---------- Empty ---------- */
+.empty { text-align: center; padding: 46px 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+.empty-ico { width: 54px; height: 54px; border-radius: 50%; background: var(--muted); color: var(--muted-fg); display: grid; place-items: center; margin: 0 auto 14px; }
+.empty-ico svg { width: 24px; height: 24px; }
+.empty-t { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+.empty-d { font-size: 13.5px; color: var(--muted-fg); }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--fg); font-family: var(--font); font-size: 13.5px; font-weight: 500; cursor: pointer; text-decoration: none; }
+.btn:hover { background: var(--muted); }
+.btn svg { width: 15px; height: 15px; }
+.btn-apply { background: var(--apply); border-color: var(--apply); color: #fff; }
+.btn-apply:hover { background: var(--apply-hover); border-color: var(--apply-hover); }
+.site-head .btn { padding: 8px 15px; font-size: 13px; }
+
+/* ---------- Footer ---------- */
+.foot { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px; font-size: 12.5px; color: var(--muted-fg); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.powered { display: inline-flex; align-items: center; gap: 6px; }
+.powered b { color: var(--fg); font-weight: 600; }
+</style>
+
+<!-- Demo strip only: proves one page serves every tenant. Not shipped to candidates. -->
+<div class="demo">
+  <span class="demo-lbl">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="14" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 0-4 2 2 0 0 1 0-4h4a6 6 0 0 0 0-12z"/></svg>
+    نفس الصفحة بعلامة كل عميل
+  </span>
+  <span id="demoBtns"></span>
+  <span class="demo-note">الشعار واللون والاسم والنطاق تأتي من إعدادات الشركة</span>
+</div>
+
+<!-- الهيدر مخفيّ فوق لأن الهيرو يحمل الهوية — ينزلق عند خروجه من الشاشة -->
+<div class="site-head">
+  <div class="site-head-in">
+    <div class="brand">
+      <div class="brand-logo" id="brandLogo">م</div>
+      <div class="brand-name" id="brandName">شركة الماسة لحلول التسويق</div>
+    </div>
+    <span class="head-count" id="headCount">—</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-card">
+    <div class="hero-band" id="heroBand">
+      <div class="hero-org">
+        <div class="hero-logo" id="heroLogo"><span class="hero-mark">م</span></div>
+        <div class="hero-org-txt">
+          <div class="hero-org-name" id="heroOrgName">شركة الماسة لحلول التسويق</div>
+          <a class="hero-org-link" href="#" onclick="return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span id="heroOrgDomain">almasa.com</span>
+          </a>
+        </div>
+      </div>
+      <h1 class="hero-title">الوظائف المتاحة</h1>
+      <p class="hero-sub" id="heroSub">—</p>
+    </div>
+
+    <div class="filters">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="q" placeholder="ابحث باسم الوظيفة أو المهارة…" oninput="render()">
+      </div>
+      <div class="sel-wrap"><select class="sel" id="fDept" onchange="render()"><option value="">كل الأقسام</option></select></div>
+      <div class="sel-wrap"><select class="sel" id="fBranch" onchange="render()"><option value="">كل الفروع</option></select></div>
+      <div class="sel-wrap"><select class="sel" id="fType" onchange="render()"><option value="">كل الأنواع</option></select></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="res-bar">
+    <span class="res-count" id="resCount">—</span>
+    <button class="clear-btn" id="clearBtn" onclick="clearAll()" hidden>مسح الفلاتر</button>
+  </div>
+  <div class="job-list" id="list"></div>
+
+  <div class="empty" id="empty" hidden>
+    <div class="empty-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="empty-t">لا توجد وظائف مطابقة</div>
+    <div class="empty-d">جرّب توسيع البحث أو مسح الفلاتر.</div>
+  </div>
+</div>
+
+<div class="foot">
+  <span id="footRights">—</span>
+  <span class="powered" id="powered">مدعوم بـ <b>Apex HR</b></span>
+</div>
+
+<script>
+/* One page, many tenants: everything a company owns lives in this object. */
+const TENANTS = [
+  { key:'almasa', name:'شركة الماسة لحلول التسويق', short:'الماسة', mark:'م', color:'#505edc',
+    domain:'almasa.com', rights:'جميع الحقوق محفوظة @ALMASA 2026', poweredHidden:false },
+  { key:'nakheel', name:'مجموعة النخيل القابضة', short:'النخيل', mark:'ن', color:'#0caf60',
+    domain:'careers.alnakheel.sa', rights:'© مجموعة النخيل القابضة 2026', poweredHidden:true,
+    cover:'linear-gradient(115deg,#0b3d2c,#0caf60)' },
+  { key:'mudad', name:'مداد للتقنية', short:'مداد', mark:'د', color:'#d92d20',
+    domain:'jobs.mudad.tech', rights:'© مداد للتقنية 2026', poweredHidden:false }
+];
+
+const JOBS = [
+  { id:'ui-ux-designer', title:'مصمم واجهات وتجربة مستخدم (UI/UX)', dept:'التسويق', branch:'الرياض', mode:'حضوري',
+    type:'دوام كامل', salary:'8,000 – 11,000', days:3, apps:24, deadline:12 },
+  { id:'frontend-dev', title:'مطوّر واجهات أمامية', dept:'التقنية', branch:'الرياض', mode:'هجين',
+    type:'دوام كامل', salary:'10,000 – 15,000', days:1, apps:41, deadline:20 },
+  { id:'backend-dev', title:'مهندس أنظمة خلفية (Backend)', dept:'التقنية', branch:'الرياض', mode:'عن بُعد',
+    type:'دوام كامل', salary:'12,000 – 18,000', days:6, apps:63, deadline:9 },
+  { id:'hr-specialist', title:'أخصائي موارد بشرية', dept:'الموارد البشرية', branch:'جدة', mode:'حضوري',
+    type:'دوام كامل', salary:'7,000 – 9,500', days:11, apps:18, deadline:4 },
+  { id:'accountant', title:'محاسب أول', dept:'المالية', branch:'الرياض', mode:'حضوري',
+    type:'دوام كامل', salary:'9,000 – 12,000', days:14, apps:31, deadline:6 },
+  { id:'content-writer', title:'كاتب محتوى تسويقي', dept:'التسويق', branch:'جدة', mode:'عن بُعد',
+    type:'دوام جزئي', salary:'4,000 – 6,000', days:2, apps:12, deadline:25 },
+  { id:'sales-rep', title:'مندوب مبيعات', dept:'المبيعات', branch:'الدمام', mode:'حضوري',
+    type:'دوام كامل', salary:'6,000 – 8,000 + عمولة', days:8, apps:27, deadline:15 },
+  { id:'design-intern', title:'متدرّب تصميم جرافيك', dept:'التسويق', branch:'الرياض', mode:'حضوري',
+    type:'تدريب', salary:'2,500', days:4, apps:56, deadline:3 }
+];
+
+/* ---------- Brand maths: tints, shades and a readable band ---------- */
+function hexToRgb(h) { const m = h.replace('#','').match(/.{2}/g).map(x => parseInt(x, 16)); return { r:m[0], g:m[1], b:m[2] }; }
+function shade(hex, amount) {
+  const c = hexToRgb(hex);
+  const f = v => Math.max(0, Math.min(255, Math.round(v * (1 - amount))));
+  return '#' + [f(c.r), f(c.g), f(c.b)].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+function relLum(hex) {
+  const c = hexToRgb(hex);
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+}
+function readableOn(hex) {
+  const L = relLum(hex);
+  return (L + 0.05) / 0.0585 > 1.05 / (L + 0.05) ? '#121217' : '#fff';
+}
+/* أقلّ حجاب أسود يجعل النصّ الأبيض يبلغ 4.5:1 فوق لون العميل.
+   حجاب ثابت لا يكفي: الأزرق الغامق يمرّ بـ12% والسماوي يحتاج 42%. */
+function scrimFor(hex, highlight) {
+  const c = hexToRgb(hex);
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const lumAt = a => {
+    const px = ['r','g','b'].map(k => c[k] * (1 - a) * (1 - highlight) + 255 * highlight);
+    return 0.2126 * f(px[0]) + 0.7152 * f(px[1]) + 0.0722 * f(px[2]);
+  };
+  const TARGET = 1.05 / 4.5 - 0.05;
+  let lo = 0, hi = 0.75;
+  for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (lumAt(mid) > TARGET) lo = mid; else hi = mid; }
+  return Math.min(0.75, Math.max(0.12, hi));
+}
+
+let TENANT = TENANTS[0];
+
+function applyTenant(t) {
+  TENANT = t;
+  const c = hexToRgb(t.color);
+  const r = document.documentElement.style;
+  const isLight = relLum(t.color) > 0.45;
+  const a = isLight ? 0.03 : scrimFor(t.color, 0.12);
+
+  r.setProperty('--brand', t.color);
+  r.setProperty('--brand-deep', shade(t.color, isLight ? 0.12 : 0.42));
+  r.setProperty('--brand-fg', readableOn(t.color));
+  r.setProperty('--scrim-a', a.toFixed(3));
+  r.setProperty('--scrim-b', Math.min(0.80, a + 0.26).toFixed(3));
+  r.setProperty('--brand-soft', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',0.10)');
+  r.setProperty('--brand-line', 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',0.28)');
+
+  const markHtml = t.logo ? '<img src="' + t.logo + '" alt="' + t.name + '">' : '<span class="hero-mark">' + t.mark + '</span>';
+  document.getElementById('heroLogo').innerHTML = markHtml;
+  document.getElementById('brandLogo').innerHTML = t.logo ? '<img src="' + t.logo + '" alt="">' : t.mark;
+
+  const band = document.getElementById('heroBand');
+  band.style.backgroundImage = t.cover || '';
+  band.classList.toggle('light', isLight && !t.cover);
+
+  document.getElementById('brandName').textContent = t.name;
+  document.getElementById('heroOrgName').textContent = t.name;
+  document.getElementById('heroOrgDomain').textContent = t.domain;
+  document.getElementById('footRights').textContent = t.rights;
+  document.getElementById('powered').hidden = t.poweredHidden;
+  document.title = 'الوظائف المتاحة — ' + t.short;
+
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.toggle('on', b.dataset.k === t.key));
+  render();
+}
+
+function buildDemo() {
+  document.getElementById('demoBtns').innerHTML = TENANTS.map(t =>
+    '<button class="demo-btn" data-k="' + t.key + '" onclick="applyTenant(TENANTS.find(x=>x.key===\'' + t.key + '\'))">' +
+    '<span class="demo-swatch" style="background:' + t.color + '"></span>' + t.short + '</button>'
+  ).join(' ');
+}
+
+/* خيارات الفلاتر تُبنى من الوظائف نفسها — لا قائمة ثابتة تتقادم عند تغيّر البيانات */
+function buildFilters() {
+  const fill = (id, values) => {
+    const s = document.getElementById(id);
+    [...new Set(values)].sort((a, b) => a.localeCompare(b, 'ar')).forEach(v => s.add(new Option(v, v)));
+  };
+  fill('fDept', JOBS.map(j => j.dept));
+  fill('fBranch', JOBS.map(j => j.branch));
+  fill('fType', JOBS.map(j => j.type));
+}
+
+const ICO = {
+  branch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  type: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+  onsite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/></svg>',
+  remote: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg>',
+  time: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  hybrid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18M16 3v18M3 8h18M3 16h18"/></svg>',
+  go:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>'
+};
+/* أيقونة لكل نمط عمل — الخريطة أوضح من شرط ثنائي يُسقط «هجين» على أيقونة الحضوري */
+const MODE_ICO = { 'حضوري': ICO.onsite, 'عن بُعد': ICO.remote, 'هجين': ICO.hybrid };
+
+/* تمييز العدد في العربية: مفرد ومثنى وجمع قلّة (٣–١٠) وتمييز مفرد منصوب (١١+) */
+function daysAr(n) {
+  if (n === 1) return 'أمس';
+  if (n === 2) return 'يومين';
+  if (n <= 10) return n + ' أيام';
+  return n + ' يوماً';
+}
+
+function jobCard(j) {
+  const flags =
+    (j.days <= 3 ? '<span class="tag-new">جديدة</span>' : '') +
+    (j.deadline <= 5 ? '<span class="tag-soon">تنتهي خلال ' + daysAr(j.deadline) + '</span>' : '');
+  return '' +
+  '<div class="job">' +
+    '<div class="job-main">' +
+      '<div class="job-head"><span class="job-title">' + j.title + '</span>' + flags + '</div>' +
+      '<div class="job-dept">' + j.dept + '</div>' +
+      '<div class="job-meta">' +
+        '<span class="pill brand">' + ICO.type + j.type + '</span>' +
+        // الفرع التابعة له الوظيفة — لا مكان العمل. لذا «فرع الرياض · عن بُعد» ليست تكراراً
+        '<span class="pill">' + ICO.branch + 'فرع ' + j.branch + '</span>' +
+        '<span class="pill">' + (MODE_ICO[j.mode] || ICO.onsite) + j.mode + '</span>' +
+        '<span class="pill">' + ICO.time + (j.days === 1 ? 'نُشرت أمس' : 'نُشرت قبل ' + daysAr(j.days)) + '</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="job-side">' +
+      '<a class="btn btn-apply" href="job-apply.html">' + ICO.go + 'عرض الوظيفة</a>' +
+      '<span class="job-apps">' + j.apps + ' متقدّم حتى الآن</span>' +
+    '</div>' +
+  '</div>';
+}
+
+function render() {
+  const q      = document.getElementById('q').value.trim();
+  const dept   = document.getElementById('fDept').value;
+  const branch = document.getElementById('fBranch').value;
+  const type   = document.getElementById('fType').value;
+
+  const hits = JOBS.filter(j =>
+    (!q      || (j.title + ' ' + j.dept).includes(q)) &&
+    (!dept   || j.dept   === dept)   &&
+    (!branch || j.branch === branch) &&
+    (!type   || j.type   === type)
+  );
+
+  document.getElementById('list').innerHTML = hits.map(jobCard).join('');
+  document.getElementById('empty').hidden = hits.length > 0;
+
+  const filtered = !!(q || dept || branch || type);
+  document.getElementById('resCount').innerHTML = filtered
+    ? '<b>' + hits.length + '</b> من ' + JOBS.length + ' وظيفة'
+    : '<b>' + JOBS.length + '</b> وظيفة متاحة';
+  document.getElementById('clearBtn').hidden = !filtered;
+
+  // الترويسة والهيرو يعرضان الإجمالي دائماً — لا يتبعان الفلترة
+  const branches = new Set(JOBS.map(j => j.branch)).size;
+  document.getElementById('heroSub').textContent =
+    JOBS.length + ' وظيفة مفتوحة في ' + branches + ' فروع · فريق ' + TENANT.short;
+  document.getElementById('headCount').textContent = JOBS.length + ' وظيفة متاحة';
+}
+
+function clearAll() {
+  document.getElementById('q').value = '';
+  ['fDept','fBranch','fType'].forEach(id => document.getElementById(id).value = '');
+  render();
+}
+
+/* الهيدر يظهر فقط بعد خروج الهيرو من أعلى الشاشة — قبلها هو تكرار له.
+   القياس من موضع الهيرو لا من IntersectionObserver: الأخير يصمت حين
+   يكون ارتفاع النافذة صفراً (إطارات مضمّنة، معاينات). */
+function watchHeader() {
+  const head = document.querySelector('.site-head');
+  const hero = document.querySelector('.hero-card');
+  if (!head || !hero) return;
+  const update = () => head.classList.toggle('show', hero.getBoundingClientRect().bottom < 60);
+  /* خنق زمني لا requestAnimationFrame: الأخير يتوقّف في التبويبات الخلفية */
+  let last = 0, timer = null;
+  const onScroll = () => {
+    const now = Date.now();
+    if (now - last >= 16) { last = now; update(); return; }
+    clearTimeout(timer);
+    timer = setTimeout(() => { last = Date.now(); update(); }, 16);
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  update();
+}
+
+buildDemo();
+buildFilters();
+applyTenant(TENANTS[0]);
+watchHeader();
+</script>

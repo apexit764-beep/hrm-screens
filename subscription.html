@@ -1,0 +1,559 @@
+<title>الاشتراكات</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+
+<style>
+:root {
+  --bg: #f7f7f8; --fg: #121217; --card: #fff; --card-fg: #121217;
+  --primary: #505edc; --primary-fg: #fff; --primary-light: #f4f1fd; --primary-soft: #e8e5fa;
+  --muted: #f7f7f8; --muted-fg: #6c6c89; --border: #d1d1db; --input-border: #d1d1db;
+  --success: #0caf60; --success-bg: #e7f8f0; --success-fg: #0a7b43;
+  --warning: #e5a500; --warning-bg: #fef9e7; --warning-fg: #8a6300;
+  --danger: #d92d20; --danger-bg: #fef2f1; --danger-fg: #991b1b;
+  --info: #2563eb; --info-bg: #eff6ff; --info-fg: #1d4ed8;
+  --shadow-sm: 0px 1px 1px rgba(18,18,23,0.05);
+  --font: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --mono: 'Courier New', ui-monospace, monospace;
+  --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --card-fg: #ededf0;
+    --primary: #7b8aef; --primary-light: #1e1d30; --primary-soft: #2a2950;
+    --muted: #1e1e24; --muted-fg: #9494a8; --border: #2c2c35; --input-border: #3a3a45;
+    --success: #34d369; --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+    --warning: #f59e0b; --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+    --danger: #ef4444; --danger-bg: #2a1212; --danger-fg: #fca5a5;
+    --info: #60a5fa; --info-bg: #172554; --info-fg: #93c5fd;
+    --shadow-sm: 0px 1px 2px rgba(0,0,0,0.3);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0c0f; --fg: #ededf0; --card: #18181c; --card-fg: #ededf0;
+  --primary: #7b8aef; --primary-light: #1e1d30; --primary-soft: #2a2950;
+  --muted: #1e1e24; --muted-fg: #9494a8; --border: #2c2c35; --input-border: #3a3a45;
+  --success: #34d369; --success-bg: #0f2a1a; --success-fg: #6ee7a0;
+  --warning: #f59e0b; --warning-bg: #2a1f0a; --warning-fg: #fbbf24;
+  --danger: #ef4444; --danger-bg: #2a1212; --danger-fg: #fca5a5;
+  --info: #60a5fa; --info-bg: #172554; --info-fg: #93c5fd;
+  --shadow-sm: 0px 1px 2px rgba(0,0,0,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--bg); color: var(--card-fg); font-family: var(--font); direction: rtl; -webkit-font-smoothing: antialiased; line-height: 1.7; }
+[hidden] { display: none !important; }
+
+/* Nav */
+.nav-bar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background: var(--card); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.nav-links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.nav-link { padding: 7px 14px; border-radius: var(--radius); font-size: 13px; font-family: var(--font); border: none; cursor: pointer; text-decoration: none; background: transparent; color: var(--muted-fg); }
+.nav-link:hover { background: var(--muted); color: var(--fg); }
+.nav-link.active { background: var(--primary); color: #fff; font-weight: 500; }
+.theme-toggle { display: flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); font-size: 13px; font-family: var(--font); color: var(--card-fg); cursor: pointer; }
+.theme-toggle:hover { background: var(--muted); }
+.theme-toggle svg { width: 16px; height: 16px; }
+
+/* Change note */
+.change-note { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: var(--primary-light); border: 1px solid var(--primary-soft); border-radius: var(--radius-lg); margin-bottom: 20px; }
+.change-note > svg { width: 19px; height: 19px; color: var(--primary); flex-shrink: 0; margin-top: 2px; }
+.change-note-title { font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 7px; }
+.change-note ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.change-note li { font-size: 12.5px; color: var(--card-fg); display: flex; align-items: center; gap: 8px; }
+.tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; flex-shrink: 0; }
+.tag.move { background: var(--info-bg); color: var(--info-fg); }
+.tag.add { background: var(--success-bg); color: var(--success-fg); }
+.tag.fix { background: var(--warning-bg); color: var(--warning-fg); }
+
+.page { max-width: 1080px; margin: 0 auto; padding: 22px 20px 60px; }
+.crumb { font-size: 13px; color: var(--muted-fg); margin-bottom: 6px; }
+.crumb b { color: var(--card-fg); font-weight: 500; }
+.page-title { font-size: 24px; font-weight: 600; color: var(--fg); margin-bottom: 20px; }
+
+/* Shell + tabs */
+.shell { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow: hidden; }
+.tabs { display: flex; padding: 0 22px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab { padding: 15px 4px 13px; margin-left: 26px; border: none; background: none; cursor: pointer; font-family: var(--font); font-size: 14px; color: var(--muted-fg); border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+.tab:last-child { margin-left: 0; }
+.tab:hover { color: var(--fg); }
+.tab.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--primary); }
+.tab svg { width: 16px; height: 16px; }
+.tab .new-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+.body { padding: 24px; }
+
+.sec-title { font-size: 15px; font-weight: 600; color: var(--fg); margin-bottom: 4px; }
+.sec-sub { font-size: 13px; color: var(--muted-fg); margin-bottom: 16px; }
+
+/* Current subscription hero */
+.cur { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.cur-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.cur-head-t { font-size: 15px; font-weight: 600; color: var(--fg); display: flex; align-items: center; gap: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 100px; }
+.badge.ok { background: var(--success-bg); color: var(--success-fg); }
+.badge svg { width: 12px; height: 12px; }
+.cur-grid { display: grid; grid-template-columns: auto repeat(4, 1fr); gap: 18px; padding: 20px; align-items: center; }
+@media (max-width: 900px) { .cur-grid { grid-template-columns: auto 1fr 1fr; } }
+@media (max-width: 560px) { .cur-grid { grid-template-columns: 1fr 1fr; } }
+.ring-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ring { position: relative; width: 84px; height: 84px; }
+.ring svg { transform: rotate(-90deg); }
+.ring-txt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-num { font-size: 20px; font-weight: 700; color: var(--primary); line-height: 1; font-variant-numeric: tabular-nums; }
+.ring-lbl { font-size: 9px; color: var(--muted-fg); margin-top: 2px; }
+.stat { display: flex; align-items: center; gap: 11px; }
+.stat-ico { width: 38px; height: 38px; border-radius: var(--radius); background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stat-ico svg { width: 18px; height: 18px; }
+.stat-lbl { font-size: 11px; color: var(--muted-fg); }
+.stat-val { font-size: 14px; font-weight: 600; color: var(--fg); }
+
+/* Usage — one compact line inside the subscription card */
+.usage { display: flex; align-items: center; gap: 12px; padding: 11px 20px; border-top: 1px solid var(--border); background: var(--muted); }
+.usage-t { font-size: 12.5px; font-weight: 600; color: var(--fg); white-space: nowrap; }
+.usage-n { font-size: 12px; color: var(--muted-fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar { flex: 1; min-width: 80px; height: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--primary); border-radius: 100px; }
+@media (max-width: 480px) { .usage { flex-wrap: wrap; } .bar { flex-basis: 100%; order: 3; } }
+
+/* Rows / toggles */
+.row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 18px; background: var(--muted); border-radius: var(--radius-lg); margin-top: 12px; }
+.row-t { font-size: 14px; font-weight: 500; color: var(--fg); }
+.row-d { font-size: 12.5px; color: var(--muted-fg); margin-top: 2px; }
+.tgl { width: 42px; height: 24px; border-radius: 12px; position: relative; flex-shrink: 0; cursor: pointer; border: none; }
+.tgl.on { background: var(--primary); } .tgl.off { background: var(--border); }
+.tgl .knob { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.tgl.on .knob { left: 3px; } .tgl.off .knob { right: 3px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 18px; border-radius: var(--radius); font-size: 13.5px; font-weight: 500; font-family: var(--font); cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--card-fg); }
+.btn:hover { background: var(--muted); }
+.btn svg { width: 15px; height: 15px; }
+.btn-pr { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-pr:hover { background: #4350c7; }
+.btn-out { background: transparent; border-color: var(--primary); color: var(--primary); }
+.btn-out:hover { background: var(--primary-light); }
+.btn-sm { padding: 7px 13px; font-size: 12.5px; }
+.btn-dg { color: var(--danger-fg); border-color: transparent; }
+.btn-dg:hover { background: var(--danger-bg); }
+
+/* Billing cycle toggle */
+.cycle { display: inline-flex; padding: 4px; background: var(--muted); border-radius: 100px; margin-bottom: 18px; }
+.cycle button { padding: 8px 20px; border-radius: 100px; border: none; background: transparent; font-family: var(--font); font-size: 13px; color: var(--muted-fg); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.cycle button.on { background: var(--card); color: var(--fg); font-weight: 600; box-shadow: var(--shadow-sm); }
+.save-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 100px; background: var(--danger); color: #fff; }
+
+/* Employee slider */
+.emp { padding: 18px 20px; border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 18px; }
+.emp-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+.emp-t { font-size: 13px; font-weight: 600; color: var(--fg); }
+.emp-v { font-size: 14px; font-weight: 700; color: var(--primary); font-variant-numeric: tabular-nums; }
+.emp input[type=range] { width: 100%; height: 5px; appearance: none; background: var(--border); border-radius: 3px; outline: none; direction: ltr; }
+.emp input[type=range]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.22); }
+.emp-scale { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--muted-fg); direction: ltr; }
+
+/* Plans */
+.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+@media (max-width: 820px) { .plans { grid-template-columns: 1fr; } }
+.plan { border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; position: relative; }
+.plan.now { background: var(--muted); }
+.plan.best { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+.plan-tag { position: absolute; top: -10px; right: 18px; font-size: 10px; font-weight: 700; padding: 3px 11px; border-radius: 100px; background: var(--primary); color: #fff; }
+.plan-tag.cur { background: var(--muted-fg); }
+.plan-n { font-size: 16px; font-weight: 700; color: var(--fg); }
+.plan-for { font-size: 11.5px; color: var(--muted-fg); margin-bottom: 14px; }
+.plan-price { display: flex; align-items: baseline; gap: 6px; }
+.plan-num { font-size: 30px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+.plan-cur { font-size: 14px; color: var(--muted-fg); }
+.plan-per { font-size: 11.5px; color: var(--muted-fg); margin-bottom: 16px; min-height: 18px; }
+.plan-old { font-size: 12px; color: var(--muted-fg); text-decoration: line-through; margin-right: 6px; }
+.feats { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; flex: 1; }
+.feat { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--card-fg); line-height: 1.55; }
+.feat svg { width: 14px; height: 14px; color: var(--success); flex-shrink: 0; margin-top: 3px; }
+.feat.off { color: var(--muted-fg); } .feat.off svg { color: var(--border); }
+
+/* Payment cards */
+.pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+@media (max-width: 720px) { .pay-grid { grid-template-columns: 1fr; } }
+.pcard { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1.5px solid var(--border); border-radius: var(--radius-lg); }
+.pcard.def { border-color: var(--primary); background: var(--primary-light); }
+.brand { width: 52px; height: 34px; border-radius: 6px; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; letter-spacing: .04em; flex-shrink: 0; }
+.pcard-main { flex: 1; min-width: 0; }
+.pcard-num { font-size: 14px; font-weight: 600; color: var(--fg); direction: ltr; text-align: right; letter-spacing: .06em; }
+.pcard-exp { font-size: 11.5px; color: var(--muted-fg); margin-top: 2px; }
+.pcard-acts { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.icon-btn { width: 32px; height: 32px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--muted-fg); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.icon-btn:hover { background: var(--danger-bg); color: var(--danger-fg); border-color: var(--danger-bg); }
+.icon-btn svg { width: 15px; height: 15px; }
+
+/* Table */
+.tw { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+th { text-align: right; padding: 12px 16px; font-size: 11.5px; font-weight: 600; color: var(--muted-fg); background: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--card-fg); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--muted); }
+.amt { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.st { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+.st.ok { background: var(--success-bg); color: var(--success-fg); }
+.st.end { background: var(--muted); color: var(--muted-fg); border: 1px solid var(--border); }
+
+/* Fields */
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 620px) { .fields { grid-template-columns: 1fr; } }
+.lbl { display: block; font-size: 12.5px; font-weight: 500; color: var(--card-fg); margin-bottom: 6px; }
+.inp { width: 100%; padding: 11px 14px; border: 1px solid var(--input-border); border-radius: var(--radius); font-size: 13.5px; font-family: var(--font); color: var(--fg); background: var(--card); }
+.inp:focus { outline: none; border-color: var(--primary); }
+
+.alert { display: flex; align-items: flex-start; gap: 11px; padding: 13px 16px; border-radius: var(--radius-lg); font-size: 12.5px; margin-top: 16px; }
+.alert svg { width: 17px; height: 17px; flex-shrink: 0; margin-top: 1px; }
+.alert.info { background: var(--info-bg); color: var(--info-fg); }
+
+.foot { display: flex; gap: 9px; padding: 16px 24px; border-top: 1px solid var(--border); background: var(--muted); }
+.divider { height: 1px; background: var(--border); margin: 22px 0; }
+</style>
+
+<!-- Nav -->
+<div class="nav-bar">
+  <div class="nav-links">
+    <a href="candidates-kanban.html" class="nav-link">مراحل المرشحين</a>
+    <a href="subscription.html" class="nav-link active">الاشتراكات</a>
+    <a href="company-settings.html" class="nav-link">إعدادات الشركة</a>
+    <a href="domain.html" class="nav-link">تخصيص النطاق</a>
+    <a href="ai-settings.html" class="nav-link">إعدادات الذكاء الاصطناعي</a>
+    <a href="training.html" class="nav-link">التدريب والتطوير</a>
+    <a href="index.html" class="nav-link">فحص السير الذاتية</a>
+    <a href="tokens.html" class="nav-link">Design Tokens</a>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <svg id="ts" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg id="tm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span id="tl">Light</span>
+  </button>
+</div>
+
+<div class="page">
+  <div class="crumb">لوحة التحكم / <b>الاشتراكات</b></div>
+  <h1 class="page-title">الاشتراكات</h1>
+
+  <div class="change-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div>
+      <div class="change-note-title">التعديلات المطبّقة</div>
+      <ul>
+        <li><span class="tag move">نقل</span> «إعدادات الدفع» من الإعدادات ← المالية إلى تبويب مستقل هنا</li>
+        <li><span class="tag move">نقل</span> «التجديد التلقائي» إلى تبويب «الاشتراك» — لأنه إعداد للاشتراك القائم</li>
+        <li><span class="tag add">إضافة</span> «الاشتراكات السابقة» مع تحميل الفاتورة الضريبية</li>
+        <li><span class="tag fix">دمج</span> «الاشتراك الحالي» و«الباقات» في تبويب واحد — لأن الترقية أكثر رحلة شائعة</li>
+        <li><span class="tag fix">تصحيح</span> توحيد العملة بالريال — كانت تعرض «2,499 ر.س» و«249$» في نفس الصفحة</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="tabs">
+      <button class="tab active" data-t="sub" onclick="go('sub')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4-6.2-4.6L5.8 21l2.4-7.4L2 9.4h7.6z"/></svg>
+        الاشتراك
+      </button>
+      <button class="tab" data-t="pay" onclick="go('pay')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        إعدادات الدفع <span class="new-dot" title="منقولة من الإعدادات ← المالية"></span>
+      </button>
+      <button class="tab" data-t="past" onclick="go('past')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+        الاشتراكات السابقة
+      </button>
+    </div>
+
+    <!-- ===== Current ===== -->
+    <!-- ===== Tab 1: subscription (current + plans) ===== -->
+    <div class="body" id="p-sub">
+      <div class="cur">
+        <div class="cur-head">
+          <span class="cur-head-t">
+            الاشتراك الحالي
+            <span class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>فعّال</span>
+          </span>
+          <button class="btn btn-out btn-sm" onclick="document.querySelector('.plans').scrollIntoView({behavior:'smooth',block:'center'})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            ترقية الباقة
+          </button>
+        </div>
+        <div class="cur-grid">
+          <div class="ring-wrap">
+            <div class="ring">
+              <svg width="84" height="84">
+                <circle cx="42" cy="42" r="34" fill="none" stroke="var(--border)" stroke-width="7"/>
+                <circle cx="42" cy="42" r="34" fill="none" stroke="var(--primary)" stroke-width="7" stroke-linecap="round" stroke-dasharray="196 214"/>
+              </svg>
+              <div class="ring-txt"><span class="ring-num">335</span><span class="ring-lbl">يوم متبقٍ</span></div>
+            </div>
+          </div>
+          <div class="stat">
+            <span class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4-6.2-4.6L5.8 21l2.4-7.4L2 9.4h7.6z"/></svg></span>
+            <span><span class="stat-lbl">نوع الباقة</span><br><span class="stat-val">الباقة المميزة</span></span>
+          </div>
+          <div class="stat">
+            <span class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+            <span><span class="stat-lbl">رسوم الاشتراك</span><br><span class="stat-val">2,499 ر.س</span></span>
+          </div>
+          <div class="stat">
+            <span class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+            <span><span class="stat-lbl">تاريخ البدء</span><br><span class="stat-val">5 أكتوبر 2025</span></span>
+          </div>
+          <div class="stat">
+            <span class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+            <span><span class="stat-lbl">تاريخ الانتهاء</span><br><span class="stat-val">5 أكتوبر 2026</span></span>
+          </div>
+        </div>
+
+        <div class="usage">
+          <span class="usage-t">الموظفون المستخدمون</span>
+          <div class="bar"><div class="bar-fill" style="width:68%"></div></div>
+          <span class="usage-n">68 من 100</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec-title">التجديد التلقائي</div>
+      <div class="sec-sub">تحكّم في كيفية تجديد اشتراكك.</div>
+      <div class="row" style="margin-top:0;">
+        <div>
+          <div class="row-t">تفعيل التجديد التلقائي</div>
+          <div class="row-d">عند التفعيل، سيتم تجديد اشتراكك تلقائياً عند انتهاء الفترة الحالية باستخدام طريقة الدفع الافتراضية.</div>
+        </div>
+        <span class="tgl on"><span class="knob"></span></span>
+      </div>
+      <div class="alert info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div>سيُخصم <strong>2,499 ر.س</strong> من بطاقة <span style="direction:ltr;display:inline-block">VISA ••••4242</span> بتاريخ <strong>5 أكتوبر 2026</strong>. سنُذكّرك قبلها بـ 7 أيام.</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec-title">الباقات المتاحة</div>
+      <div class="sec-sub">قارن الباقات وغيّر باقتك في أي وقت — يُحتسب الفرق تناسبياً.</div>
+
+      <div class="cycle">
+        <button id="cm" onclick="setCycle('m')">شهري</button>
+        <button id="cy" class="on" onclick="setCycle('y')">سنوي <span class="save-tag">خصم 16%</span></button>
+      </div>
+
+      <div class="emp">
+        <div class="emp-head">
+          <span class="emp-t">عدد الموظفين</span>
+          <span class="emp-v" id="empV">70 موظف</span>
+        </div>
+        <input type="range" min="10" max="200" step="10" value="70" id="empR" oninput="setEmp(this.value)">
+        <div class="emp-scale"><span>10</span><span>50</span><span>100</span><span>150</span><span>200</span></div>
+      </div>
+
+      <div class="plans">
+        <div class="plan" id="plan-basic">
+          <div class="plan-n">باقة البداية</div>
+          <div class="plan-for">للشركات الصغيرة</div>
+          <div class="plan-price"><span class="plan-num" id="pB">999</span><span class="plan-cur">ر.س</span></div>
+          <div class="plan-per" id="perB">سنوياً · <span class="plan-old">1,188 ر.س</span></div>
+          <div class="feats">
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>حتى 25 موظفاً</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>إدارة الموظفين</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>الحضور والانصراف</div>
+            <div class="feat off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>بدون الرواتب والتوظيف</div>
+            <div class="feat off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>بدون نطاق مخصص</div>
+          </div>
+          <button class="btn" onclick="openDown()">تخفيض للباقة</button>
+        </div>
+
+        <div class="plan now" id="plan-prem">
+          <span class="plan-tag cur">باقتك الحالية</span>
+          <div class="plan-n">الباقة المميزة</div>
+          <div class="plan-for">للمؤسسات والشركات المتوسطة</div>
+          <div class="plan-price"><span class="plan-num" id="pP">2,499</span><span class="plan-cur">ر.س</span></div>
+          <div class="plan-per" id="perP">سنوياً · <span class="plan-old">2,988 ر.س</span></div>
+          <div class="feats">
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>حتى 100 موظف</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>الرواتب والمسيّرات</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>التوظيف وفحص السير الذاتية</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>نطاق مخصص + SSL</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>تقارير وتحليلات متقدمة</div>
+          </div>
+          <button class="btn" disabled style="opacity:.55;cursor:default;">باقتك الحالية</button>
+        </div>
+
+        <div class="plan best" id="plan-biz">
+          <span class="plan-tag">الأنسب لحجمك</span>
+          <div class="plan-n">باقة الأعمال</div>
+          <div class="plan-for">للمؤسسات متعددة الفروع</div>
+          <div class="plan-price"><span class="plan-num" id="pZ">4,999</span><span class="plan-cur">ر.س</span></div>
+          <div class="plan-per" id="perZ">سنوياً · <span class="plan-old">5,988 ر.س</span></div>
+          <div class="feats">
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>موظفون بلا حد + فروع متعددة</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>كل مزايا المميزة</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>مزايا الذكاء الاصطناعي كاملة</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>ربط API وتكاملات مخصصة</div>
+            <div class="feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>مدير حساب ودعم مخصص</div>
+          </div>
+          <button class="btn btn-pr" onclick="openUp()">ترقية الآن</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Tab 2: billing (payment + history) ===== -->
+    <!-- ===== Tab 2: payment methods ===== -->
+    <div class="body" id="p-pay" hidden>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px;">
+        <div>
+          <div class="sec-title">البطاقات المحفوظة</div>
+          <div class="sec-sub" style="margin-bottom:0;">إدارة طرق الدفع الخاصة بك — تُستخدم في تجديد الاشتراك.</div>
+        </div>
+        <button class="btn btn-pr" onclick="openAddCard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة بطاقة
+        </button>
+      </div>
+
+      <div class="pay-grid">
+        <div class="pcard def">
+          <span class="brand">VISA</span>
+          <span class="pcard-main">
+            <span class="pcard-num">•••• •••• •••• 4242</span>
+            <span class="pcard-exp">تاريخ الانتهاء: 02/28</span>
+          </span>
+          <span class="pcard-acts">
+            <span class="badge ok" style="background:var(--primary-light);color:var(--primary);">افتراضية</span>
+            <button class="icon-btn" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </span>
+        </div>
+        <div class="pcard">
+          <span class="brand" style="background:#1a1f71;">VISA</span>
+          <span class="pcard-main">
+            <span class="pcard-num">•••• •••• •••• 8317</span>
+            <span class="pcard-exp">تاريخ الانتهاء: 09/27</span>
+          </span>
+          <span class="pcard-acts">
+            <button class="btn btn-sm" onclick="openSetDefault()">تعيين كافتراضية</button>
+            <button class="icon-btn" title="حذف"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec-title">بيانات الفوترة</div>
+      <div class="sec-sub">تظهر على الفاتورة الضريبية.</div>
+      <div class="fields">
+        <div><label class="lbl">الاسم النظامي للشركة</label><input class="inp" value="شركة الماسة لحلول التسويق"></div>
+        <div><label class="lbl">الرقم الضريبي (VAT)</label><input class="inp" style="font-family:var(--mono);direction:ltr;text-align:left;" value="310123456700003"></div>
+        <div><label class="lbl">العنوان</label><input class="inp" value="الرياض، المملكة العربية السعودية"></div>
+        <div><label class="lbl">بريد استلام الفواتير</label><input class="inp" style="direction:ltr;text-align:left;" value="finance@almasa.com"></div>
+      </div>
+    </div>
+
+    <!-- ===== Tab 3: past subscriptions ===== -->
+    <div class="body" id="p-past" hidden>
+      <div class="sec-title">الاشتراكات السابقة</div>
+      <div class="sec-sub">سجل اشتراكاتك مع إمكانية تحميل الفاتورة الضريبية لكل فترة.</div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>#</th><th>الفترة</th><th>الباقة</th><th>المدة</th><th>المبلغ</th><th>الحالة</th><th>الفاتورة</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>01</td>
+              <td>5 أكتوبر 2025 — 5 أكتوبر 2026</td>
+              <td>الباقة المميزة</td><td>سنوي</td>
+              <td class="amt">2,499 ر.س</td>
+              <td><span class="st ok">الحالية</span></td>
+              <td><button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>تحميل</button></td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td>5 أكتوبر 2024 — 5 أكتوبر 2025</td>
+              <td>باقة البداية</td><td>سنوي</td>
+              <td class="amt">999 ر.س</td>
+              <td><span class="st end">منتهية</span></td>
+              <td><button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>تحميل</button></td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td>5 سبتمبر 2024 — 5 أكتوبر 2024</td>
+              <td>باقة البداية</td><td>شهري</td>
+              <td class="amt">99 ر.س</td>
+              <td><span class="st end">منتهية</span></td>
+              <td><button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>تحميل</button></td>
+            </tr>
+            <tr>
+              <td>04</td>
+              <td>5 أغسطس 2024 — 5 سبتمبر 2024</td>
+              <td>باقة البداية</td><td>شهري</td>
+              <td class="amt">99 ر.س</td>
+              <td><span class="st end">منتهية</span></td>
+              <td><button class="btn btn-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>تحميل</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="alert info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div>الفواتير صادرة بصيغة متوافقة مع هيئة الزكاة والضريبة (ZATCA) وتتضمن الرقم الضريبي المسجّل في «بيانات الفوترة».</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <button class="btn btn-pr">حفظ التغييرات</button>
+      <button class="btn">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const r=document.documentElement;const n=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('hrm-theme',n)}catch(e){}themeUI(n);}
+function themeUI(t){document.getElementById('ts').style.display=t==='dark'?'none':'block';document.getElementById('tm').style.display=t==='dark'?'block':'none';document.getElementById('tl').textContent=t==='dark'?'Dark':'Light';}
+(function(){const s=(function(){try{return localStorage.getItem('hrm-theme')}catch(e){return null}})()||'light';document.documentElement.setAttribute('data-theme',s);themeUI(s);})();
+
+const TABS = ['sub','pay','past'];
+function go(t){
+  TABS.forEach(x => document.getElementById('p-'+x).hidden = x !== t);
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+}
+
+/* Prices in SAR only — one currency across the page */
+const P = { basic:{m:99,y:999,list:1188}, prem:{m:249,y:2499,list:2988}, biz:{m:499,y:4999,list:5988} };
+let cycle = 'y';
+function setCycle(c){
+  cycle = c;
+  document.getElementById('cm').classList.toggle('on', c==='m');
+  document.getElementById('cy').classList.toggle('on', c==='y');
+  const fmt = n => n.toLocaleString('en-US');
+  document.getElementById('pB').textContent = fmt(P.basic[c]);
+  document.getElementById('pP').textContent = fmt(P.prem[c]);
+  document.getElementById('pZ').textContent = fmt(P.biz[c]);
+  const per = (k) => c==='y'
+    ? 'سنوياً · <span class="plan-old">'+fmt(P[k].list)+' ر.س</span>'
+    : 'شهرياً';
+  document.getElementById('perB').innerHTML = per('basic');
+  document.getElementById('perP').innerHTML = per('prem');
+  document.getElementById('perZ').innerHTML = per('biz');
+}
+
+/* Slider highlights the plan that fits the company size */
+function setEmp(v){
+  document.getElementById('empV').textContent = v + ' موظف';
+  const fit = v <= 25 ? 'basic' : (v <= 100 ? 'prem' : 'biz');
+  const map = { basic:'plan-basic', prem:'plan-prem', biz:'plan-biz' };
+  Object.entries(map).forEach(([k,id]) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('best', k === fit && k !== 'prem');
+    const tag = el.querySelector('.plan-tag:not(.cur)');
+    if (tag) tag.hidden = k !== fit;
+  });
+}
+
+function openUp(){ alert('ينتقل إلى شاشة الدفع باستخدام البطاقة الافتراضية — نفس تدفق الدفع في صفحة تخصيص النطاق.'); }
+function openDown(){ alert('تأكيد التخفيض: تنبيه بأن عدد الموظفين الحالي (68) يتجاوز حد الباقة (25).'); }
+function openAddCard(){ alert('نموذج إضافة بطاقة جديدة.'); }
+function openSetDefault(){ alert('تأكيد: سيُستخدم هذا الكارت في التجديد القادم بتاريخ 5 أكتوبر 2026.'); }
+
+setCycle('y');
+setEmp(70);
+</script>
