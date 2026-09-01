@@ -1,4 +1,4 @@
-﻿<title>إعدادات الذكاء الاصطناعي</title>
+<title>إعدادات الذكاء الاصطناعي</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
 
 <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('hrm-theme')||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
@@ -549,6 +549,28 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
 .field-err.show { display: block; }
 .req { color: var(--danger); }
 
+/* رسالة عابرة — بديل الصمت حين يُضغط قسم لم تُبنَ صفحته بعد */
+.toast {
+  position: fixed; inset-inline: 0; bottom: 24px; z-index: 60;
+  margin: 0 auto; width: max-content; max-width: calc(100% - 40px);
+  padding: 11px 18px; border-radius: 999px;
+  background: var(--fg); color: var(--bg);
+  font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,.22);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: none; }
+
+/* ميزة مجالها معطّل — ظاهرة لكن غير قابلة للتشغيل */
+.feat-blocked { opacity: .5; }
+.feat-blocked .toggle { pointer-events: none; }
+.feat-note {
+  display: inline-block; margin-top: 3px; font-size: 11.5px;
+  color: var(--warning-fg); background: var(--warning-bg);
+  border-radius: 5px; padding: 1px 7px;
+}
+
 /* شريط التغييرات غير المحفوظة */
 .save-bar {
   position: sticky; bottom: 0; z-index: 20;
@@ -693,13 +715,14 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
   <div class="settings-shell">
 
     <!-- Top category tabs -->
-    <div class="top-tabs">
-      <button class="top-tab">الشركة</button>
+    <!-- data-go يحمل الصفحة الموجودة فعلاً؛ ما دونه يردّ برسالة بدل الصمت -->
+    <div class="top-tabs" onclick="topNav(event)">
+      <button class="top-tab" data-go="company-settings.html">الشركة</button>
       <button class="top-tab">الحضور</button>
       <button class="top-tab">المالية</button>
-      <button class="top-tab">التوظيف</button>
+      <button class="top-tab" data-go="candidates-kanban.html">التوظيف</button>
       <button class="top-tab">الطلبات والموافقات</button>
-      <button class="top-tab">التطبيق</button>
+      <button class="top-tab" data-go="document-settings.html">المستندات</button>
       <button class="top-tab active">الذكاء الاصطناعي</button>
     </div>
 
@@ -819,10 +842,12 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
             </div>
           </div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-primary">حفظ التغييرات</button>
-          <button class="btn">إلغاء</button>
-        </div>
+      </div>
+      <div class="save-bar" id="bar-scope">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في نطاق العمل</span>
+        <button class="btn" type="button" onclick="discard('scope')">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="save('scope')">حفظ التغييرات</button>
       </div>
       </div>
 
@@ -1096,14 +1121,16 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
           <span class="badge badge-primary">باقة الأعمال</span>
         </div>
         <div class="section-body">
+          <!-- كل رقم هنا يُشتقّ من CREDIT في السكربت — الكتابة اليدوية هي التي
+               جعلت «3,600 متبقية» تظهر بجانب شارة 64% وهما متناقضان -->
           <div class="usage-head">
-            <span class="usage-num" id="usageNum">3,600 <span>عملية متبقية من 10,000</span></span>
-            <span class="badge badge-success" id="usagePct">64%</span>
+            <span class="usage-num" id="usageNum">—</span>
+            <span class="badge" id="usagePct">—</span>
           </div>
-          <div class="usage-bar"><div class="usage-fill" id="usageFill" style="width: 64%;"></div></div>
+          <div class="usage-bar"><div class="usage-fill" id="usageFill" style="width: 0%;"></div></div>
           <div class="usage-foot">
-            <span>استهلاك اليوم: 23 عملية</span>
-            <span>تتجدّد الدورة في 1 أكتوبر</span>
+            <span id="usageToday">—</span>
+            <span id="usageRenew">—</span>
           </div>
         </div>
       </div>
@@ -1157,28 +1184,28 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
         </div>
         <div class="section-body">
           <div class="feat-list">
-            <div class="toggle-row">
+            <div class="toggle-row" data-needs="التوظيف">
               <div class="toggle-info">
                 <div class="toggle-label">تحليل السير الذاتية</div>
               </div>
               <span class="opt-tag" style="margin-left: 12px;">2 عملية/سيرة</span>
               <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
             </div>
-            <div class="toggle-row">
+            <div class="toggle-row" data-needs="المستندات">
               <div class="toggle-info">
                 <div class="toggle-label">تحليل المستندات (PDF)</div>
               </div>
               <span class="opt-tag" style="margin-left: 12px;">3 عمليات/ملف</span>
               <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
             </div>
-            <div class="toggle-row">
+            <div class="toggle-row" data-needs="الموظفين">
               <div class="toggle-info">
                 <div class="toggle-label">تلخيص المحادثات</div>
               </div>
               <span class="opt-tag" style="margin-left: 12px;">1 عملية/محادثة</span>
               <div class="toggle off" role="switch" aria-checked="false" tabindex="0"><div class="dot"></div></div>
             </div>
-            <div class="toggle-row">
+            <div class="toggle-row" data-needs="الموظفين">
               <div class="toggle-info">
                 <div class="toggle-label">اقتراحات ذكية للموظفين</div>
               </div>
@@ -1330,6 +1357,30 @@ function updateThemeUI(theme) {
   document.getElementById('theme-label').textContent = theme === 'dark' ? 'Dark' : 'Light';
 }
 
+/* ── رسالة عابرة ── */
+let toastEl, toastTimer;
+function toast(msg) {
+  if (!toastEl) {
+    toastEl = document.createElement('div');
+    toastEl.className = 'toast';
+    toastEl.setAttribute('role', 'status');
+    document.body.appendChild(toastEl);
+  }
+  toastEl.textContent = msg;
+  void toastEl.offsetWidth;              // إعادة تدفّق تُشغّل الانتقال — rAF يتجمّد في التبويبات الخلفية
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+}
+
+/* أقسام الإعدادات العليا: ما بُنيت صفحته ينتقل إليه، وما لم تُبنَ يقولها صراحة */
+function topNav(e) {
+  const btn = e.target.closest('.top-tab');
+  if (!btn || btn.classList.contains('active')) return;
+  if (btn.dataset.go) { location.href = btn.dataset.go; return; }
+  toast('قسم «' + btn.textContent.trim() + '» غير مشمول في هذا العرض');
+}
+
 /* تبويب لكل شأن: أين يعمل · مساعد الموارد البشرية · الربط · اللغة · الرصيد · الخصوصية */
 const TABS = ['scope','assistant','link','usage','privacy'];
 function showTab(id, btn) {
@@ -1346,10 +1397,33 @@ function toggleModuleSwitch(e, el) {
   row.classList.toggle('off', !on);
   row.querySelector('.mod-state').textContent = on ? 'مفعّل' : 'معطّل';
   updateModCount();
+  syncFeatures();          // ميزات الرصيد تتبع المجال الذي تنتمي إليه
+  markDirty('scope');
 }
 function modKey(e, el) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleModuleSwitch(e, el); }
 }
+/* ميزة تابعة لمجال معطَّل لا يصحّ أن تبقى مفعّلة وتستهلك رصيداً.
+   تُعطَّل بصرياً وتُمنع من التبديل حتى يُفعَّل مجالها في نطاق العمل. */
+function syncFeatures() {
+  const offModules = new Set(
+    [...document.querySelectorAll('.mod-row.off')].map(r => r.querySelector('.mod-name').textContent.trim())
+  );
+  document.querySelectorAll('.feat-list .toggle-row[data-needs]').forEach(row => {
+    const blocked = offModules.has(row.dataset.needs);
+    row.classList.toggle('feat-blocked', blocked);
+    const note = row.querySelector('.feat-note');
+    if (blocked && !note) {
+      const s = document.createElement('span');
+      s.className = 'feat-note';
+      s.textContent = '«' + row.dataset.needs + '» معطّل';
+      row.querySelector('.toggle-info').appendChild(s);
+    } else if (!blocked && note) {
+      note.remove();
+    }
+  });
+}
+
 function updateModCount() {
   const rows = [...document.querySelectorAll('.mod-row')];
   const on = rows.filter(r => !r.classList.contains('off')).length;
@@ -1362,6 +1436,38 @@ function updateModCount() {
 
 /* لقطة الحالة الأولى لكل تبويب — يقارَن بها لمعرفة وجود تغيير فعلي */
 const baseline = {};
+
+/* ─── الرصيد: مصدر واحد للأرقام ───
+   الشريط يمثّل المتبقي كالبطارية، فالرقم والشارة والشريط تقول الشيء نفسه. */
+const CREDIT = { total: 10000, used: 6400, today: 23, renews: '1 أكتوبر' };
+
+function renderCredit() {
+  const { total, used, today, renews } = CREDIT;
+  const left = Math.max(0, total - used);
+  const pct  = Math.round(left / total * 100);
+  const n    = v => v.toLocaleString('en');
+
+  const numEl = document.getElementById('usageNum');
+  if (!numEl) return;
+  numEl.innerHTML = n(left) + ' <span>عملية متبقية من ' + n(total) + '</span>';
+
+  // اللون يتبع ما تبقّى: يطمئن فوق النصف، ويحذّر مع النفاد
+  const level = pct > 50 ? 'success' : pct > 20 ? 'warning' : 'danger';
+  const badge = document.getElementById('usagePct');
+  badge.textContent = pct + '% متبقٍ';
+  badge.className = 'badge badge-' + level;
+
+  const fill = document.getElementById('usageFill');
+  fill.style.width = pct + '%';
+  fill.style.background = 'var(--' + (level === 'success' ? 'primary' : level) + ')';
+
+  document.getElementById('usageToday').textContent = 'استهلاك اليوم: ' + n(today) + ' عملية';
+  document.getElementById('usageRenew').textContent = 'تتجدّد الدورة في ' + renews;
+
+  // حدّ التنبيه لا يصحّ أن يتجاوز حجم الباقة
+  const alertNum = document.getElementById('alertNum');
+  if (alertNum) alertNum.max = total;
+}
 
 function panelOf(el) {
   const p = el.closest('.tab-panel');
@@ -1448,6 +1554,8 @@ function updateCompliance() {
 
 /* ── المفاتيح ── */
 function flipToggle(t) {
+  // ميزة مجالها معطّل: التبديل مرفوض، وإلا استهلكت رصيداً لمجال لا يعمل
+  if (t.closest('.feat-blocked')) return;
   const on = !t.classList.contains('on');
   t.classList.toggle('on', on);
   t.classList.toggle('off', !on);
@@ -1557,5 +1665,7 @@ document.addEventListener('change', e => {
 const saved = localStorage.getItem('hrm-theme') || 'light';
 document.documentElement.setAttribute('data-theme', saved);
 updateThemeUI(saved);
+renderCredit();
+syncFeatures();
 TABS.forEach(t => baseline[t] = snapshot(t));
 </script>
