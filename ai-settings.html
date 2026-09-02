@@ -163,9 +163,12 @@ body {
 .top-tab.active { background: var(--muted); color: var(--fg); font-weight: 500; }
 
 /* Sub tabs (border-bottom style like the site) */
+/* لم تعد تبويبات تُخفي المحتوى، بل روابط تمرّر إليه — تبقى لاصقة أثناء التصفّح */
 .sub-tabs {
+  position: sticky; top: 0; z-index: 30;
   display: flex; align-items: center; gap: 0;
   padding: 0 24px;
+  background: var(--card);
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
 }
@@ -183,6 +186,12 @@ body {
 
 /* Content area */
 .settings-content { padding: 24px; }
+/* الأقسام كلها ظاهرة في صفحة واحدة، والتمرير يترك مساحة تحت الشريط اللاصق */
+.tab-panel { scroll-margin-top: 62px; }
+.tab-panel + .tab-panel { margin-top: 34px; }
+.sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sec-head h2 { font-size: 17px; font-weight: 600; color: var(--fg); margin: 0; white-space: nowrap; }
+.sec-head::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* Section cards inside content */
 .section {
@@ -574,7 +583,7 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
 
 /* شريط التغييرات غير المحفوظة */
 .save-bar {
-  position: sticky; bottom: 0; z-index: 20;
+  position: sticky; bottom: 16px; z-index: 35;
   display: none; align-items: center; gap: 12px;
   margin-top: 16px; padding: 12px 18px;
   background: var(--card); border: 1px solid var(--border);
@@ -729,17 +738,101 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
 
     <!-- Sub navigation tabs -->
     <div class="sub-tabs">
-      <button class="sub-tab active" onclick="showTab('scope', this)">نطاق العمل</button>
-      <button class="sub-tab" onclick="showTab('assistant', this)">المساعد الذكي</button>
-      <button class="sub-tab" onclick="showTab('link', this)">إعدادات الربط</button>
-      <button class="sub-tab" onclick="showTab('usage', this)">الميزات والرصيد</button>
-      <button class="sub-tab" onclick="showTab('privacy', this)">الخصوصية</button>
+      <button class="sub-tab active" onclick="goSection('link')">إعدادات الربط</button>
+      <button class="sub-tab" onclick="goSection('scope')">نطاق العمل</button>
+      <button class="sub-tab" onclick="goSection('assistant')">المساعد الذكي</button>
+      <button class="sub-tab" onclick="goSection('privacy')">الخصوصية</button>
+      <button class="sub-tab" onclick="goSection('usage')">الرصيد والاستهلاك</button>
     </div>
 
     <!-- Content -->
     <div class="settings-content">
 
+      <div class="tab-panel" id="panel-link">
+      <div class="sec-head"><h2>إعدادات الربط</h2></div>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">ربط مزوّد الذكاء الاصطناعي</p>
+            <p class="section-desc">اختر المزوّد ثم أدخل مفتاح الـ API. المفتاح محفوظ عندك ولا يُشارك مع أي طرف ثالث.</p>
+          </div>
+          <span class="badge badge-success" id="connBadge">متصل</span>
+        </div>
+        <div class="section-body">
+
+          <p class="section-label">المصدر</p>
+          <div class="opt-grid" data-group="provider" style="margin-bottom: 20px;">
+            <div class="opt-card sel" role="radio" aria-checked="true" tabindex="0" data-val="claude" data-models="متوازن|الأدق في التحليل|الأسرع">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">Claude</span>
+                <span class="opt-desc">الأذكى في التحليل والمحادثات الطويلة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="openai" data-models="GPT-4o mini · موصى به|GPT-4o|GPT-4 Turbo">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">OpenAI</span>
+                <span class="opt-desc">الأشهر — مجموعة GPT-4o</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="gemini" data-models="Gemini Flash · موصى به|Gemini Pro">
+              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.6 6.8L21 11l-6.4 2.2L12 20l-2.6-6.8L3 11l6.4-2.2z"/></svg></span>
+              <span class="opt-body">
+                <span class="opt-title">Gemini</span>
+                <span class="opt-desc">سياق طويل ودعم وسائط متعددة</span>
+              </span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label class="field-label" for="apiKey">مفتاح API <span class="req">*</span></label>
+            <div class="key-wrap">
+              <!-- قيمة عرض مقنّعة عمداً: أي نصّ بصيغة مفتاح حقيقي يُشعل فحص الأسرار في المستودع -->
+              <input type="password" id="apiKey" class="field-input mono" value="••••••••••••••••4f2a" placeholder="ألصق المفتاح هنا">
+              <button type="button" class="key-eye" id="keyEye" aria-label="إظهار المفتاح" onclick="toggleKey()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="field-err" id="apiKeyErr">مفتاح API مطلوب.</p>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label class="field-label" for="modelSel">النموذج <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="modelSel" class="field-select-el">
+                <option>متوازن</option>
+                <option>الأدق في التحليل</option>
+                <option>الأسرع</option>
+              </select>
+            </div>
+            <p class="slider-hint">النماذج المتاحة تتغيّر حسب المزوّد المختار.</p>
+          </div>
+
+          <div>
+            <label class="field-label" for="maxLen">حدّ طول الرد <span style="color: var(--muted-fg); font-weight: 400;">(اختياري)</span></label>
+            <div class="input-affix">
+              <input type="number" id="maxLen" class="field-input" value="600" min="50" max="4000" step="50">
+              <span class="affix">رمز</span>
+            </div>
+            <p class="slider-hint" id="maxLenHint">الحد الأقصى لطول الرد بالرموز (tokens). 600 رمز ≈ 450 كلمة.</p>
+          </div>
+
+          <div class="conn-row" style="margin-top: 20px;">
+            <span class="conn-dot" id="connDot"></span>
+            <span class="conn-name" id="connMsg">الاتصال يعمل — آخر فحص قبل 4 دقائق</span>
+            <button class="btn" type="button" onclick="testConn(this)">اختبار الاتصال</button>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <!-- الميزات والرصيد -->
       <div class="tab-panel" id="panel-scope">
+      <div class="sec-head"><h2>نطاق العمل</h2></div>
       <!-- نطاق العمل: تفعيل/إلغاء تفعيل كل مجال — لا إعدادات تفصيلية هنا -->
       <div class="section">
         <div class="section-head">
@@ -844,15 +937,51 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
           </div>
         </div>
       </div>
-      <div class="save-bar" id="bar-scope">
-        <span class="dirty-dot"></span>
-        <span class="dirty-msg">لديك تغييرات غير محفوظة في نطاق العمل</span>
-        <button class="btn" type="button" onclick="discard('scope')">تجاهل</button>
-        <button class="btn btn-primary" type="button" onclick="save('scope')">حفظ التغييرات</button>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">الميزات المتاحة</p>
+            <p class="section-desc">كل ميزة تتبع مجالها أعلاه — إطفاء المجال يعطّلها. الرقم بجانبها استهلاكها من الرصيد.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="feat-list">
+            <div class="toggle-row" data-needs="التوظيف">
+              <div class="toggle-info">
+                <div class="toggle-label">تحليل السير الذاتية</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">2 عملية/سيرة</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row" data-needs="المستندات">
+              <div class="toggle-info">
+                <div class="toggle-label">تحليل المستندات (PDF)</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">3 عمليات/ملف</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row" data-needs="الموظفين">
+              <div class="toggle-info">
+                <div class="toggle-label">تلخيص المحادثات</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">1 عملية/محادثة</span>
+              <div class="toggle off" role="switch" aria-checked="false" tabindex="0"><div class="dot"></div></div>
+            </div>
+            <div class="toggle-row" data-needs="الموظفين">
+              <div class="toggle-info">
+                <div class="toggle-label">اقتراحات ذكية للموظفين</div>
+              </div>
+              <span class="opt-tag" style="margin-left: 12px;">1 عملية/اقتراح</span>
+              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
+            </div>
+          </div>
+        </div>
       </div>
       </div>
 
-      <div class="tab-panel" id="panel-assistant" hidden>
+      <div class="tab-panel" id="panel-assistant">
+      <div class="sec-head"><h2>المساعد الذكي</h2></div>
       <div class="section">
         <div class="section-head">
           <div>
@@ -1015,216 +1144,11 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
           </div>
         </div>
       </div>
-      <div class="save-bar" id="bar-assistant">
-        <span class="dirty-dot"></span>
-        <span class="dirty-msg">لديك تغييرات غير محفوظة في المساعد الذكي</span>
-        <button class="btn" type="button" onclick="discard('assistant')">تجاهل</button>
-        <button class="btn btn-primary" type="button" onclick="save('assistant')">حفظ التغييرات</button>
-      </div>
       </div>
 
       <!-- إعدادات الربط -->
-      <div class="tab-panel" id="panel-link" hidden>
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <p class="section-title">ربط مزوّد الذكاء الاصطناعي</p>
-            <p class="section-desc">اختر المزوّد ثم أدخل مفتاح الـ API. المفتاح محفوظ عندك ولا يُشارك مع أي طرف ثالث.</p>
-          </div>
-          <span class="badge badge-success" id="connBadge">متصل</span>
-        </div>
-        <div class="section-body">
-
-          <p class="section-label">المصدر</p>
-          <div class="opt-grid" data-group="provider" style="margin-bottom: 20px;">
-            <div class="opt-card sel" role="radio" aria-checked="true" tabindex="0" data-val="claude" data-models="متوازن|الأدق في التحليل|الأسرع">
-              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg></span>
-              <span class="opt-body">
-                <span class="opt-title">Claude</span>
-                <span class="opt-desc">الأذكى في التحليل والمحادثات الطويلة</span>
-              </span>
-              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="openai" data-models="GPT-4o mini · موصى به|GPT-4o|GPT-4 Turbo">
-              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>
-              <span class="opt-body">
-                <span class="opt-title">OpenAI</span>
-                <span class="opt-desc">الأشهر — مجموعة GPT-4o</span>
-              </span>
-              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="opt-card" role="radio" aria-checked="false" tabindex="0" data-val="gemini" data-models="Gemini Flash · موصى به|Gemini Pro">
-              <span class="opt-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.6 6.8L21 11l-6.4 2.2L12 20l-2.6-6.8L3 11l6.4-2.2z"/></svg></span>
-              <span class="opt-body">
-                <span class="opt-title">Gemini</span>
-                <span class="opt-desc">سياق طويل ودعم وسائط متعددة</span>
-              </span>
-              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 16px;">
-            <label class="field-label" for="apiKey">مفتاح API <span class="req">*</span></label>
-            <div class="key-wrap">
-              <!-- قيمة عرض مقنّعة عمداً: أي نصّ بصيغة مفتاح حقيقي يُشعل فحص الأسرار في المستودع -->
-              <input type="password" id="apiKey" class="field-input mono" value="••••••••••••••••4f2a" placeholder="ألصق المفتاح هنا">
-              <button type="button" class="key-eye" id="keyEye" aria-label="إظهار المفتاح" onclick="toggleKey()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-            <p class="field-err" id="apiKeyErr">مفتاح API مطلوب.</p>
-          </div>
-
-          <div style="margin-bottom: 16px;">
-            <label class="field-label" for="modelSel">النموذج <span class="req">*</span></label>
-            <div class="select-wrap">
-              <select id="modelSel" class="field-select-el">
-                <option>متوازن</option>
-                <option>الأدق في التحليل</option>
-                <option>الأسرع</option>
-              </select>
-            </div>
-            <p class="slider-hint">النماذج المتاحة تتغيّر حسب المزوّد المختار.</p>
-          </div>
-
-          <div>
-            <label class="field-label" for="maxLen">حدّ طول الرد <span style="color: var(--muted-fg); font-weight: 400;">(اختياري)</span></label>
-            <div class="input-affix">
-              <input type="number" id="maxLen" class="field-input" value="600" min="50" max="4000" step="50">
-              <span class="affix">رمز</span>
-            </div>
-            <p class="slider-hint" id="maxLenHint">الحد الأقصى لطول الرد بالرموز (tokens). 600 رمز ≈ 450 كلمة.</p>
-          </div>
-
-          <div class="conn-row" style="margin-top: 20px;">
-            <span class="conn-dot" id="connDot"></span>
-            <span class="conn-name" id="connMsg">الاتصال يعمل — آخر فحص قبل 4 دقائق</span>
-            <button class="btn" type="button" onclick="testConn(this)">اختبار الاتصال</button>
-          </div>
-        </div>
-      </div>
-      <div class="save-bar" id="bar-link">
-        <span class="dirty-dot"></span>
-        <span class="dirty-msg">لديك تغييرات غير محفوظة في إعدادات الربط</span>
-        <button class="btn" type="button" onclick="discard('link')">تجاهل</button>
-        <button class="btn btn-primary" type="button" onclick="save('link')">حفظ التغييرات</button>
-      </div>
-      </div>
-
-      <!-- الميزات والرصيد -->
-      <div class="tab-panel" id="panel-usage" hidden>
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <p class="section-title">الرصيد الحالي</p>
-            <p class="section-desc">رصيد عمليات الذكاء الاصطناعي المتبقي في حسابك</p>
-          </div>
-          <span class="badge badge-primary">باقة الأعمال</span>
-        </div>
-        <div class="section-body">
-          <!-- كل رقم هنا يُشتقّ من CREDIT في السكربت — الكتابة اليدوية هي التي
-               جعلت «3,600 متبقية» تظهر بجانب شارة 64% وهما متناقضان -->
-          <div class="usage-head">
-            <span class="usage-num" id="usageNum">—</span>
-            <span class="badge" id="usagePct">—</span>
-          </div>
-          <div class="usage-bar"><div class="usage-fill" id="usageFill" style="width: 0%;"></div></div>
-          <div class="usage-foot">
-            <span id="usageToday">—</span>
-            <span id="usageRenew">—</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <p class="section-title">التنبيهات والحدود</p>
-            <p class="section-desc">اضبط التنبيه والحد الأقصى لاستهلاك الرصيد</p>
-          </div>
-        </div>
-        <div class="section-body">
-          <div class="toggle-row">
-            <div class="toggle-info">
-              <div class="toggle-label">تنبيه قبل نفاد الرصيد</div>
-            </div>
-            <div class="toggle on" role="switch" aria-checked="true" tabindex="0" data-controls="alertAt"><div class="dot"></div></div>
-          </div>
-
-          <div id="alertAt" style="margin-top: 14px; max-width: 320px;">
-            <label class="field-label" for="alertNum">نبّهني عند</label>
-            <div class="input-affix">
-              <input type="number" id="alertNum" class="field-input" value="1000" min="0" max="10000" step="100">
-              <span class="affix">عملية</span>
-            </div>
-            <p class="field-err" id="alertNumErr">القيمة يجب أن تكون بين 0 و 10,000.</p>
-          </div>
-
-          <div class="divider"></div>
-
-          <p class="section-label">عند نفاد الرصيد</p>
-          <div class="opt-grid" data-group="onEmpty">
-            <div class="opt-card slim sel" role="radio" aria-checked="true" tabindex="0" data-val="stop">
-              <span class="opt-body"><span class="opt-title">إيقاف المزايا الذكية</span><span class="opt-desc">حتى تجديد الدورة</span></span>
-              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="opt-card slim" role="radio" aria-checked="false" tabindex="0" data-val="renew">
-              <span class="opt-body"><span class="opt-title">شراء رصيد تلقائياً</span><span class="opt-desc">يُخصم من وسيلة الدفع</span></span>
-              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-head">
-          <div>
-            <p class="section-title">ميزات المساعد الذكي</p>
-            <p class="section-desc">فعّل أو عطّل الميزات حسب احتياجك — كل ميزة تستهلك رصيداً عند الاستخدام</p>
-          </div>
-        </div>
-        <div class="section-body">
-          <div class="feat-list">
-            <div class="toggle-row" data-needs="التوظيف">
-              <div class="toggle-info">
-                <div class="toggle-label">تحليل السير الذاتية</div>
-              </div>
-              <span class="opt-tag" style="margin-left: 12px;">2 عملية/سيرة</span>
-              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
-            </div>
-            <div class="toggle-row" data-needs="المستندات">
-              <div class="toggle-info">
-                <div class="toggle-label">تحليل المستندات (PDF)</div>
-              </div>
-              <span class="opt-tag" style="margin-left: 12px;">3 عمليات/ملف</span>
-              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
-            </div>
-            <div class="toggle-row" data-needs="الموظفين">
-              <div class="toggle-info">
-                <div class="toggle-label">تلخيص المحادثات</div>
-              </div>
-              <span class="opt-tag" style="margin-left: 12px;">1 عملية/محادثة</span>
-              <div class="toggle off" role="switch" aria-checked="false" tabindex="0"><div class="dot"></div></div>
-            </div>
-            <div class="toggle-row" data-needs="الموظفين">
-              <div class="toggle-info">
-                <div class="toggle-label">اقتراحات ذكية للموظفين</div>
-              </div>
-              <span class="opt-tag" style="margin-left: 12px;">1 عملية/اقتراح</span>
-              <div class="toggle on" role="switch" aria-checked="true" tabindex="0"><div class="dot"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="save-bar" id="bar-usage">
-        <span class="dirty-dot"></span>
-        <span class="dirty-msg">لديك تغييرات غير محفوظة في الميزات والرصيد</span>
-        <button class="btn" type="button" onclick="discard('usage')">تجاهل</button>
-        <button class="btn btn-primary" type="button" onclick="save('usage')">حفظ التغييرات</button>
-      </div>
-      </div>
-      <!-- الخصوصية -->
-      <div class="tab-panel" id="panel-privacy" hidden>
+      <div class="tab-panel" id="panel-privacy">
+      <div class="sec-head"><h2>الخصوصية</h2></div>
       <div class="section">
         <div class="section-head">
           <div>
@@ -1331,14 +1255,82 @@ select.field-select-el:focus-visible { outline: 2px solid var(--primary); outlin
           </div>
         </div>
       </div>
-      <div class="save-bar" id="bar-privacy">
-        <span class="dirty-dot"></span>
-        <span class="dirty-msg">لديك تغييرات غير محفوظة في الخصوصية</span>
-        <button class="btn" type="button" onclick="discard('privacy')">تجاهل</button>
-        <button class="btn btn-primary" type="button" onclick="save('privacy')">حفظ التغييرات</button>
-      </div>
       </div>
 
+      <div class="tab-panel" id="panel-usage">
+      <div class="sec-head"><h2>الرصيد والاستهلاك</h2></div>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">الرصيد الحالي</p>
+            <p class="section-desc">رصيد عمليات الذكاء الاصطناعي المتبقي في حسابك</p>
+          </div>
+          <span class="badge badge-primary">باقة الأعمال</span>
+        </div>
+        <div class="section-body">
+          <!-- كل رقم هنا يُشتقّ من CREDIT في السكربت — الكتابة اليدوية هي التي
+               جعلت «3,600 متبقية» تظهر بجانب شارة 64% وهما متناقضان -->
+          <div class="usage-head">
+            <span class="usage-num" id="usageNum">—</span>
+            <span class="badge" id="usagePct">—</span>
+          </div>
+          <div class="usage-bar"><div class="usage-fill" id="usageFill" style="width: 0%;"></div></div>
+          <div class="usage-foot">
+            <span id="usageToday">—</span>
+            <span id="usageRenew">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <p class="section-title">التنبيهات والحدود</p>
+            <p class="section-desc">اضبط التنبيه والحد الأقصى لاستهلاك الرصيد</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">تنبيه قبل نفاد الرصيد</div>
+            </div>
+            <div class="toggle on" role="switch" aria-checked="true" tabindex="0" data-controls="alertAt"><div class="dot"></div></div>
+          </div>
+
+          <div id="alertAt" style="margin-top: 14px; max-width: 320px;">
+            <label class="field-label" for="alertNum">نبّهني عند</label>
+            <div class="input-affix">
+              <input type="number" id="alertNum" class="field-input" value="1000" min="0" max="10000" step="100">
+              <span class="affix">عملية</span>
+            </div>
+            <p class="field-err" id="alertNumErr">القيمة يجب أن تكون بين 0 و 10,000.</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <p class="section-label">عند نفاد الرصيد</p>
+          <div class="opt-grid" data-group="onEmpty">
+            <div class="opt-card slim sel" role="radio" aria-checked="true" tabindex="0" data-val="stop">
+              <span class="opt-body"><span class="opt-title">إيقاف المزايا الذكية</span><span class="opt-desc">حتى تجديد الدورة</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="opt-card slim" role="radio" aria-checked="false" tabindex="0" data-val="renew">
+              <span class="opt-body"><span class="opt-title">شراء رصيد تلقائياً</span><span class="opt-desc">يُخصم من وسيلة الدفع</span></span>
+              <svg class="opt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+      <!-- الخصوصية -->
+      <!-- شريط واحد للصفحة كلها بدل خمسة، فالحفظ يشمل كل الأقسام -->
+      <div class="save-bar" id="saveBar">
+        <span class="dirty-dot"></span>
+        <span class="dirty-msg">لديك تغييرات غير محفوظة في إعدادات الذكاء الاصطناعي</span>
+        <button class="btn" type="button" onclick="discardAll()">تجاهل</button>
+        <button class="btn btn-primary" type="button" onclick="saveAll()">حفظ التغييرات</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1382,11 +1374,24 @@ function topNav(e) {
   toast('قسم «' + btn.textContent.trim() + '» غير مشمول في هذا العرض');
 }
 
-/* تبويب لكل شأن: أين يعمل · مساعد الموارد البشرية · الربط · اللغة · الرصيد · الخصوصية */
-const TABS = ['scope','assistant','link','usage','privacy'];
-function showTab(id, btn) {
-  TABS.forEach(k => document.getElementById('panel-' + k).hidden = k !== id);
-  document.querySelectorAll('.sub-tab').forEach(b => b.classList.toggle('active', b === btn));
+/* الأقسام كلها في صفحة واحدة — الشريط يمرّر إليها ويتتبّع الظاهر منها */
+const TABS = ['link','scope','assistant','privacy','usage'];
+
+function goSection(id) {
+  const el = document.getElementById('panel-' + id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* يُبرز القسم الذي يعلو الشاشة حالياً — بلا IntersectionObserver لأنه
+   يصمت حين يكون ارتفاع النافذة صفراً (إطارات مضمّنة، معاينات) */
+function spySection() {
+  let current = TABS[0];
+  for (const k of TABS) {
+    const el = document.getElementById('panel-' + k);
+    if (el && el.getBoundingClientRect().top <= 90) current = k;
+  }
+  document.querySelectorAll('.sub-tab').forEach((b, i) =>
+    b.classList.toggle('active', TABS[i] === current));
 }
 
 /* كل مجال يُفعَّل أو يُعطَّل من صفّه — بلا إعدادات تفصيلية هنا */
@@ -1399,7 +1404,7 @@ function toggleModuleSwitch(e, el) {
   row.querySelector('.mod-state').textContent = on ? 'مفعّل' : 'معطّل';
   updateModCount();
   syncFeatures();          // ميزات الرصيد تتبع المجال الذي تنتمي إليه
-  markDirty('scope');
+  markDirty();
 }
 function modKey(e, el) {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleModuleSwitch(e, el); }
@@ -1436,7 +1441,7 @@ function updateModCount() {
    ───────────────────────────────────────────────────────────── */
 
 /* لقطة الحالة الأولى لكل تبويب — يقارَن بها لمعرفة وجود تغيير فعلي */
-const baseline = {};
+let baseline = '';
 
 /* ─── الرصيد: مصدر واحد للأرقام ───
    الشريط يمثّل المتبقي كالبطارية، فالرقم والشارة والشريط تقول الشيء نفسه. */
@@ -1470,26 +1475,20 @@ function renderCredit() {
   if (alertNum) alertNum.max = total;
 }
 
-function panelOf(el) {
-  const p = el.closest('.tab-panel');
-  return p ? p.id.replace('panel-', '') : null;
-}
-
-/* توقيع الحالة: يلتقط كل كرت ومفتاح وحقل داخل التبويب */
-function snapshot(tab) {
-  const p = document.getElementById('panel-' + tab);
-  if (!p) return '';
-  const cards = [...p.querySelectorAll('.opt-card')].map(c => c.classList.contains('sel') ? '1' : '0');
-  const tgls  = [...p.querySelectorAll('.toggle')].map(t => t.classList.contains('on') ? '1' : '0');
-  const segs  = [...p.querySelectorAll('.perm-row')].map(r => r.dataset.state);
-  const vals  = [...p.querySelectorAll('input, select')].map(i => i.value);
+/* توقيع حالة الصفحة كاملة — صار الحفظ واحداً فلا حاجة لتوقيع لكل قسم */
+function snapshot() {
+  const root = document.querySelector('.settings-content');
+  if (!root) return '';
+  const cards = [...root.querySelectorAll('.opt-card')].map(c => c.classList.contains('sel') ? '1' : '0');
+  const tgls  = [...root.querySelectorAll('.toggle')].map(t => t.classList.contains('on') ? '1' : '0');
+  const segs  = [...root.querySelectorAll('.perm-row')].map(r => r.dataset.state);
+  const vals  = [...root.querySelectorAll('input, select')].map(i => i.value);
   return JSON.stringify([cards, tgls, segs, vals]);
 }
 
-function markDirty(tab) {
-  const bar = document.getElementById('bar-' + tab);
-  if (!bar) return;
-  bar.classList.toggle('show', snapshot(tab) !== baseline[tab]);
+function markDirty() {
+  const bar = document.getElementById('saveBar');
+  if (bar) bar.classList.toggle('show', snapshot() !== baseline);
 }
 
 /* ── كروت الاختيار: مجموعة أحادية أو متعددة ── */
@@ -1517,7 +1516,7 @@ function pickCard(card) {
   }
 
   if (grid.dataset.group === 'provider') applyProvider(card);
-  markDirty(panelOf(card));
+  markDirty();
 }
 
 /* تغيير المزوّد يعيد بناء قائمة النماذج — القائمة تتبع المصدر */
@@ -1539,7 +1538,7 @@ function pickPerm(btn) {
   });
   row.dataset.state = btn.dataset.v;      // يقود لون الأيقونة عبر CSS
   updateCompliance();
-  markDirty(panelOf(btn));
+  markDirty();
 }
 
 /* شارة التوافق تتبع الصلاحيات فعلاً — إتاحة المستندات الشخصية تُخرج
@@ -1566,7 +1565,7 @@ function flipToggle(t) {
     const target = document.getElementById(t.dataset.controls);
     if (target) target.style.display = on ? '' : 'none';
   }
-  markDirty(panelOf(t));
+  markDirty();
 }
 
 /* ── إظهار مفتاح API ── */
@@ -1618,14 +1617,17 @@ function validateAlert() {
 }
 
 /* ── حفظ / تجاهل ── */
-function save(tab) {
-  if (tab === 'link' && !validateKey()) return;
-  if (tab === 'usage' && !validateAlert()) return;
-  baseline[tab] = snapshot(tab);
-  document.getElementById('bar-' + tab).classList.remove('show');
+function saveAll() {
+  // الحفظ يشمل كل الأقسام، فيُتحقّق منها جميعاً ويُمرَّر إلى أول خطأ
+  const keyOk = validateKey();
+  const alertOk = validateAlert();
+  if (!keyOk) { goSection('link'); return; }
+  if (!alertOk) { goSection('usage'); return; }
+  baseline = snapshot();
+  document.getElementById('saveBar').classList.remove('show');
 }
-function discard(tab) {
-  // إعادة تحميل التبويب لحالته المحفوظة: أبسط وأصدق من تتبّع كل حقل
+function discardAll() {
+  // إعادة التحميل أبسط وأصدق من تتبّع كل حقل للرجوع به
   location.reload();
 }
 
@@ -1657,10 +1659,10 @@ document.addEventListener('input', e => {
     document.getElementById('maxLenHint').textContent =
       'الحد الأقصى لطول الرد بالرموز (tokens). ' + n.toLocaleString('en') + ' رمز ≈ ' + Math.round(n * 0.75).toLocaleString('en') + ' كلمة.';
   }
-  markDirty(panelOf(t));
+  markDirty();
 });
 document.addEventListener('change', e => {
-  if (e.target.matches('select')) markDirty(panelOf(e.target));
+  if (e.target.matches('select')) markDirty();
 });
 
 const saved = localStorage.getItem('hrm-theme') || 'light';
@@ -1668,5 +1670,7 @@ document.documentElement.setAttribute('data-theme', saved);
 updateThemeUI(saved);
 renderCredit();
 syncFeatures();
-TABS.forEach(t => baseline[t] = snapshot(t));
+baseline = snapshot();
+spySection();
+addEventListener('scroll', spySection, { passive: true });
 </script>
